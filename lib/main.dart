@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:notehub/features/auth/presentation/login_page.dart';
-import 'package:notehub/features/splash/presentation/splashscreen.dart';
-
-void main() {
+import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:notehub/features/auth/presentation/pages/error_page.dart';
+import 'package:notehub/features/auth/presentation/pages/login_page.dart';
+import 'package:notehub/injection.dart';
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initDependencies();
   runApp(const MyApp());
 }
 
@@ -12,13 +16,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
+        textTheme: GoogleFonts.interTextTheme(),
       ),
       debugShowCheckedModeBanner: false,
-      home: Splashscreen(), 
+      home: ErrorPage(), // Ganti dengan Splashscreen() jika ingin menggunakan splash screen
     );
   }
 }
