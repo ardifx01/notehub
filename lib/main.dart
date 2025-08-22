@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:notehub/features/auth/presentation/pages/error_page.dart';
-import 'package:notehub/features/auth/presentation/pages/login_page.dart';
+import 'package:notehub/features/splash/presentation/splashscreen.dart';
 import 'package:notehub/injection.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +22,7 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.interTextTheme(),
       ),
       debugShowCheckedModeBanner: false,
-      home: ErrorPage(), // Ganti dengan Splashscreen() jika ingin menggunakan splash screen
+      home: Splashscreen(), // Ganti dengan Splashscreen() jika ingin menggunakan splash screen
     );
   }
 }
