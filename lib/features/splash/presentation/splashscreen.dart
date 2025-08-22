@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:notehub/features/auth/presentation/pages/error_page.dart';
+import 'package:notehub/features/auth/presentation/pages/login_page.dart';
+import 'package:notehub/features/home/presentation/home_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Splashscreen extends StatefulWidget {
   const Splashscreen({super.key});
@@ -18,17 +24,25 @@ class _SplashscreenState extends State<Splashscreen> {
   Future<void> _initApp() async {
     final start = DateTime.now();
 
-    // TODO: Inisialisasi aplikasi, misalnya memuat data awal, konfigurasi, dll.
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final userId = prefs.getString("user_id"); // misalnya kamu simpan userId
 
-    // Hitung sisa waktu agar minimal 5 detik
-    final elapsed = DateTime.now().difference(start);
-    final remaining = Duration(seconds: 5) - elapsed;
-    if (remaining > Duration.zero) {
-      await Future.delayed(remaining);
+      // Hitung sisa waktu agar minimal 5 detik
+      final elapsed = DateTime.now().difference(start);
+      final remaining = Duration(seconds: 5) - elapsed;
+      if (remaining > Duration.zero) {
+        await Future.delayed(remaining);
+      }
+
+      if (userId != null && userId.isNotEmpty) {
+        Get.offAll(() => HomePage());
+      } else {
+        Get.offAll(() => LoginPage());
+      }
+    } catch (e) {
+      Get.offAll(() => ErrorPage());
     }
-
-    // // Pindah ke halaman utama (Main akan handle isi user kosong / tidak)
-    // Get.offAll(() => Main());
   }
 
   @override
