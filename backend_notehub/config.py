@@ -1,0 +1,5 @@
+DB_HOST = "localhost"
+DB_USER = "fajar"
+DB_PASSWORD = "Nova0920"
+DB_NAME = "notehub"
+Base_URL = "https://30545b9d51d7.ngrok-free.app/"
