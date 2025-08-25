@@ -21,15 +21,15 @@ class AuthRemoteDataSource {
   }
 
   // Signup: backend balikin {"message": "User created", "id": 1}
-  Future<int> signUp(String username, String email, String password) async {
+  Future<UserModel> signUp(String username, String email, String password) async {
     final response = await apiClient.post('/signup', {
       "nama": username,
       "email": email,
       "password": password,
     });
 
-    if (response['id'] != null) {
-      return response['id']; // balikin user_id
+    if (response['user'] != null) {
+      return UserModel.fromJson(response['user']);
     } else {
       throw Exception(response['message'] ?? "Signup gagal");
     }

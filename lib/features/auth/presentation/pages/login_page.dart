@@ -3,14 +3,17 @@ import 'package:get/get.dart';
 import 'package:notehub/core/const/colors.dart';
 import 'package:notehub/core/widgets/custom_button.dart';
 import 'package:notehub/core/widgets/custom_textfield.dart';
+import 'package:notehub/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:notehub/features/auth/presentation/controllers/login_controller.dart'
     show LoginController;
 import 'package:notehub/features/auth/presentation/pages/signup_page.dart';
+import 'package:notehub/features/home/presentation/home_page.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
-  
+
   final controller = Get.find<LoginController>();
+  final authController = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -98,11 +101,30 @@ class LoginPage extends StatelessWidget {
                             SizedBox(height: 70),
 
                             // Tombol login
-                            customButton(
-                                text: 'Masuk',
-                                onPressed: () {
-                                  // TODO: Implement login functionality
-                                })
+                            Obx(
+                              () => customButton(
+                                  text: 'Masuk',
+                                  color: authController.isLoading.value
+                                      ? AppColors.disabledTextColor
+                                      : AppColors.buttonColor3,
+                                  onPressed: () async {
+                                    try {
+                                      await authController.login(
+                                        controller.emailController.text,
+                                        controller.passwordController.text,
+                                      );
+                                      Get.off(() => HomePage());
+                                    } catch (e) {
+                                      Get.snackbar(
+                                        'Error',
+                                        'Gagal melakukan login: $e',
+                                        snackPosition: SnackPosition.BOTTOM,
+                                        backgroundColor: AppColors.errorColor,
+                                        colorText: AppColors.surfaceColor,
+                                      );
+                                    }
+                                  }),
+                            )
                           ],
                         ),
                       ),
