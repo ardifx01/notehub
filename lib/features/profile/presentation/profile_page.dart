@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notehub/core/const/colors.dart';
+import 'package:notehub/core/functions/convert_date.dart';
 import 'package:notehub/core/widgets/heatmap_callendar.dart';
 import 'package:notehub/features/auth/presentation/controllers/auth_controller.dart';
 
 class ProfilePage extends StatelessWidget {
   ProfilePage({super.key});
-  
+
   final authController = Get.find<AuthController>();
 
   @override
@@ -54,7 +55,8 @@ class ProfilePage extends StatelessWidget {
                     children: [
                       // container putih untuk konten profil
                       Container(
-                        margin: const EdgeInsets.only(top: 60), // ruang untuk avatar
+                        margin: const EdgeInsets.only(
+                            top: 60), // ruang untuk avatar
                         padding: const EdgeInsets.only(top: 50, bottom: 20),
                         width: double.infinity,
                         color: AppColors.surfaceColor,
@@ -102,9 +104,21 @@ class ProfilePage extends StatelessWidget {
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
-                                children: const [
+                                children: [
                                   // TODO: ganti value dengan data asli
-                                  _InfoBox(title: "Sejak", value: "Des 2024"),
+                                  Obx(
+                                    () {
+                                      final createdAt =
+                                          authController.user.value?.createdAt;
+                                      return _InfoBox(
+                                        title: "Sejak",
+                                        value: createdAt != null
+                                            ? formatTanggal(createdAt)
+                                            : "-", // fallback kalau null
+                                      );
+                                    },
+                                  ),
+
                                   _InfoBox(title: "Notes", value: "6"),
                                   _InfoBox(title: "Disimpan", value: "24"),
                                 ],
