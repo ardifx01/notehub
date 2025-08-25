@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.interTextTheme(),
       ),
       debugShowCheckedModeBanner: false,
-      home: HomePage(), 
+      home: Splashscreen(), 
     );
   }
 }
