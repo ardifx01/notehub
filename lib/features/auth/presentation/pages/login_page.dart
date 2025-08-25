@@ -7,6 +7,7 @@ import 'package:notehub/features/auth/presentation/controllers/auth_controller.d
 import 'package:notehub/features/auth/presentation/controllers/login_controller.dart'
     show LoginController;
 import 'package:notehub/features/auth/presentation/pages/signup_page.dart';
+import 'package:notehub/features/home/presentation/home_page.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -112,6 +113,7 @@ class LoginPage extends StatelessWidget {
                                         controller.emailController.text,
                                         controller.passwordController.text,
                                       );
+                                      Get.off(() => HomePage());
                                     } catch (e) {
                                       Get.snackbar(
                                         'Error',

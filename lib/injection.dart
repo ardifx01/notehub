@@ -25,8 +25,8 @@ Future<void> initDependencies() async {
       ));
 
   // Controller
-  Get.lazyPut(() => LoginController(), fenix: true);
-  Get.lazyPut(() => SignUpController(), fenix: true);
+  Get.put(LoginController(), permanent: true);
+  Get.put(SignUpController(), permanent: true);
   Get.put(AuthController(Get.find<AuthRepository>()), permanent: true);
 
   // ✅ NOTE

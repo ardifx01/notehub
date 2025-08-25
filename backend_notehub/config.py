@@ -1,4 +1,4 @@
-DB_HOST = "localhost"
+DB_HOST = "10.0.5.41"
 DB_USER = "fajar"
 DB_PASSWORD = "Nova0920"
 DB_NAME = "notehub"

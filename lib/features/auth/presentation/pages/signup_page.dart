@@ -6,6 +6,7 @@ import 'package:notehub/core/widgets/custom_textfield.dart';
 import 'package:notehub/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:notehub/features/auth/presentation/controllers/signup_controller.dart';
 import 'package:notehub/features/auth/presentation/pages/login_page.dart';
+import 'package:notehub/features/home/presentation/home_page.dart';
 
 class SignupPage extends StatelessWidget {
   SignupPage({super.key});
@@ -119,6 +120,7 @@ class SignupPage extends StatelessWidget {
                                         controller.emailController.text,
                                         controller.passwordController.text,
                                       );
+                                      Get.off(() => HomePage());
                                     } catch (e) {
                                       Get.snackbar(
                                         'Error',
