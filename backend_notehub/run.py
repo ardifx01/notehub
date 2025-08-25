@@ -6,7 +6,7 @@ from datetime import datetime
 from config import DB_HOST, DB_USER, DB_PASSWORD, DB_NAME
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 def get_db_connection():
     return pymysql.connect(

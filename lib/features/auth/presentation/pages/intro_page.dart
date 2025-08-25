@@ -52,9 +52,9 @@ class _IntroPageState extends State<IntroPage> {
   }
 }
 
-void main() {
-  runApp(const MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: IntroPage(),
-  ));
-}
+// void main() {
+//   runApp(const MaterialApp(
+//     debugShowCheckedModeBanner: false,
+//     home: IntroPage(),
+//   ));
+// }
