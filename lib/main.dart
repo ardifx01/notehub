@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:notehub/features/auth/presentation/pages/intro_page.dart';
+import 'package:notehub/features/home/presentation/home_page.dart';
 import 'package:notehub/features/splash/presentation/splashscreen.dart';
 import 'package:notehub/injection.dart';
 Future<void> main() async {
@@ -23,7 +25,7 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.interTextTheme(),
       ),
       debugShowCheckedModeBanner: false,
-      home: Splashscreen(), 
+      home: HomePage(), 
     );
   }
 }
