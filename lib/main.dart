@@ -10,7 +10,6 @@ import 'package:notehub/injection.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initDependencies();
-  await initializeDateFormatting('id_ID', '');
   runApp(const MyApp());
 }
 

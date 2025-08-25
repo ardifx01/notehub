@@ -18,19 +18,18 @@ class UserModel {
   factory UserModel.fromJson(Map<String, dynamic> json) {
     DateTime createdAt;
     try {
-      createdAt = DateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'", 'en_US')
-          .parseUtc(json['tanggal_pembuatan_akun'])
-          .toLocal();
+      createdAt = DateTime.parse(json['tanggal_pembuatan_akun']);
     } catch (_) {
       createdAt = DateTime.now();
     }
 
     return UserModel(
-        id: json['id'],
-        nama: json['nama'],
-        email: json['email'],
-        foto: json['foto'] ?? '',
-        createdAt: createdAt);
+      id: json['id'],
+      nama: json['nama'],
+      email: json['email'],
+      foto: json['foto'] ?? '',
+      createdAt: createdAt,
+    );
   }
 
   Map<String, dynamic> toJson() {
