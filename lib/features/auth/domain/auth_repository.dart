@@ -1,6 +1,18 @@
+import 'package:notehub/features/auth/models/user_model.dart';
+
 abstract class AuthRepository {
-  Future<void> signUp(String username, String email, String password);
-  Future<void> login(String email, String password);
+  /// Sign up, balikin userId dari backend
+  Future<UserModel> signUp(String username, String email, String password);
+
+  /// Login, balikin user model
+  Future<UserModel> login(String email, String password);
+
+  /// Logout, hapus data user lokal
   Future<void> logout();
-  Future<bool> isAuthenticated();
+
+  /// Cek user sekarang (dari SharedPreferences)
+  Future<UserModel?> getCurrentUser();
+
+  /// Update user
+  Future<void> editUser(int userId, String nama, String email, String foto);
 }

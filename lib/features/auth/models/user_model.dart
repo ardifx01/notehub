@@ -28,4 +28,19 @@ class UserModel {
       'foto': foto,
     };
   }
+
+  // method copyWith untuk memudahkan update sebagian atribut
+  UserModel copyWith({
+    int? id,
+    String? nama,
+    String? email,
+    String? foto,
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      nama: nama ?? this.nama,
+      email: email ?? this.email,
+      foto: foto ?? this.foto,
+    );
+  }
 }

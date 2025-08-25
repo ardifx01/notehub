@@ -9,7 +9,7 @@ class AuthLocalDataSource {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_keyUser, jsonEncode(user.toJson()));
   }
-
+  
   Future<UserModel?> getUser() async {
     final prefs = await SharedPreferences.getInstance();
     final userJson = prefs.getString(_keyUser);

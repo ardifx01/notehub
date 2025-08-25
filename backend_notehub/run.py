@@ -39,7 +39,12 @@ def signup():
             db.commit()
             user_id = cursor.lastrowid
 
-    return jsonify({"message": "User created", "id": user_id})
+            # langsung ambil user yg baru dibuat
+            cursor.execute("SELECT * FROM users WHERE id=%s", (user_id,))
+            new_user = cursor.fetchone()
+
+    return jsonify({"message": "User created", "user": new_user})
+
 
 
 # 2. Login

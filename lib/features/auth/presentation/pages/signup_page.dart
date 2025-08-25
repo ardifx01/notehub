@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:notehub/core/const/colors.dart';
 import 'package:notehub/core/widgets/custom_button.dart';
 import 'package:notehub/core/widgets/custom_textfield.dart';
+import 'package:notehub/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:notehub/features/auth/presentation/controllers/signup_controller.dart';
 import 'package:notehub/features/auth/presentation/pages/login_page.dart';
 
@@ -10,6 +11,7 @@ class SignupPage extends StatelessWidget {
   SignupPage({super.key});
 
   final controller = Get.find<SignUpController>();
+  final authController = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -103,12 +105,31 @@ class SignupPage extends StatelessWidget {
                             ),
                             SizedBox(height: 70),
 
-                            // Tombol login
-                            customButton(
-                                text: 'Masuk',
-                                onPressed: () {
-                                  // TODO: Implement login functionality
-                                })
+                            // Tombol sign Up
+                            Obx(
+                              () => customButton(
+                                  text: 'Daftar',
+                                  color: authController.isLoading.value
+                                      ? AppColors.disabledTextColor
+                                      : AppColors.buttonColor3,
+                                  onPressed: () async {
+                                    try {
+                                      await authController.signUp(
+                                        controller.usernameController.text,
+                                        controller.emailController.text,
+                                        controller.passwordController.text,
+                                      );
+                                    } catch (e) {
+                                      Get.snackbar(
+                                        'Error',
+                                        'Gagal melakukan sign up: $e',
+                                        snackPosition: SnackPosition.BOTTOM,
+                                        backgroundColor: AppColors.errorColor,
+                                        colorText: AppColors.surfaceColor,
+                                      );
+                                    }
+                                  }),
+                            )
                           ],
                         ),
                       ),

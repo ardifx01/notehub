@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:notehub/features/splash/presentation/splashscreen.dart';
@@ -11,10 +12,10 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
+  
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { 
     return GetMaterialApp(
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.interTextTheme(),
       ),
       debugShowCheckedModeBanner: false,
-      home: Splashscreen(), // Ganti dengan Splashscreen() jika ingin menggunakan splash screen
+      home: Splashscreen(), 
     );
   }
 }

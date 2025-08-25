@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/get_navigation.dart';
+import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:notehub/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:notehub/features/auth/presentation/pages/error_page.dart';
 import 'package:notehub/features/auth/presentation/pages/login_page.dart';
 import 'package:notehub/features/home/presentation/home_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Splashscreen extends StatefulWidget {
   const Splashscreen({super.key});
@@ -25,17 +24,18 @@ class _SplashscreenState extends State<Splashscreen> {
     final start = DateTime.now();
 
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final userId = prefs.getString("user_id"); // misalnya kamu simpan userId
+      // ambil controller
+      final authController = Get.find<AuthController>();
 
       // Hitung sisa waktu agar minimal 5 detik
       final elapsed = DateTime.now().difference(start);
-      final remaining = Duration(seconds: 5) - elapsed;
+      final remaining = const Duration(seconds: 5) - elapsed;
       if (remaining > Duration.zero) {
         await Future.delayed(remaining);
       }
 
-      if (userId != null && userId.isNotEmpty) {
+      // routing berdasarkan login
+      if (authController.isLoggedIn) {
         Get.offAll(() => HomePage());
       } else {
         Get.offAll(() => LoginPage());
