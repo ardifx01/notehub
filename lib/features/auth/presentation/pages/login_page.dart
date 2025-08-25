@@ -18,67 +18,73 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Column(
-            children: [
-              Expanded(
-                flex: 1,
-                child: Container(
-                  color: AppColors.primaryColor,
-                ),
-              ),
-              Expanded(
-                flex: 2,
-                child: Container(
-                  color: AppColors.backgroundColor,
-                ),
-              )
-            ],
+      body: SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minHeight: MediaQuery.of(context).size.height,
           ),
-          Align(
-            alignment: Alignment.center,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/images/logo_horizontal.png',
-                  width: 150,
-                ),
-                SizedBox(height: 30),
+          child: Stack(
+            children: [
+              // Background
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.33,
+                    color: AppColors.primaryColor,
+                  ),
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.67,
+                    color: AppColors.backgroundColor,
+                  ),
+                ],
+              ),
 
-                // Login Container
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Container(
-                    height: 350,
-                    decoration: BoxDecoration(
-                      color: AppColors.surfaceColor,
-                      borderRadius: BorderRadius.circular(18),
+              // Content
+              Align(
+                alignment: Alignment.center,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(height: 90),
+                    Image.asset(
+                      'assets/images/logo_horizontal.png',
+                      width: 150,
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 20, horizontal: 20),
-                      child: SizedBox.expand(
+                    const SizedBox(height: 30),
+
+                    // Login Container
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 20,
+                          horizontal: 20,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.surfaceColor,
+                          borderRadius: BorderRadius.circular(18),
+                        ),
                         child: Column(
-                          mainAxisSize: MainAxisSize.max,
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             // Judul
                             Text(
                               'Login',
                               style: TextStyle(
-                                  color: AppColors.secondaryTextColor,
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.bold),
+                                color: AppColors.secondaryTextColor,
+                                fontSize: 32,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
 
                             // Input email
                             customTextfield(
                               controller: controller.emailController,
                               hintText: 'Email',
                             ),
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
 
                             // Input password
                             Obx(
@@ -92,22 +98,34 @@ class LoginPage extends StatelessWidget {
                                         ? Icons.visibility_off
                                         : Icons.visibility,
                                   ),
-                                  onPressed: () {
-                                    controller.togglePasswordVisibility();
-                                  },
+                                  onPressed:
+                                      controller.togglePasswordVisibility,
                                 ),
                               ),
                             ),
-                            SizedBox(height: 70),
+                            const SizedBox(height: 40),
 
                             // Tombol login
                             Obx(
                               () => customButton(
-                                  text: 'Masuk',
-                                  color: authController.isLoading.value
-                                      ? AppColors.disabledTextColor
-                                      : AppColors.buttonColor3,
-                                  onPressed: () async {
+                                text: authController.isLoading.value
+                                    ? 'Sedang Masuk..'
+                                    : 'Masuk',
+                                color: authController.isLoading.value
+                                    ? AppColors.disabledTextColor
+                                    : AppColors.buttonColor3,
+                                onPressed: () async {
+                                  if (controller.emailController.text.isEmpty ||
+                                      controller
+                                          .passwordController.text.isEmpty) {
+                                    Get.snackbar(
+                                      'Error',
+                                      'Email dan password harus diisi',
+                                      backgroundColor: AppColors.errorColor,
+                                      colorText: AppColors.surfaceColor,
+                                    );
+                                    return;
+                                  } else {
                                     try {
                                       await authController.login(
                                         controller.emailController.text,
@@ -123,48 +141,53 @@ class LoginPage extends StatelessWidget {
                                         colorText: AppColors.surfaceColor,
                                       );
                                     }
-                                  }),
-                            )
+                                  }
+                                },
+                              ),
+                            ),
                           ],
                         ),
                       ),
                     ),
-                  ),
-                ),
-                SizedBox(height: 35),
+                    const SizedBox(height: 35),
 
-                // Tombol sign up
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Belum punya akun?',
-                      style: TextStyle(
-                        color: AppColors.secondaryTextColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Get.to(SignupPage(),
-                            duration: Duration(milliseconds: 500));
-                      },
-                      child: Text(
-                        'Sign Up',
-                        style: TextStyle(
-                            color: AppColors.buttonColor3,
+                    // Tombol sign up
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Belum punya akun?',
+                          style: TextStyle(
+                            color: AppColors.secondaryTextColor,
                             fontSize: 12,
-                            fontWeight: FontWeight.bold),
-                      ),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Get.to(
+                              SignupPage(),
+                              duration: const Duration(milliseconds: 500),
+                            );
+                          },
+                          child: Text(
+                            'Sign Up',
+                            style: TextStyle(
+                              color: AppColors.buttonColor3,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
+                    const SizedBox(height: 60),
                   ],
                 ),
-                SizedBox(height: 80),
-              ],
-            ),
-          )
-        ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
