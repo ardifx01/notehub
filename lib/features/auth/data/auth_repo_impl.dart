@@ -13,7 +13,8 @@ class AuthRepositoryImpl implements AuthRepository {
   });
 
   @override
-  Future<UserModel> signUp(String username, String email, String password) async {
+  Future<UserModel> signUp(
+      String username, String email, String password) async {
     return await remoteDataSource.signUp(username, email, password);
   }
 
@@ -35,16 +36,17 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<void> editUser(int userId, String nama, String email, String foto) async {
+  Future<void> editUser(
+      int userId, String nama, String email, String foto) async {
     await remoteDataSource.editUser(userId, nama, email, foto);
 
     // update data lokal juga (biar konsisten)
     final updatedUser = UserModel(
-      id: userId,
-      nama: nama,
-      email: email,
-      foto: foto,
-    );
+        id: userId,
+        nama: nama,
+        email: email,
+        foto: foto,
+        createdAt: (await getCurrentUser())?.createdAt ?? DateTime.now());
     await localDataSource.saveUser(updatedUser);
   }
 }
