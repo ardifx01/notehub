@@ -80,20 +80,24 @@ def login():
 @app.route("/user/<int:user_id>", methods=["PUT"])
 def edit_user(user_id):
     data = request.json
-    valid, error = validate_fields(data, ["nama", "email"])
-    if not valid:
-        return jsonify({"error": error}), 400
-
     nama = data["nama"]
     email = data["email"]
     foto = data.get("foto", "")
+    password = data.get("password")  # opsional
 
     with get_db_connection() as db:
         with db.cursor() as cursor:
-            cursor.execute(
-                "UPDATE users SET nama=%s, email=%s, foto=%s WHERE id=%s",
-                (nama, email, foto, user_id)
-            )
+            if password:  # kalau ada password baru
+                hashed_pw = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+                cursor.execute(
+                    "UPDATE users SET nama=%s, email=%s, foto=%s, password=%s WHERE id=%s",
+                    (nama, email, foto, hashed_pw, user_id)
+                )
+            else:  # kalau tidak ada password → update biasa
+                cursor.execute(
+                    "UPDATE users SET nama=%s, email=%s, foto=%s WHERE id=%s",
+                    (nama, email, foto, user_id)
+                )
             db.commit()
 
     return jsonify({"message": "User updated"})
