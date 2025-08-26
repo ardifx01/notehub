@@ -83,7 +83,7 @@ def edit_user(user_id):
     nama = data["nama"]
     email = data["email"]
     foto = data.get("foto", "")
-    password = data.get("password")  # opsional
+    password = data.get("password") 
 
     with get_db_connection() as db:
         with db.cursor() as cursor:

@@ -33,10 +33,10 @@ class HomePage extends StatelessWidget {
                             radius: 20,
                             backgroundColor: Colors.white,
                             backgroundImage: authController.user.value?.foto !=
-                                    null
+                                    ''
                                 ? NetworkImage(authController.user.value!.foto)
-                                : const AssetImage(
-                                    'assets/images/avatar_placeholder.png'),
+                                : AssetImage(
+                                    'assets/images/default_avatar.png'),
                           ),
                         ),
                         onTap: () {
