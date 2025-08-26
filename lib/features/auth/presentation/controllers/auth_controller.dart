@@ -1,15 +1,20 @@
 import 'package:flutter/foundation.dart'; // untuk debugPrint
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:notehub/features/auth/domain/auth_repository.dart';
 import 'package:notehub/features/auth/models/user_model.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class AuthController extends GetxController {
   final AuthRepository authRepository;
 
   AuthController(this.authRepository);
 
+  final ImagePicker _picker = ImagePicker();
+
   /// State reactive
   var user = Rxn<UserModel>(); // null kalau belum login
+  var fotoBaruPath = Rxn<String>(); // variabel untuk preview foto sementara
   var isLoading = false.obs;
 
   /// Cek apakah user sudah login
@@ -18,7 +23,8 @@ class AuthController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    debugPrint("🔄 AuthController onInit dipanggil untuk load user dari sharedpreferences");
+    debugPrint(
+        "🔄 AuthController onInit dipanggil untuk load user dari sharedpreferences");
     loadUser();
   }
 
@@ -57,7 +63,7 @@ class AuthController extends GetxController {
     }
   }
 
-  /// Signup + auto login
+  // Signup + auto login
   Future<void> signUp(String nama, String email, String password) async {
     isLoading.value = true;
     debugPrint("📝 signUp dipanggil: nama=$nama, email=$email");
@@ -73,25 +79,67 @@ class AuthController extends GetxController {
     }
   }
 
-  /// Edit user profile
-  Future<void> editUser(String nama, String email, String foto, String? password) async {
-    if (user.value == null) {
-      debugPrint("⚠️ editUser dipanggil tapi tidak ada user login");
-      return;
+  // --- Pilih foto dari galeri, return path file atau null
+  Future<String?> pilihFoto() async {
+    // minta permission storage / photos
+    var status = await Permission.photos
+        .request(); // atau Permission.storage untuk <android 13
+    if (status.isGranted) {
+      // bisa akses galeri
+    } else if (status.isPermanentlyDenied) {
+      openAppSettings();
+    } else {
+      debugPrint("❌ Permission galeri ditolak");
+      return null;
     }
 
-    isLoading.value = true;
-    debugPrint("✏️ Mengupdate user ${user.value!.id}");
-    try {
-      await authRepository.editUser(user.value!.id, nama, email, foto, password);
+    // buka galeri
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image == null) return null;
 
-      // update di state
+    return image.path;
+  }
+
+  /// --- pilih foto tapi belum upload
+  Future<void> pilihFotoPreview() async {
+    String? path = await pilihFoto();
+    if (path != null) {
+      fotoBaruPath.value = path; // simpan path sementara
+    }
+  }
+
+  /// --- simpan perubahan ke backend
+  Future<void> editUser(String nama, String email, String? password) async {
+    if (user.value == null) return;
+
+    isLoading.value = true;
+    try {
+      String? urlFoto;
+
+      // kalau ada foto baru, upload dulu
+      if (fotoBaruPath.value != null) {
+        urlFoto =
+            await authRepository.uploadFotoKeCloudinary(fotoBaruPath.value!);
+      }
+
+      // update backend
+      await authRepository.editUser(
+        user.value!.id,
+        nama,
+        email,
+        urlFoto ?? user.value!.foto,
+        password,
+      );
+
+      // update state lokal
       user.value = user.value!.copyWith(
         nama: nama,
         email: email,
-        foto: foto,
+        foto: urlFoto ?? user.value!.foto,
       );
-      debugPrint("✅ User berhasil diupdate: ${user.value!.toJson()}");
+
+      // reset path foto sementara
+      fotoBaruPath.value = null;
     } catch (e) {
       debugPrint("❌ Gagal update user: $e");
       rethrow;
@@ -100,7 +148,7 @@ class AuthController extends GetxController {
     }
   }
 
-  /// Logout
+  /// --- Logout
   Future<void> logout() async {
     debugPrint("🚪 Logout dipanggil...");
     await authRepository.logout();

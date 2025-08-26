@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notehub/core/const/colors.dart';
@@ -43,6 +45,8 @@ class EditPage extends StatelessWidget {
               ],
             ),
           ),
+
+          // -------- container putih + konten utama scrollable
           Padding(
             padding: EdgeInsets.only(left: 30, right: 30, top: 75, bottom: 50),
             child: Container(
@@ -51,37 +55,59 @@ class EditPage extends StatelessWidget {
                 color: AppColors.surfaceColor,
                 borderRadius: BorderRadius.circular(18),
               ),
+              // konten utama scrollable
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircleAvatar(
-                          radius: 55,
-                          backgroundColor: AppColors.disabledTextColor,
-                          child: Icon(
-                            Icons.person,
-                            size: 60,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      GestureDetector(
+                        onTap: () {
+                          authController.pilihFotoPreview();
+                        },
+                        child: Obx(() {
+                          String? fotoPreview =
+                              authController.fotoBaruPath.value;
+                          String? fotoUser = authController.user.value?.foto;
+
+                          ImageProvider avatarImage;
+
+                          if (fotoPreview != null) {
+                            // pakai foto preview lokal
+                            avatarImage = FileImage(File(fotoPreview));
+                          } else if (fotoUser != null && fotoUser.isNotEmpty) {
+                            // pakai foto dari server
+                            avatarImage = NetworkImage(fotoUser);
+                          } else {
+                            // pakai default
+                            avatarImage =
+                                AssetImage('assets/images/default_avatar.png');
+                          }
+
+                          return CircleAvatar(
+                            radius: 20,
+                            backgroundColor: AppColors.buttonColor2,
+                            backgroundImage: avatarImage,
+                          );
+                        }),
+                      ),
+                    ]),
                     SizedBox(height: 30),
+
+                    // Textfield untuk username, email, password
                     Text('Ubah Username',
-                        style:
-                            TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
                     SizedBox(height: 8),
                     customTextfield(
-                        hintText: authController.user.value?.nama ?? 'Nama Kamu',
+                        hintText:
+                            authController.user.value?.nama ?? 'Nama Kamu',
                         controller: controller.usernameController),
                     SizedBox(height: 15),
                     Text('Ubah Email',
-                        style:
-                            TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
                     SizedBox(height: 8),
                     customTextfield(
                         hintText:
@@ -89,8 +115,8 @@ class EditPage extends StatelessWidget {
                         controller: controller.emailController),
                     SizedBox(height: 15),
                     Text('Ubah Password',
-                        style:
-                            TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
                     SizedBox(height: 8),
                     Obx(
                       () => customTextfield(
@@ -116,11 +142,12 @@ class EditPage extends StatelessWidget {
                           middleText:
                               "Apakah kamu yakin ingin menyimpan perubahan ini?",
                           onConfirm: () async {
-                
-                            // Melakukan update profil
                             try {
+                              // Melakukan update profil
                               await authController.editUser(
-                                controller.usernameController.text.trim().isEmpty
+                                controller.usernameController.text
+                                        .trim()
+                                        .isEmpty
                                     ? authController.user.value?.nama ??
                                         'Nama Error'
                                     : controller.usernameController.text.trim(),
@@ -128,13 +155,17 @@ class EditPage extends StatelessWidget {
                                     ? authController.user.value?.email ??
                                         'Email Error'
                                     : controller.emailController.text.trim(),
-                                '',
-                                controller.passwordController.text.trim().isEmpty
+                                controller.passwordController.text
+                                        .trim()
+                                        .isEmpty
                                     ? null
                                     : controller.passwordController.text.trim(),
                               );
-                              Get.back(); // tutup dialog
-                              Get.back(); // kembali ke halaman profil
+                              // Membersihkan controller
+                              controller.clearControllers();
+                              // Navigasi kembali ke halaman profil
+                              Get.back();
+                              Get.back();
                               Get.snackbar(
                                 'Sukses',
                                 'Profil berhasil diperbarui',

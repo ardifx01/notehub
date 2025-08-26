@@ -4,6 +4,7 @@ import 'package:notehub/core/const/colors.dart';
 import 'package:notehub/core/functions/convert_date.dart';
 import 'package:notehub/core/widgets/heatmap_callendar.dart';
 import 'package:notehub/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:notehub/features/auth/presentation/pages/login_page.dart';
 import 'package:notehub/features/profile/presentation/pages/edit_page.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -22,7 +23,8 @@ class ProfilePage extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  // header hijau dengan gambar dekorasi + tombol back
+
+                  // ---- header hijau dengan gambar dekorasi + tombol back
                   Stack(
                     children: [
                       // background header
@@ -50,7 +52,7 @@ class ProfilePage extends StatelessWidget {
                     ],
                   ),
 
-                  // container putih + avatar overlap
+                  // -------- container putih + avatar overlap
                   Stack(
                     clipBehavior: Clip.none,
                     children: [
@@ -160,8 +162,22 @@ class ProfilePage extends StatelessWidget {
                                       vertical: 12,
                                     ),
                                   ),
-                                  onPressed: () {
-                                    print("Logout ditekan");
+                                  onPressed: () async {
+                                    try {
+                                      await authController.logout();
+                                      Get.offAll(LoginPage());
+                                      Get.snackbar(
+                                        "Success",
+                                        "Berhasil logout",
+                                      );
+                                    } catch (e) {
+                                      Get.snackbar(
+                                        "Error",
+                                        "Gagal logout: $e",
+                                        backgroundColor: AppColors.errorColor,
+                                        colorText: AppColors.surfaceColor,
+                                      );
+                                    }
                                   },
                                   icon: const Icon(
                                     Icons.logout,
@@ -208,7 +224,7 @@ class ProfilePage extends StatelessWidget {
   }
 }
 
-// InfoBox Widget: menampilkan judul dan value (seperti Sejak, Notes, Disimpan)
+// InfoBox Widget: menampilkan judul dan value (Sejak, Notes, Disimpan)
 class _InfoBox extends StatelessWidget {
   final String title;
   final String value;

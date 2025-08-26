@@ -2,7 +2,7 @@ class UserModel {
   final int id;
   final String nama;
   final String email;
-  final String foto;
+  final String? foto;
   final DateTime createdAt;
 
   UserModel({

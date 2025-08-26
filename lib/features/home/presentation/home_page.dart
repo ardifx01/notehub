@@ -33,8 +33,8 @@ class HomePage extends StatelessWidget {
                             radius: 20,
                             backgroundColor: AppColors.buttonColor2,
                             backgroundImage: authController.user.value?.foto !=
-                                    ''
-                                ? NetworkImage(authController.user.value!.foto)
+                                        ''
+                                ? NetworkImage(authController.user.value!.foto!)
                                 : AssetImage(
                                     'assets/images/default_avatar.png'),
                           ),
@@ -71,7 +71,7 @@ class HomePage extends StatelessWidget {
                   children: [
                     const SizedBox(height: 20),
                     const Text(
-                      "Ide hebat apa yang ingin kamu\ntulis hari ini?",
+                      "Ide hebat apa yang ingin kamu tulis hari ini?",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 20,

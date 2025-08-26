@@ -4,9 +4,17 @@ import pymysql
 import bcrypt
 from datetime import datetime
 from config import DB_HOST, DB_USER, DB_PASSWORD, DB_NAME
+import cloudinary.uploader
+import cloudinary
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
+
+cloudinary.config(
+  cloud_name="dgtvpcslj",      
+  api_key="298163539819314",    
+  api_secret="DSrPDe6QTeHTobNVx9ufQ8ydgtE" 
+)
 
 def get_db_connection():
     return pymysql.connect(
@@ -79,33 +87,49 @@ def login():
 
 @app.route("/user/<int:user_id>", methods=["PUT"])
 def edit_user(user_id):
-    data = request.json
-    nama = data["nama"]
-    email = data["email"]
-    foto = data.get("foto", "")
-    password = data.get("password") 
+    nama = request.form.get("nama")
+    email = request.form.get("email")
+    password = request.form.get("password")
+    foto_url = None  
+
+    # cek kalau ada file dikirim
+    if "foto" in request.files:
+        foto = request.files["foto"]
+        if foto:
+            upload_result = cloudinary.uploader.upload(foto)
+            foto_url = upload_result.get("secure_url")
 
     with get_db_connection() as db:
         with db.cursor() as cursor:
-            if password:  # kalau ada password baru
+            if password:  
                 hashed_pw = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
                 cursor.execute(
-                    "UPDATE users SET nama=%s, email=%s, foto=%s, password=%s WHERE id=%s",
-                    (nama, email, foto, hashed_pw, user_id)
+                    """
+                    UPDATE users 
+                    SET nama=%s, email=%s, foto=COALESCE(%s, foto), password=%s 
+                    WHERE id=%s
+                    """,
+                    (nama, email, foto_url, hashed_pw, user_id)
                 )
-            else:  # kalau tidak ada password → update biasa
+            else:  
                 cursor.execute(
-                    "UPDATE users SET nama=%s, email=%s, foto=%s WHERE id=%s",
-                    (nama, email, foto, user_id)
+                    """
+                    UPDATE users 
+                    SET nama=%s, email=%s, foto=COALESCE(%s, foto) 
+                    WHERE id=%s
+                    """,
+                    (nama, email, foto_url, user_id)
                 )
             db.commit()
 
     return jsonify({"message": "User updated"})
 
 
+
 # ======================
 # 📝 NOTE ENDPOINTS
 # ======================
+    
 
 @app.route("/note", methods=["POST"])
 def upload_note():
