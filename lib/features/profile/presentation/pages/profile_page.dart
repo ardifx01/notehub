@@ -4,6 +4,7 @@ import 'package:notehub/core/const/colors.dart';
 import 'package:notehub/core/functions/convert_date.dart';
 import 'package:notehub/core/widgets/heatmap_callendar.dart';
 import 'package:notehub/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:notehub/features/profile/presentation/pages/edit_page.dart';
 
 class ProfilePage extends StatelessWidget {
   ProfilePage({super.key});
@@ -81,7 +82,9 @@ class ProfilePage extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                Get.to(EditPage());
+                              },
                               icon: const Icon(
                                 Icons.edit,
                                 color: AppColors.surfaceColor,
