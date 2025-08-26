@@ -51,107 +51,109 @@ class EditPage extends StatelessWidget {
                 color: AppColors.surfaceColor,
                 borderRadius: BorderRadius.circular(18),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircleAvatar(
-                        radius: 55,
-                        backgroundColor: AppColors.disabledTextColor,
-                        child: Icon(
-                          Icons.person,
-                          size: 60,
-                          color: Colors.black,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: 55,
+                          backgroundColor: AppColors.disabledTextColor,
+                          child: Icon(
+                            Icons.person,
+                            size: 60,
+                            color: Colors.black,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 30),
-                  Text('Ubah Username',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 8),
-                  customTextfield(
-                      hintText: authController.user.value?.nama ?? 'Nama Kamu',
-                      controller: controller.usernameController),
-                  SizedBox(height: 15),
-                  Text('Ubah Email',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 8),
-                  customTextfield(
-                      hintText:
-                          authController.user.value?.email ?? 'Email Kamu',
-                      controller: controller.emailController),
-                  SizedBox(height: 15),
-                  Text('Ubah Password',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 8),
-                  Obx(
-                    () => customTextfield(
-                        suffixIcon: IconButton(
-                          icon: controller.obscurePassword.value
-                              ? Icon(Icons.visibility)
-                              : Icon(Icons.visibility_off),
-                          onPressed: () {
-                            controller.togglePasswordVisibility();
+                      ],
+                    ),
+                    SizedBox(height: 30),
+                    Text('Ubah Username',
+                        style:
+                            TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    SizedBox(height: 8),
+                    customTextfield(
+                        hintText: authController.user.value?.nama ?? 'Nama Kamu',
+                        controller: controller.usernameController),
+                    SizedBox(height: 15),
+                    Text('Ubah Email',
+                        style:
+                            TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    SizedBox(height: 8),
+                    customTextfield(
+                        hintText:
+                            authController.user.value?.email ?? 'Email Kamu',
+                        controller: controller.emailController),
+                    SizedBox(height: 15),
+                    Text('Ubah Password',
+                        style:
+                            TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    SizedBox(height: 8),
+                    Obx(
+                      () => customTextfield(
+                          suffixIcon: IconButton(
+                            icon: controller.obscurePassword.value
+                                ? Icon(Icons.visibility)
+                                : Icon(Icons.visibility_off),
+                            onPressed: () {
+                              controller.togglePasswordVisibility();
+                            },
+                          ),
+                          obscureText: controller.obscurePassword.value,
+                          hintText: '',
+                          controller: controller.passwordController),
+                    ),
+                    SizedBox(height: 30),
+                    customButton(
+                      text: "Konfirmasi",
+                      onPressed: () {
+                        dialogConfirmation(
+                          imagePath: 'assets/images/deco_quest.png',
+                          title: "Konfirmasi Perubahan",
+                          middleText:
+                              "Apakah kamu yakin ingin menyimpan perubahan ini?",
+                          onConfirm: () async {
+                
+                            // Melakukan update profil
+                            try {
+                              await authController.editUser(
+                                controller.usernameController.text.trim().isEmpty
+                                    ? authController.user.value?.nama ??
+                                        'Nama Error'
+                                    : controller.usernameController.text.trim(),
+                                controller.emailController.text.trim().isEmpty
+                                    ? authController.user.value?.email ??
+                                        'Email Error'
+                                    : controller.emailController.text.trim(),
+                                '',
+                                controller.passwordController.text.trim().isEmpty
+                                    ? null
+                                    : controller.passwordController.text.trim(),
+                              );
+                              Get.back(); // tutup dialog
+                              Get.back(); // kembali ke halaman profil
+                              Get.snackbar(
+                                'Sukses',
+                                'Profil berhasil diperbarui',
+                              );
+                            } catch (e) {
+                              Get.back(); // tutup dialog
+                              Get.snackbar(
+                                'Error',
+                                'Gagal memperbarui profil: $e',
+                                backgroundColor: AppColors.errorColor,
+                                colorText: AppColors.surfaceColor,
+                              );
+                            }
                           },
-                        ),
-                        obscureText: controller.obscurePassword.value,
-                        hintText: '',
-                        controller: controller.passwordController),
-                  ),
-                  Expanded(child: SizedBox()),
-                  customButton(
-                    text: "Konfirmasi",
-                    onPressed: () {
-                      dialogConfirmation(
-                        imagePath: 'assets/images/deco_quest.png',
-                        title: "Konfirmasi Perubahan",
-                        middleText:
-                            "Apakah kamu yakin ingin menyimpan perubahan ini?",
-                        onConfirm: () async {
-
-                          // Melakukan update profil
-                          try {
-                            await authController.editUser(
-                              controller.usernameController.text.trim().isEmpty
-                                  ? authController.user.value?.nama ??
-                                      'Nama Error'
-                                  : controller.usernameController.text.trim(),
-                              controller.emailController.text.trim().isEmpty
-                                  ? authController.user.value?.email ??
-                                      'Email Error'
-                                  : controller.emailController.text.trim(),
-                              '',
-                              controller.passwordController.text.trim().isEmpty
-                                  ? null
-                                  : controller.passwordController.text.trim(),
-                            );
-                            Get.back(); // tutup dialog
-                            Get.back(); // kembali ke halaman profil
-                            Get.snackbar(
-                              'Sukses',
-                              'Profil berhasil diperbarui',
-                            );
-                          } catch (e) {
-                            Get.back(); // tutup dialog
-                            Get.snackbar(
-                              'Error',
-                              'Gagal memperbarui profil: $e',
-                              backgroundColor: AppColors.errorColor,
-                              colorText: AppColors.surfaceColor,
-                            );
-                          }
-                        },
-                      );
-                    },
-                  )
-                ],
+                        );
+                      },
+                    )
+                  ],
+                ),
               ),
             ),
           )
