@@ -12,6 +12,12 @@ class EditController extends GetxController {
     obscurePassword.value = !obscurePassword.value;
   }
 
+  void clearControllers() {
+    usernameController.clear();
+    emailController.clear();
+    passwordController.clear();
+  }
+
   @override
   void onClose() {
     usernameController.dispose();

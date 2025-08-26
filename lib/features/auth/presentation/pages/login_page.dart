@@ -115,6 +115,7 @@ class LoginPage extends StatelessWidget {
                                     ? AppColors.disabledTextColor
                                     : AppColors.buttonColor3,
                                 onPressed: () async {
+                                  // Validasi input
                                   if (controller.emailController.text.isEmpty ||
                                       controller
                                           .passwordController.text.isEmpty) {
@@ -127,10 +128,15 @@ class LoginPage extends StatelessWidget {
                                     return;
                                   } else {
                                     try {
+                                      // Memulai proses login
                                       await authController.login(
                                         controller.emailController.text,
                                         controller.passwordController.text,
                                       );
+                                      // Membersihkan controller
+                                      controller.emailController.clear();
+                                      controller.passwordController.clear();
+                                      // Navigasi ke halaman home
                                       Get.off(() => HomePage());
                                     } catch (e) {
                                       Get.snackbar(

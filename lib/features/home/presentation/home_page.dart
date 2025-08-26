@@ -31,10 +31,10 @@ class HomePage extends StatelessWidget {
                         child: Obx(
                           () => CircleAvatar(
                             radius: 20,
-                            backgroundColor: Colors.white,
+                            backgroundColor: AppColors.buttonColor2,
                             backgroundImage: authController.user.value?.foto !=
-                                    ''
-                                ? NetworkImage(authController.user.value!.foto)
+                                        ''
+                                ? NetworkImage(authController.user.value!.foto!)
                                 : AssetImage(
                                     'assets/images/default_avatar.png'),
                           ),
@@ -71,7 +71,7 @@ class HomePage extends StatelessWidget {
                   children: [
                     const SizedBox(height: 20),
                     const Text(
-                      "Ide hebat apa yang ingin kamu\ntulis hari ini?",
+                      "Ide hebat apa yang ingin kamu tulis hari ini?",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 20,
@@ -105,13 +105,12 @@ class HomePage extends StatelessWidget {
 
                     // Tiga kotak menu
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
-                          flex: 2,
+                          flex: 1,
                           child: GestureDetector(
                             onTap: () {
-                              // aksi ketika "Jelajahi Notes" ditekan
                               print("Jelajahi Notes ditekan");
                             },
                             child: Container(
@@ -128,6 +127,7 @@ class HomePage extends StatelessWidget {
                                       'assets/images/fyp.png',
                                       height: 60,
                                     ),
+                                    const SizedBox(height: 8),
                                     Text(
                                       "Jelajahi Notes",
                                       style: TextStyle(
@@ -144,12 +144,11 @@ class HomePage extends StatelessWidget {
                         ),
                         const SizedBox(width: 10),
                         Expanded(
-                          flex: 2,
+                          flex: 1,
                           child: Column(
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  // aksi ketika "Notes Disimpan" ditekan
                                   print("Notes Disimpan ditekan");
                                 },
                                 child: Container(
@@ -158,27 +157,28 @@ class HomePage extends StatelessWidget {
                                     color: AppColors.buttonColor2,
                                     borderRadius: BorderRadius.circular(18),
                                   ),
-                                  child: Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        children: [
-                                          Image.asset(
-                                            'assets/images/notes.png',
-                                            height: 50,
-                                          ),
-                                          Text(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        Image.asset(
+                                          'assets/images/notes.png',
+                                          height: 50,
+                                        ),
+                                        const SizedBox(width: 6),
+                                        Flexible(
+                                          child: Text(
                                             "Daftar Notes\nKamu",
                                             overflow: TextOverflow.ellipsis,
+                                            maxLines: 3,
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -186,7 +186,6 @@ class HomePage extends StatelessWidget {
                               const SizedBox(height: 10),
                               GestureDetector(
                                 onTap: () {
-                                  // aksi ketika "Notes Disimpan" ditekan
                                   print("Notes Disimpan ditekan");
                                 },
                                 child: Container(
@@ -195,28 +194,28 @@ class HomePage extends StatelessWidget {
                                     color: AppColors.buttonColor3,
                                     borderRadius: BorderRadius.circular(18),
                                   ),
-                                  child: Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        children: [
-                                          Image.asset(
-                                            'assets/images/bookmark.png',
-                                            height: 50,
-                                          ),
-                                          Text(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        Image.asset(
+                                          'assets/images/bookmark.png',
+                                          height: 50,
+                                        ),
+                                        const SizedBox(width: 6),
+                                        Flexible(
+                                          child: Text(
                                             "Notes\nDisimpan",
-                                            
                                             overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
