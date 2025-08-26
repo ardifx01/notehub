@@ -19,13 +19,16 @@ class IntroPage extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(top: 100, left: 25, right: 25),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    "Selamat Datang!",
-                    style: TextStyle(
-                        fontSize: 36,
-                        color: AppColors.textFieldColor,
-                        fontWeight: FontWeight.bold),
+                  Center(
+                    child: Text(
+                      "Selamat Datang!",
+                      style: TextStyle(
+                          fontSize: 36,
+                          color: AppColors.textFieldColor,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
                   SizedBox(height: 20),
                   Text(

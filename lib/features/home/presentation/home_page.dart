@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:notehub/core/const/colors.dart';
 import 'package:notehub/core/widgets/heatmap_callendar.dart';
 import 'package:notehub/features/auth/presentation/controllers/auth_controller.dart';
-import 'package:notehub/features/profile/presentation/profile_page.dart';
+import 'package:notehub/features/profile/presentation/pages/profile_page.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
@@ -207,6 +207,7 @@ class HomePage extends StatelessWidget {
                                           ),
                                           Text(
                                             "Notes\nDisimpan",
+                                            
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                               color: Colors.white,

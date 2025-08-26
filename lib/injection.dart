@@ -8,6 +8,7 @@ import 'package:notehub/features/auth/domain/auth_repository.dart';
 import 'package:notehub/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:notehub/features/auth/presentation/controllers/login_controller.dart';
 import 'package:notehub/features/auth/presentation/controllers/signup_controller.dart';
+import 'package:notehub/features/profile/presentation/controllers/edit_controller.dart';
 
 Future<void> initDependencies() async {
   // ✅ CORE
@@ -27,6 +28,7 @@ Future<void> initDependencies() async {
   // Controller
   Get.put(LoginController(), permanent: true);
   Get.put(SignUpController(), permanent: true);
+  Get.put(EditController(), permanent: true);
   Get.put(AuthController(Get.find<AuthRepository>()), permanent: true);
 
   // ✅ NOTE
