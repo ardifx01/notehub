@@ -44,7 +44,7 @@ class EditPage extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsetsGeometry.only(
+            padding: EdgeInsets.only(
                 left: 30, right: 30, top: 75, bottom: 50),
             child: Container(
               padding: EdgeInsets.all(25),
