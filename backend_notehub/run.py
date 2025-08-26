@@ -17,14 +17,25 @@ def get_db_connection():
         cursorclass=pymysql.cursors.DictCursor
     )
 
+def validate_fields(data, required_fields):
+    """Helper function untuk cek field wajib"""
+    missing = [field for field in required_fields if field not in data or data[field] in [None, ""]]
+    if missing:
+        return False, f"Field(s) missing or empty: {', '.join(missing)}"
+    return True, None
+
+
 # ======================
 # 🔑 AUTH ENDPOINTS
 # ======================
 
-# 1. Sign Up
 @app.route("/signup", methods=["POST"])
 def signup():
     data = request.json
+    valid, error = validate_fields(data, ["nama", "email", "password"])
+    if not valid:
+        return jsonify({"error": error}), 400
+
     nama = data["nama"]
     email = data["email"]
     password = bcrypt.hashpw(data["password"].encode("utf-8"), bcrypt.gensalt())
@@ -39,18 +50,19 @@ def signup():
             db.commit()
             user_id = cursor.lastrowid
 
-            # langsung ambil user yg baru dibuat
             cursor.execute("SELECT * FROM users WHERE id=%s", (user_id,))
             new_user = cursor.fetchone()
 
     return jsonify({"message": "User created", "user": new_user})
 
 
-
-# 2. Login
 @app.route("/login", methods=["POST"])
 def login():
     data = request.json
+    valid, error = validate_fields(data, ["email", "password"])
+    if not valid:
+        return jsonify({"error": error}), 400
+
     email = data["email"]
     password = data["password"].encode("utf-8")
 
@@ -62,15 +74,18 @@ def login():
     if user and bcrypt.checkpw(password, user["password"].encode("utf-8")):
         return jsonify({"message": "Login success", "user": user})
     else:
-        return jsonify({"message": "Invalid credentials"}), 401
+        return jsonify({"error": "Invalid credentials"}), 401
 
 
-# 3. Edit data user
 @app.route("/user/<int:user_id>", methods=["PUT"])
 def edit_user(user_id):
     data = request.json
-    nama = data.get("nama")
-    email = data.get("email")
+    valid, error = validate_fields(data, ["nama", "email"])
+    if not valid:
+        return jsonify({"error": error}), 400
+
+    nama = data["nama"]
+    email = data["email"]
     foto = data.get("foto", "")
 
     with get_db_connection() as db:
@@ -88,10 +103,13 @@ def edit_user(user_id):
 # 📝 NOTE ENDPOINTS
 # ======================
 
-# 1. Upload note
 @app.route("/note", methods=["POST"])
 def upload_note():
     data = request.json
+    valid, error = validate_fields(data, ["user_id", "judul", "isi"])
+    if not valid:
+        return jsonify({"error": error}), 400
+
     user_id = data["user_id"]
     judul = data["judul"]
     isi = data["isi"]
@@ -110,7 +128,6 @@ def upload_note():
     return jsonify({"message": "Note uploaded", "id": note_id})
 
 
-# 2. Ambil semua note user tertentu
 @app.route("/notes/<int:user_id>", methods=["GET"])
 def get_user_notes(user_id):
     with get_db_connection() as db:
@@ -120,7 +137,6 @@ def get_user_notes(user_id):
     return jsonify(notes)
 
 
-# 3. Hapus note
 @app.route("/note/<int:note_id>", methods=["DELETE"])
 def delete_note(note_id):
     with get_db_connection() as db:
@@ -130,7 +146,6 @@ def delete_note(note_id):
     return jsonify({"message": "Note deleted"})
 
 
-# 4. Ambil semua note
 @app.route("/notes", methods=["GET"])
 def get_all_notes():
     with get_db_connection() as db:
@@ -140,10 +155,13 @@ def get_all_notes():
     return jsonify(notes)
 
 
-# 5. Simpan note orang lain
 @app.route("/save_note", methods=["POST"])
 def save_note():
     data = request.json
+    valid, error = validate_fields(data, ["user_id", "note_id"])
+    if not valid:
+        return jsonify({"error": error}), 400
+
     user_id = data["user_id"]
     note_id = data["note_id"]
 
@@ -159,7 +177,6 @@ def save_note():
     return jsonify({"message": "Note saved", "id": save_id})
 
 
-# 6. Ambil semua note yang disimpan user
 @app.route("/saved_notes/<int:user_id>", methods=["GET"])
 def get_saved_notes(user_id):
     with get_db_connection() as db:
@@ -173,9 +190,5 @@ def get_saved_notes(user_id):
     return jsonify(notes)
 
 
-# ======================
-# RUN APP
-# ======================
 if __name__ == "__main__":
-    # Binding ke semua IP (biar bisa diakses dari jaringan lokal)
     app.run(host="0.0.0.0", port=5000, debug=True)
