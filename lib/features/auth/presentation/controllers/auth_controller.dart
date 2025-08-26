@@ -74,7 +74,7 @@ class AuthController extends GetxController {
   }
 
   /// Edit user profile
-  Future<void> editUser(String nama, String email, String foto) async {
+  Future<void> editUser(String nama, String email, String foto, String? password) async {
     if (user.value == null) {
       debugPrint("⚠️ editUser dipanggil tapi tidak ada user login");
       return;
@@ -83,7 +83,7 @@ class AuthController extends GetxController {
     isLoading.value = true;
     debugPrint("✏️ Mengupdate user ${user.value!.id}");
     try {
-      await authRepository.editUser(user.value!.id, nama, email, foto);
+      await authRepository.editUser(user.value!.id, nama, email, foto, password);
 
       // update di state
       user.value = user.value!.copyWith(

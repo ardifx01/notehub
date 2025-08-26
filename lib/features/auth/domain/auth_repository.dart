@@ -14,5 +14,5 @@ abstract class AuthRepository {
   Future<UserModel?> getCurrentUser();
 
   /// Update user
-  Future<void> editUser(int userId, String nama, String email, String foto);
+  Future<void> editUser(int userId, String nama, String email, String foto, String? password);
 }

@@ -21,7 +21,8 @@ class AuthRemoteDataSource {
   }
 
   // Signup: backend balikin {"message": "User created", "id": 1}
-  Future<UserModel> signUp(String username, String email, String password) async {
+  Future<UserModel> signUp(
+      String username, String email, String password) async {
     final response = await apiClient.post('/signup', {
       "nama": username,
       "email": email,
@@ -36,13 +37,26 @@ class AuthRemoteDataSource {
   }
 
   // Edit user
+  // Edit user
   Future<void> editUser(
-      int userId, String nama, String email, String foto) async {
-    final response = await apiClient.put('/user/$userId', {
+    int userId,
+    String nama,
+    String email,
+    String foto, {
+    String? password, // opsional
+  }) async {
+    final body = {
       "nama": nama,
       "email": email,
       "foto": foto,
-    });
+    };
+
+    // kalau user isi password baru → ikut dikirim
+    if (password != null && password.isNotEmpty) {
+      body["password"] = password;
+    }
+
+    final response = await apiClient.put('/user/$userId', body);
 
     if (response['message'] != "User updated") {
       throw Exception("Gagal update user");

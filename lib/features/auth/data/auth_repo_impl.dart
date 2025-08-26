@@ -37,8 +37,8 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> editUser(
-      int userId, String nama, String email, String foto) async {
-    await remoteDataSource.editUser(userId, nama, email, foto);
+      int userId, String nama, String email, String foto, String? password) async {
+    await remoteDataSource.editUser(userId, nama, email, foto, password: password);
 
     // update data lokal juga (biar konsisten)
     final updatedUser = UserModel(

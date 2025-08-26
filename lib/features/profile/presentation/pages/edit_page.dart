@@ -44,8 +44,7 @@ class EditPage extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(
-                left: 30, right: 30, top: 75, bottom: 50),
+            padding: EdgeInsets.only(left: 30, right: 30, top: 75, bottom: 50),
             child: Container(
               padding: EdgeInsets.all(25),
               decoration: BoxDecoration(
@@ -116,10 +115,38 @@ class EditPage extends StatelessWidget {
                         middleText:
                             "Apakah kamu yakin ingin menyimpan perubahan ini?",
                         onConfirm: () async {
-                          // await authController.editUser(
-                          //   controller.usernameController.text.trim(),
-                          //   controller.usernameController.text.trim()
-                          // );
+
+                          // Melakukan update profil
+                          try {
+                            await authController.editUser(
+                              controller.usernameController.text.trim().isEmpty
+                                  ? authController.user.value?.nama ??
+                                      'Nama Error'
+                                  : controller.usernameController.text.trim(),
+                              controller.emailController.text.trim().isEmpty
+                                  ? authController.user.value?.email ??
+                                      'Email Error'
+                                  : controller.emailController.text.trim(),
+                              '',
+                              controller.passwordController.text.trim().isEmpty
+                                  ? null
+                                  : controller.passwordController.text.trim(),
+                            );
+                            Get.back(); // tutup dialog
+                            Get.back(); // kembali ke halaman profil
+                            Get.snackbar(
+                              'Sukses',
+                              'Profil berhasil diperbarui',
+                            );
+                          } catch (e) {
+                            Get.back(); // tutup dialog
+                            Get.snackbar(
+                              'Error',
+                              'Gagal memperbarui profil: $e',
+                              backgroundColor: AppColors.errorColor,
+                              colorText: AppColors.surfaceColor,
+                            );
+                          }
                         },
                       );
                     },
