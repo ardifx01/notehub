@@ -16,16 +16,16 @@ class UserModel {
   factory UserModel.fromJson(Map<String, dynamic> json) {
     DateTime createdAt;
     try {
-      createdAt = DateTime.parse(json['tanggal_pembuatan_akun']);
+      createdAt = DateTime.parse(json['tanggal_pembuatan_akun'].toString());
     } catch (_) {
       createdAt = DateTime.now();
     }
 
     return UserModel(
-      id: json['id'],
-      nama: json['nama'],
-      email: json['email'],
-      foto: json['foto'] ?? '',
+      id: int.parse(json['id'].toString()),
+      nama: json['nama'].toString(),
+      email: json['email'].toString(),
+      foto: json['foto']?.toString() ?? '',
       createdAt: createdAt,
     );
   }

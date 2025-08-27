@@ -6,6 +6,8 @@ from datetime import datetime
 from config import DB_HOST, DB_USER, DB_PASSWORD, DB_NAME
 import cloudinary.uploader
 import cloudinary
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -85,45 +87,64 @@ def login():
         return jsonify({"error": "Invalid credentials"}), 401
 
 
+# endpoint update user
 @app.route("/user/<int:user_id>", methods=["PUT"])
 def edit_user(user_id):
-    nama = request.form.get("nama")
-    email = request.form.get("email")
-    password = request.form.get("password")
-    foto_url = None  
+    data = request.get_json()
+    if not data:
+        return jsonify({"message": "Request body kosong"}), 400
 
-    # cek kalau ada file dikirim
-    if "foto" in request.files:
-        foto = request.files["foto"]
-        if foto:
-            upload_result = cloudinary.uploader.upload(foto)
-            foto_url = upload_result.get("secure_url")
+    nama = data.get("nama")
+    email = data.get("email")
+    password = data.get("password")
+    foto_url = data.get("foto")
 
     with get_db_connection() as db:
         with db.cursor() as cursor:
-            if password:  
-                hashed_pw = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
-                cursor.execute(
-                    """
-                    UPDATE users 
-                    SET nama=%s, email=%s, foto=COALESCE(%s, foto), password=%s 
-                    WHERE id=%s
-                    """,
-                    (nama, email, foto_url, hashed_pw, user_id)
-                )
-            else:  
-                cursor.execute(
-                    """
-                    UPDATE users 
-                    SET nama=%s, email=%s, foto=COALESCE(%s, foto) 
-                    WHERE id=%s
-                    """,
-                    (nama, email, foto_url, user_id)
-                )
-            db.commit()
+            cursor.execute("SELECT * FROM users WHERE id=%s", (user_id,))
+            user_lama = cursor.fetchone()
 
-    return jsonify({"message": "User updated"})
+    if not user_lama:
+        return jsonify({"message": "User tidak ditemukan"}), 404
 
+    nama = nama or user_lama[1]  # asumsi kolom kedua = nama
+    email = email or user_lama[2]
+    foto_url = foto_url or user_lama[3]
+
+    hashed_pw = (
+        bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+        if password else None
+    )
+
+    # update user
+    query = "UPDATE users SET nama=%s, email=%s, foto=%s"
+    params = [nama, email, foto_url]
+
+    if hashed_pw:
+        query += ", password=%s"
+        params.append(hashed_pw)
+
+    query += " WHERE id=%s"
+    params.append(user_id)
+
+    try:
+        with get_db_connection() as db:
+            with db.cursor() as cursor:
+                cursor.execute(query, params)
+                db.commit()
+
+                # ambil data terbaru
+                cursor.execute("SELECT id, nama, email, foto, tanggal_pembuatan_akun FROM users WHERE id=%s", (user_id,))
+                row = cursor.fetchone()
+                columns = [col[0] for col in cursor.description]
+                updated_user = dict(zip(columns, row))
+
+        return jsonify({
+            "message": "User updated",
+            "user": updated_user
+        })
+    except Exception as e:
+        return jsonify({"message": f"Gagal update user: {e}"}), 500
 
 
 # ======================

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:notehub/core/network/api_client.dart';
@@ -42,39 +43,63 @@ class AuthRemoteDataSource {
   // ==============================
   // ✏️ EDIT USER
   // ==============================
-  Future<void> editUser(int userId, String nama, String email, String? foto,
-      String? password) async {
-    final body = {"nama": nama, "email": email};
-    if (foto != null && foto.isNotEmpty) body["foto"] = foto;
-    if (password != null && password.isNotEmpty) body["password"] = password;
+  // ==============================
+// ✏️ EDIT USER
+// ==============================
+  Future<UserModel> editUser(
+    int userId,
+    String nama,
+    String email,
+    String? password,
+    String? fotoPath,
+  ) async {
+    final fields = {
+      "nama": nama,
+      "email": email,
+    };
 
-    final response = await apiClient.put('/user/$userId', body);
-    if (response['message'] != "User updated")
+    if (password != null && password.isNotEmpty) {
+      fields["password"] = password;
+    }
+
+    if (fotoPath != null && fotoPath.isNotEmpty) {
+      final file = File(fotoPath);
+      final fotoUrl = await uploadFotoKeCloudinary(file);
+      fields["foto"] = fotoUrl;
+    }
+
+    final response = await apiClient.put("/user/$userId", fields);
+
+    if (response['message'] != "User updated") {
       throw Exception("Gagal update user");
+    }
+
+    // 🔥 parsing data user baru dari backend
+    return UserModel.fromJson(response['user']);
   }
 
   // ==============================
   // 📤 UPLOAD FOTO
   // ==============================
-  Future<String> uploadFotoKeCloudinary(String pathFile) async {
-    const cloudName = "dgtvpcslj"; // ganti sesuai cloudinary
-    const uploadPreset = "profile_pictures"; // ganti sesuai preset
+  Future<String> uploadFotoKeCloudinary(File file) async {
+    const cloudName = "dgtvpcslj"; // ganti sesuai akunmu
+    const uploadPreset = "profile_pictures"; // ganti sesuai setting cloudinary
 
     final url =
         Uri.parse("https://api.cloudinary.com/v1_1/$cloudName/image/upload");
 
-    final request = http.MultipartRequest("POST", url)
-      ..fields['upload_preset'] = uploadPreset
-      ..files.add(await http.MultipartFile.fromPath('file', pathFile));
+    var request = http.MultipartRequest("POST", url);
+    request.fields["upload_preset"] = uploadPreset;
+    request.files.add(await http.MultipartFile.fromPath("file", file.path));
 
     final response = await request.send();
-    final body = await response.stream.bytesToString();
+    final resBody = await response.stream.bytesToString();
 
     if (response.statusCode == 200) {
-      final data = json.decode(body);
-      return data['secure_url']; // URL untuk DB
+      final data = jsonDecode(resBody);
+      return data["secure_url"]; // ini url cloudinary
     } else {
-      throw Exception("Gagal upload foto: $body");
+      throw Exception("Gagal upload foto ke Cloudinary: $resBody");
     }
   }
 }
