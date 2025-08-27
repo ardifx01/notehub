@@ -69,11 +69,12 @@ class AuthRemoteDataSource {
 
     if (fotoPath != null && fotoPath.isNotEmpty) {
       final file = File(fotoPath);
-      final fotoUrl = await uploadFotoKeCloudinary(file);
+      final fotoUrl = await uploadFotoKeCloudinary(file); // upload ke Cloudinary dan dapatkan URL
       fields["foto"] = fotoUrl;
     }
-
-    final response = await apiClient.put("/user/$userId", fields);
+    
+    // Simpan perubahan nama, email, password ke database backend termasuk url foto dari Cloudinary
+    final response = await apiClient.put("/user/$userId", fields); 
 
     if (response['message'] != "User updated") {
       throw Exception("Gagal update user");
