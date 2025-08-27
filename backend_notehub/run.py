@@ -99,6 +99,7 @@ def edit_user(user_id):
     password = data.get("password")
     foto_url = data.get("foto")
 
+    # cek user lama
     with get_db_connection() as db:
         with db.cursor() as cursor:
             cursor.execute("SELECT * FROM users WHERE id=%s", (user_id,))
@@ -107,16 +108,17 @@ def edit_user(user_id):
     if not user_lama:
         return jsonify({"message": "User tidak ditemukan"}), 404
 
-    nama = nama or user_lama[1]  # asumsi kolom kedua = nama
-    email = email or user_lama[2]
-    foto_url = foto_url or user_lama[3]
+    # fallback ke data lama kalau field kosong
+    nama = nama or user_lama["nama"]
+    email = email or user_lama["email"]
+    foto_url = foto_url or user_lama["foto"]
 
     hashed_pw = (
         bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
         if password else None
     )
 
-    # update user
+    # build query update
     query = "UPDATE users SET nama=%s, email=%s, foto=%s"
     params = [nama, email, foto_url]
 
@@ -134,10 +136,11 @@ def edit_user(user_id):
                 db.commit()
 
                 # ambil data terbaru
-                cursor.execute("SELECT id, nama, email, foto, tanggal_pembuatan_akun FROM users WHERE id=%s", (user_id,))
-                row = cursor.fetchone()
-                columns = [col[0] for col in cursor.description]
-                updated_user = dict(zip(columns, row))
+                cursor.execute(
+                    "SELECT id, nama, email, foto, tanggal_pembuatan_akun FROM users WHERE id=%s",
+                    (user_id,),
+                )
+                updated_user = cursor.fetchone()
 
         return jsonify({
             "message": "User updated",
