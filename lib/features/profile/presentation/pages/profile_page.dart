@@ -23,7 +23,6 @@ class ProfilePage extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-
                   // ---- header hijau dengan gambar dekorasi + tombol back
                   Stack(
                     children: [
@@ -198,18 +197,18 @@ class ProfilePage extends StatelessWidget {
                       ),
 
                       // avatar profile overlap
-                      const Positioned(
+                      Positioned(
                         top: 0,
                         left: 0,
                         right: 0,
                         child: CircleAvatar(
                           radius: 50,
-                          backgroundColor: AppColors.disabledTextColor,
-                          child: Icon(
-                            Icons.person,
-                            size: 60,
-                            color: Colors.black,
-                          ),
+                          backgroundColor: AppColors.buttonColor2,
+                          backgroundImage: authController.user.value?.foto !=
+                                  null
+                              ? NetworkImage(authController.user.value!.foto!)
+                              : AssetImage("assets/images/default_avatar.png")
+                                  as ImageProvider,
                         ),
                       ),
                     ],
