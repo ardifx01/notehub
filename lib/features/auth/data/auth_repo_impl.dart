@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:notehub/features/auth/data/auth_localdatasource.dart';
 import 'package:notehub/features/auth/data/auth_remotedatasource.dart';
 import 'package:notehub/features/auth/domain/auth_repository.dart';
@@ -36,22 +38,28 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<void> editUser(int userId, String nama, String email, String? foto,
-      String? password) async {
-    await remoteDataSource.editUser(userId, nama, email, foto, password);
-
-    final updatedUser = UserModel(
-      id: userId,
-      nama: nama,
-      email: email,
-      foto: foto,
-      createdAt: (await getCurrentUser())?.createdAt ?? DateTime.now(),
+  Future<UserModel> editUser(
+    int userId,
+    String nama,
+    String email,
+    String? foto,
+    String? password,
+  ) async {
+    final updatedUser = await remoteDataSource.editUser(
+      userId,
+      nama,
+      email,
+      password,
+      foto,
     );
+
+    // simpan juga ke lokal
     await localDataSource.saveUser(updatedUser);
+    return updatedUser;
   }
 
   @override
-  Future<String> uploadFotoKeCloudinary(String pathFile) async {
+  Future<String> uploadFotoKeCloudinary(File pathFile) async {
     return await remoteDataSource.uploadFotoKeCloudinary(pathFile);
   }
 }

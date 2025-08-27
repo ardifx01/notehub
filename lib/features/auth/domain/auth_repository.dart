@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:notehub/features/auth/models/user_model.dart';
 
 abstract class AuthRepository {
@@ -14,9 +16,9 @@ abstract class AuthRepository {
   Future<UserModel?> getCurrentUser();
 
   /// Update user
-  Future<void> editUser(
+  Future<UserModel> editUser(
       int userId, String nama, String email, String? foto, String? password);
-      
+
   /// Upload foto ke Cloudinary, balikin URL foto
-  Future<String> uploadFotoKeCloudinary(String pathFile);
+  Future<String> uploadFotoKeCloudinary(File pathFile);
 }
