@@ -144,7 +144,7 @@ class EditPage extends StatelessWidget {
                           onConfirm: () async {
                             try {
                               // Melakukan update profil
-                              await authController.editUser(
+                              await authController.editUsercon(
                                 controller.usernameController.text
                                         .trim()
                                         .isEmpty

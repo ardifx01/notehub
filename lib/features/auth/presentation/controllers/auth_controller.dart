@@ -82,10 +82,10 @@ class AuthController extends GetxController {
   // --- Pilih foto dari galeri, return path file atau null
   Future<String?> pilihFoto() async {
     // minta permission storage / photos
-    var status = await Permission.photos
+    var status = await Permission.storage
         .request(); // atau Permission.storage untuk <android 13
     if (status.isGranted) {
-      // bisa akses galeri
+      debugPrint("✅ Permission galeri diberikan");
     } else if (status.isPermanentlyDenied) {
       openAppSettings();
     } else {
@@ -102,44 +102,30 @@ class AuthController extends GetxController {
 
   /// --- pilih foto tapi belum upload
   Future<void> pilihFotoPreview() async {
-    String? path = await pilihFoto();
-    if (path != null) {
-      fotoBaruPath.value = path; // simpan path sementara
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      fotoBaruPath.value = image.path; // simpan path sementara
     }
   }
 
-  /// --- simpan perubahan ke backend
-  Future<void> editUser(String nama, String email, String? password) async {
+  Future<void> editUsercon(
+      String? nama, String? email, String? password) async {
     if (user.value == null) return;
 
     isLoading.value = true;
     try {
-      String? urlFoto;
-
-      // kalau ada foto baru, upload dulu
-      if (fotoBaruPath.value != null) {
-        urlFoto =
-            await authRepository.uploadFotoKeCloudinary(fotoBaruPath.value!);
-      }
-
-      // update backend
-      await authRepository.editUser(
+      final updatedUser = await authRepository.editUser(
         user.value!.id,
-        nama,
-        email,
-        urlFoto ?? user.value!.foto,
-        password,
+        nama?.isNotEmpty == true ? nama! : user.value!.nama,
+        email?.isNotEmpty == true ? email! : user.value!.email,
+        fotoBaruPath.value,
+        password?.isNotEmpty == true ? password : null,
       );
 
-      // update state lokal
-      user.value = user.value!.copyWith(
-        nama: nama,
-        email: email,
-        foto: urlFoto ?? user.value!.foto,
-      );
+      // 🔥 update state lokal pakai hasil backend (sudah url Cloudinary)
+      user.value = updatedUser;
 
-      // reset path foto sementara
-      fotoBaruPath.value = null;
+      fotoBaruPath.value = null; // reset sementara
     } catch (e) {
       debugPrint("❌ Gagal update user: $e");
       rethrow;
