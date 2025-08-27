@@ -33,7 +33,10 @@ class EditPage extends StatelessWidget {
               children: [
                 IconButton(
                   icon: Icon(Icons.arrow_back, color: AppColors.surfaceColor),
-                  onPressed: () => Get.back(),
+                  onPressed: () {
+                    authController.fotoBaruPath.value = null;
+                    Get.back();
+                  },
                 ),
                 SizedBox(width: 10),
                 Text("Edit Profile",
@@ -60,12 +63,10 @@ class EditPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 20),
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      GestureDetector(
-                        onTap: () {
-                          authController.pilihFotoPreview();
-                        },
-                        child: Obx(() {
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Obx(() {
                           String? fotoPreview =
                               authController.fotoBaruPath.value;
                           String? fotoUser = authController.user.value?.foto;
@@ -73,25 +74,46 @@ class EditPage extends StatelessWidget {
                           ImageProvider avatarImage;
 
                           if (fotoPreview != null) {
-                            // pakai foto preview lokal
                             avatarImage = FileImage(File(fotoPreview));
                           } else if (fotoUser != null && fotoUser.isNotEmpty) {
-                            // pakai foto dari server
                             avatarImage = NetworkImage(fotoUser);
                           } else {
-                            // pakai default
                             avatarImage =
                                 AssetImage('assets/images/default_avatar.png');
                           }
 
-                          return CircleAvatar(
-                            radius: 20,
-                            backgroundColor: AppColors.buttonColor2,
-                            backgroundImage: avatarImage,
+                          return Stack(
+                            children: [
+                              CircleAvatar(
+                                radius: 50,
+                                backgroundColor: AppColors.buttonColor2,
+                                backgroundImage: avatarImage,
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    authController.pilihFotoPreview();
+                                  },
+                                  child: CircleAvatar( 
+                                    radius: 15,
+                                    backgroundColor: AppColors
+                                        .buttonColor3, // warna lingkaran
+                                    child: Icon(
+                                      Icons.edit,
+                                      size: 18,
+                                      color: Colors.white, // warna icon
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           );
                         }),
-                      ),
-                    ]),
+                      ],
+                    ),
+
                     SizedBox(height: 30),
 
                     // Textfield untuk username, email, password
@@ -132,55 +154,65 @@ class EditPage extends StatelessWidget {
                           controller: controller.passwordController),
                     ),
                     SizedBox(height: 30),
-                    customButton(
-                      text: "Konfirmasi",
-                      onPressed: () {
-                        dialogConfirmation(
-                          imagePath: 'assets/images/deco_quest.png',
-                          title: "Konfirmasi Perubahan",
-                          middleText:
-                              "Apakah kamu yakin ingin menyimpan perubahan ini?",
-                          onConfirm: () async {
-                            try {
-                              // Melakukan update profil
-                              await authController.editUsercon(
-                                controller.usernameController.text
-                                        .trim()
-                                        .isEmpty
-                                    ? authController.user.value?.nama ??
-                                        'Nama Error'
-                                    : controller.usernameController.text.trim(),
-                                controller.emailController.text.trim().isEmpty
-                                    ? authController.user.value?.email ??
-                                        'Email Error'
-                                    : controller.emailController.text.trim(),
-                                controller.passwordController.text
-                                        .trim()
-                                        .isEmpty
-                                    ? null
-                                    : controller.passwordController.text.trim(),
-                              );
-                              // Membersihkan controller
-                              controller.clearControllers();
-                              // Navigasi kembali ke halaman profil
-                              Get.back();
-                              Get.back();
-                              Get.snackbar(
-                                'Sukses',
-                                'Profil berhasil diperbarui',
-                              );
-                            } catch (e) {
-                              Get.back(); // tutup dialog
-                              Get.snackbar(
-                                'Error',
-                                'Gagal memperbarui profil: $e',
-                                backgroundColor: AppColors.errorColor,
-                                colorText: AppColors.surfaceColor,
-                              );
-                            }
-                          },
-                        );
-                      },
+
+                    // Tombol konfirmasi
+                    Obx(
+                      () => customButton(
+                        text: authController.isLoading.value
+                            ? 'Menyimpan...'
+                            : 'Simpan Perubahan',
+                        color: authController.isLoading.value
+                            ? AppColors.disabledTextColor
+                            : AppColors.buttonColor3,
+                        onPressed: () {
+                          dialogConfirmation(
+                            imagePath: 'assets/images/deco_quest.png',
+                            title: "Konfirmasi Perubahan",
+                            middleText:
+                                "Apakah kamu yakin ingin menyimpan perubahan ini?",
+                            onConfirm: () async {
+                              try {
+                                // Melakukan update profil
+                                await authController.editUsercon(
+                                  controller.usernameController.text
+                                          .trim()
+                                          .isEmpty
+                                      ? authController.user.value?.nama ??
+                                          'Nama Error'
+                                      : controller.usernameController.text
+                                          .trim(),
+                                  controller.emailController.text.trim().isEmpty
+                                      ? authController.user.value?.email ??
+                                          'Email Error'
+                                      : controller.emailController.text.trim(),
+                                  controller.passwordController.text
+                                          .trim()
+                                          .isEmpty
+                                      ? null
+                                      : controller.passwordController.text
+                                          .trim(),
+                                );
+                                // Membersihkan controller
+                                controller.clearControllers();
+                                // Navigasi kembali ke halaman profil
+                                Get.back();
+                                Get.snackbar(
+                                  'Sukses',
+                                  'Profil berhasil diperbarui',
+                                );
+                              } catch (e) {
+                                Get.back(); // tutup dialog
+                                Get.snackbar(
+                                  'Error',
+                                  'Gagal memperbarui profil: $e',
+                                  backgroundColor: AppColors.errorColor,
+                                  colorText: AppColors.surfaceColor,
+                                );
+                              }
+                            },
+                          );
+                        },
+                      ),
                     )
                   ],
                 ),

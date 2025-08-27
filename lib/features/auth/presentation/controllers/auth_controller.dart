@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart'; // untuk debugPrint
 import 'package:get/get.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:notehub/features/auth/domain/auth_repository.dart';
 import 'package:notehub/features/auth/models/user_model.dart';
@@ -80,34 +81,46 @@ class AuthController extends GetxController {
   }
 
   // --- Pilih foto dari galeri, return path file atau null
-  Future<String?> pilihFoto() async {
+  Future<void> pilihFotoPreview() async {
     // minta permission storage / photos
-    var status = await Permission.storage
-        .request(); // atau Permission.storage untuk <android 13
+    var status =
+        await Permission.storage.request(); // atau Permission.photos untuk iOS
     if (status.isGranted) {
       debugPrint("✅ Permission galeri diberikan");
     } else if (status.isPermanentlyDenied) {
       openAppSettings();
+      return;
     } else {
       debugPrint("❌ Permission galeri ditolak");
-      return null;
+      return;
     }
 
     // buka galeri
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image == null) return null;
-
-    return image.path;
-  }
-
-  /// --- pilih foto tapi belum upload
-  Future<void> pilihFotoPreview() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
-      fotoBaruPath.value = image.path; // simpan path sementara
+      // crop gambar menjadi 1:1
+      final croppedFile = await ImageCropper().cropImage(
+        sourcePath: image.path,
+        aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
+        uiSettings: [
+          AndroidUiSettings(
+            toolbarTitle: 'Crop Foto',
+            lockAspectRatio: true,
+          ),
+          IOSUiSettings(
+            title: 'Crop Foto',
+            aspectRatioLockEnabled: true,
+          ),
+        ],
+      );
+
+      if (croppedFile != null) {
+        fotoBaruPath.value = croppedFile.path; // simpan path hasil crop
+      }
     }
   }
 
+  /// --- Edit user (nama, email, foto, password)
   Future<void> editUsercon(
       String? nama, String? email, String? password) async {
     if (user.value == null) return;
@@ -122,10 +135,10 @@ class AuthController extends GetxController {
         password?.isNotEmpty == true ? password : null,
       );
 
-      // 🔥 update state lokal pakai hasil backend (sudah url Cloudinary)
+      // update state lokal pakai hasil backend (sudah url Cloudinary)
       user.value = updatedUser;
 
-      fotoBaruPath.value = null; // reset sementara
+      fotoBaruPath.value = null;
     } catch (e) {
       debugPrint("❌ Gagal update user: $e");
       rethrow;

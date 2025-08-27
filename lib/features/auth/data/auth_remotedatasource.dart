@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:notehub/core/const/config.dart';
 import 'package:notehub/core/network/api_client.dart';
 import 'package:notehub/features/auth/models/user_model.dart';
 
@@ -10,7 +11,10 @@ class AuthRemoteDataSource {
 
   AuthRemoteDataSource(this.apiClient);
 
-  // Login: backend balikin {"message": "...", "user": {...}}
+  // ==============================
+  // Login
+  // ==============================
+  // note: backend balikin {"message": "...", "user": {...}}
   Future<UserModel> login(String email, String password) async {
     final response = await apiClient.post('/login', {
       "email": email,
@@ -24,7 +28,10 @@ class AuthRemoteDataSource {
     }
   }
 
-  // Signup: backend balikin {"message": "User created", "id": 1}
+  // ==============================
+  // SIGNUP
+  // ==============================
+  // note: backend balikin {"message": "User created", "id": 1}
   Future<UserModel> signUp(
       String username, String email, String password) async {
     final response = await apiClient.post('/signup', {
@@ -41,11 +48,9 @@ class AuthRemoteDataSource {
   }
 
   // ==============================
-  // ✏️ EDIT USER
+  // EDIT USER
   // ==============================
-  // ==============================
-// ✏️ EDIT USER
-// ==============================
+  // note: backend balikin {"message": "User updated", "user": {...}}
   Future<UserModel> editUser(
     int userId,
     String nama,
@@ -74,16 +79,17 @@ class AuthRemoteDataSource {
       throw Exception("Gagal update user");
     }
 
-    // 🔥 parsing data user baru dari backend
+    // parsing data user baru dari backend
     return UserModel.fromJson(response['user']);
   }
 
   // ==============================
-  // 📤 UPLOAD FOTO
+  // UPLOAD FOTO
   // ==============================
+  // note: balikin URL foto dari Cloudinary
   Future<String> uploadFotoKeCloudinary(File file) async {
-    const cloudName = "dgtvpcslj"; // ganti sesuai akunmu
-    const uploadPreset = "profile_pictures"; // ganti sesuai setting cloudinary
+    const cloudName = Config.cloudinary_cloud_name; 
+    const uploadPreset = Config.cloudinary_upload_preset; 
 
     final url =
         Uri.parse("https://api.cloudinary.com/v1_1/$cloudName/image/upload");
@@ -97,7 +103,7 @@ class AuthRemoteDataSource {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(resBody);
-      return data["secure_url"]; // ini url cloudinary
+      return data["secure_url"]; 
     } else {
       throw Exception("Gagal upload foto ke Cloudinary: $resBody");
     }

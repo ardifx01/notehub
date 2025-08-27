@@ -19,6 +19,6 @@ abstract class AuthRepository {
   Future<UserModel> editUser(
       int userId, String nama, String email, String? foto, String? password);
 
-  /// Upload foto ke Cloudinary, balikin URL foto
+  /// Upload foto ke Cloudinary
   Future<String> uploadFotoKeCloudinary(File pathFile);
 }

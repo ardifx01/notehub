@@ -22,7 +22,6 @@ class ApiClient {
   }
 
   // Generic PUT
-  // Generic PUT
   Future<dynamic> put(String endpoint, Map<String, dynamic> body) async {
     final response = await http.put(
       Uri.parse('$baseUrl$endpoint'),
@@ -48,43 +47,6 @@ class ApiClient {
       }
     } else {
       throw Exception("Error: ${response.statusCode}");
-    }
-  }
-
-  // api_client.dart
-  Future<dynamic> multipartPut(
-    String endpoint, {
-    required Map<String, String> fields,
-    Map<String, String>? headers,
-    Map<String, String>? files, // key = field name, value = file path
-  }) async {
-    var uri = Uri.parse('$baseUrl$endpoint');
-    var request = http.MultipartRequest('PUT', uri);
-
-    // tambahkan field
-    request.fields.addAll(fields);
-
-    // tambahkan file (kalau ada)
-    if (files != null) {
-      for (var entry in files.entries) {
-        request.files
-            .add(await http.MultipartFile.fromPath(entry.key, entry.value));
-      }
-    }
-
-    // tambahkan headers (optional)
-    if (headers != null) {
-      request.headers.addAll(headers);
-    }
-
-    // kirim request
-    var response = await request.send();
-    var responseString = await response.stream.bytesToString();
-
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      return jsonDecode(responseString);
-    } else {
-      throw Exception("API Error ${response.statusCode}: $responseString");
     }
   }
 }
