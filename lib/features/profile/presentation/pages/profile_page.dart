@@ -201,14 +201,38 @@ class ProfilePage extends StatelessWidget {
                         top: 0,
                         left: 0,
                         right: 0,
-                        child: CircleAvatar(
-                          radius: 50,
-                          backgroundColor: AppColors.buttonColor2,
-                          backgroundImage: authController.user.value?.foto !=
-                                  null
-                              ? NetworkImage(authController.user.value!.foto!)
-                              : AssetImage("assets/images/default_avatar.png")
-                                  as ImageProvider,
+                        child: Obx(
+                          () => CircleAvatar(
+                            radius: 50,
+                            backgroundColor: AppColors.buttonColor2,
+                            // note pengalaman error: mencegah foto zoom terlalu besar dengan gambar sebagai child bukan backgroundImage
+                            child: authController.user.value?.foto != null
+                                ? ClipOval(
+                                    child: Image.network(
+                                      authController.user.value!.foto!,
+                                      fit: BoxFit.cover,
+                                      width: 100,
+                                      height: 100,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return Image.asset(
+                                          "assets/images/default_avatar.png",
+                                          fit: BoxFit.cover,
+                                          width: 100,
+                                          height: 100,
+                                        );
+                                      },
+                                    ),
+                                  )
+                                : ClipOval(
+                                    child: Image.asset(
+                                      "assets/images/default_avatar.png",
+                                      fit: BoxFit.cover,
+                                      width: 100,
+                                      height: 100,
+                                    ),
+                                  ),
+                          ),
                         ),
                       ),
                     ],

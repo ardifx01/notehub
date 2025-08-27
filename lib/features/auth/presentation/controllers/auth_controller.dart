@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart'; // untuk debugPrint
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -81,45 +84,79 @@ class AuthController extends GetxController {
   }
 
   // --- Pilih foto dari galeri, return path file atau null
-  Future<void> pilihFotoPreview() async {
-    // minta permission storage / photos
-    var status =
-        await Permission.storage.request(); // atau Permission.photos untuk iOS
-    if (status.isGranted) {
-      debugPrint("✅ Permission galeri diberikan");
-    } else if (status.isPermanentlyDenied) {
-      openAppSettings();
-      return;
+  // Future<void> pilihFotoPreview() async {
+  //   // minta permission storage / photos
+  //   var status =
+  //       await Permission.storage.request(); // atau Permission.photos untuk iOS
+  //   if (status.isGranted) {
+  //     debugPrint("✅ Permission galeri diberikan");
+  //   } else if (status.isPermanentlyDenied) {
+  //     openAppSettings();
+  //     return;
+  //   } else {
+  //     debugPrint("❌ Permission galeri ditolak");
+  //     return;
+  //   }
+
+  //   // buka galeri
+  //   final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+  //   if (image != null) {
+  //     // crop gambar menjadi 1:1
+  //     final croppedFile = await ImageCropper().cropImage(
+  //       sourcePath: image.path,
+  //       aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
+  //       uiSettings: [
+  //         AndroidUiSettings(
+  //           toolbarTitle: 'Crop Foto',
+  //           lockAspectRatio: true,
+  //         ),
+  //         IOSUiSettings(
+  //           title: 'Crop Foto',
+  //           aspectRatioLockEnabled: true,
+  //         ),
+  //       ],
+  //     );
+
+  //     if (croppedFile != null) {
+  //       fotoBaruPath.value = croppedFile.path; // simpan path hasil crop
+  //     }
+  //   }
+  // }
+
+ Future<void> pilihFotoPreview() async {
+    PermissionStatus status;
+
+    if (Platform.isAndroid) {
+      // android 13 ke atas pakai photos, 12 ke bawah pakai storage
+      if (Platform.version.contains('13') ||
+          Platform.version.contains('14') ||
+          Platform.version.contains('15')) {
+        status = await Permission.photos.request();
+      } else {
+        status = await Permission.storage.request();
+      }
+    } else if (Platform.isIOS) {
+      status = await Permission.photos.request();
     } else {
+      return; // platform lain tidak didukung
+    }
+
+    // cek status permission
+    if (!status.isGranted) {
+      if (status.isPermanentlyDenied) openAppSettings();
       debugPrint("❌ Permission galeri ditolak");
       return;
     }
 
+    debugPrint("✅ Permission galeri diberikan");
+
     // buka galeri
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
-      // crop gambar menjadi 1:1
-      final croppedFile = await ImageCropper().cropImage(
-        sourcePath: image.path,
-        aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
-        uiSettings: [
-          AndroidUiSettings(
-            toolbarTitle: 'Crop Foto',
-            lockAspectRatio: true,
-          ),
-          IOSUiSettings(
-            title: 'Crop Foto',
-            aspectRatioLockEnabled: true,
-          ),
-        ],
-      );
-
-      if (croppedFile != null) {
-        fotoBaruPath.value = croppedFile.path; // simpan path hasil crop
-      }
+      fotoBaruPath.value = image.path; // simpan path sementara
+      debugPrint("📸 Path foto: ${image.path}");
     }
   }
-
   /// --- Edit user (nama, email, foto, password)
   Future<void> editUsercon(
       String? nama, String? email, String? password) async {
@@ -139,6 +176,7 @@ class AuthController extends GetxController {
       user.value = updatedUser;
 
       fotoBaruPath.value = null;
+      debugPrint("✅ User berhasil diupdate: ${updatedUser.toJson()}");
     } catch (e) {
       debugPrint("❌ Gagal update user: $e");
       rethrow;
