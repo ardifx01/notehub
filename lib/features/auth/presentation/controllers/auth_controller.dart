@@ -24,6 +24,8 @@ class AuthController extends GetxController {
   /// Cek apakah user sudah login
   bool get isLoggedIn => user.value != null;
 
+
+  // --- load user lokal dari SharedPreferences diawal app dibuka
   @override
   void onInit() {
     super.onInit();
@@ -32,7 +34,7 @@ class AuthController extends GetxController {
     loadUser();
   }
 
-  /// Load user dari local (SharedPreferences) saat app start
+  /// --- Load user dari local (SharedPreferences) saat app start
   Future<void> loadUser() async {
     isLoading.value = true;
     debugPrint("📥 loadUser: mencoba ambil user dari local storage...");
@@ -51,7 +53,7 @@ class AuthController extends GetxController {
     }
   }
 
-  /// Login
+  /// --- Login
   Future<void> login(String email, String password) async {
     isLoading.value = true;
     debugPrint("🔐 login dipanggil dengan email=$email");
@@ -67,7 +69,7 @@ class AuthController extends GetxController {
     }
   }
 
-  // Signup + auto login
+  // --- Signup + auto login
   Future<void> signUp(String nama, String email, String password) async {
     isLoading.value = true;
     debugPrint("📝 signUp dipanggil: nama=$nama, email=$email");
@@ -83,47 +85,8 @@ class AuthController extends GetxController {
     }
   }
 
-  // --- Pilih foto dari galeri, return path file atau null
-  // Future<void> pilihFotoPreview() async {
-  //   // minta permission storage / photos
-  //   var status =
-  //       await Permission.storage.request(); // atau Permission.photos untuk iOS
-  //   if (status.isGranted) {
-  //     debugPrint("✅ Permission galeri diberikan");
-  //   } else if (status.isPermanentlyDenied) {
-  //     openAppSettings();
-  //     return;
-  //   } else {
-  //     debugPrint("❌ Permission galeri ditolak");
-  //     return;
-  //   }
-
-  //   // buka galeri
-  //   final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-  //   if (image != null) {
-  //     // crop gambar menjadi 1:1
-  //     final croppedFile = await ImageCropper().cropImage(
-  //       sourcePath: image.path,
-  //       aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
-  //       uiSettings: [
-  //         AndroidUiSettings(
-  //           toolbarTitle: 'Crop Foto',
-  //           lockAspectRatio: true,
-  //         ),
-  //         IOSUiSettings(
-  //           title: 'Crop Foto',
-  //           aspectRatioLockEnabled: true,
-  //         ),
-  //       ],
-  //     );
-
-  //     if (croppedFile != null) {
-  //       fotoBaruPath.value = croppedFile.path; // simpan path hasil crop
-  //     }
-  //   }
-  // }
-
- Future<void> pilihFotoPreview() async {
+  /// --- Pilih foto dari galeri, simpan path sementara untuk preview
+  Future<void> pilihFotoPreview() async {
     PermissionStatus status;
 
     if (Platform.isAndroid) {
@@ -157,7 +120,8 @@ class AuthController extends GetxController {
       debugPrint("📸 Path foto: ${image.path}");
     }
   }
-  /// --- Edit user (nama, email, foto, password)
+
+  /// --- Edit user (nama, email, foto, password) 
   Future<void> editUsercon(
       String? nama, String? email, String? password) async {
     if (user.value == null) return;
@@ -168,13 +132,13 @@ class AuthController extends GetxController {
         user.value!.id,
         nama?.isNotEmpty == true ? nama! : user.value!.nama,
         email?.isNotEmpty == true ? email! : user.value!.email,
-        fotoBaruPath.value,
+        fotoBaruPath.value, // path foto dari preview
         password?.isNotEmpty == true ? password : null,
       );
 
-      // update state lokal pakai hasil backend (sudah url Cloudinary)
+      // update variabel user sekarang pakai hasil backend 
       user.value = updatedUser;
-
+      // reset path foto preview
       fotoBaruPath.value = null;
       debugPrint("✅ User berhasil diupdate: ${updatedUser.toJson()}");
     } catch (e) {

@@ -28,6 +28,7 @@ class AuthRemoteDataSource {
     }
   }
 
+
   // ==============================
   // SIGNUP
   // ==============================
@@ -46,6 +47,7 @@ class AuthRemoteDataSource {
       throw Exception(response['message'] ?? "Signup gagal");
     }
   }
+
 
   // ==============================
   // EDIT USER
@@ -84,8 +86,9 @@ class AuthRemoteDataSource {
     return UserModel.fromJson(response['user']);
   }
 
+
   // ==============================
-  // UPLOAD FOTO
+  // UPLOAD FOTO PROFILE KE CLOUDINARY
   // ==============================
   // note: balikin URL foto dari Cloudinary
   Future<String> uploadFotoKeCloudinary(File file) async {

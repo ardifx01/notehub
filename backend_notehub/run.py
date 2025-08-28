@@ -52,7 +52,7 @@ def signup():
     foto = data.get("foto", "")
 
     with get_db_connection() as db:
-        with db.cursor() as cursor:
+        with db.cursor(dictionary=True) as cursor:   # pakai dictionary=True biar hasil dict
             cursor.execute(
                 "INSERT INTO users (nama, email, password, foto) VALUES (%s, %s, %s, %s)",
                 (nama, email, password.decode("utf-8"), foto)
@@ -63,8 +63,11 @@ def signup():
             cursor.execute("SELECT * FROM users WHERE id=%s", (user_id,))
             new_user = cursor.fetchone()
 
-    return jsonify({"message": "User created", "user": new_user})
+    # ubah datetime ke isoformat
+    if new_user and isinstance(new_user.get("tanggal_pembuatan_akun"), datetime):
+        new_user["tanggal_pembuatan_akun"] = new_user["tanggal_pembuatan_akun"].isoformat()
 
+    return jsonify({"message": "User created", "user": new_user})
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -77,11 +80,13 @@ def login():
     password = data["password"].encode("utf-8")
 
     with get_db_connection() as db:
-        with db.cursor() as cursor:
+        with db.cursor(dictionary=True) as cursor:   # penting: dictionary=True
             cursor.execute("SELECT * FROM users WHERE email=%s", (email,))
             user = cursor.fetchone()
 
     if user and bcrypt.checkpw(password, user["password"].encode("utf-8")):
+        if isinstance(user.get("tanggal_pembuatan_akun"), datetime):
+            user["tanggal_pembuatan_akun"] = user["tanggal_pembuatan_akun"].isoformat()
         return jsonify({"message": "Login success", "user": user})
     else:
         return jsonify({"error": "Invalid credentials"}), 401

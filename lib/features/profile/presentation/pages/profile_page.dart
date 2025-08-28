@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notehub/core/const/colors.dart';
 import 'package:notehub/core/functions/convert_date.dart';
+import 'package:notehub/core/widgets/dialog_confirmation.dart';
 import 'package:notehub/core/widgets/heatmap_callendar.dart';
 import 'package:notehub/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:notehub/features/auth/presentation/pages/login_page.dart';
@@ -162,21 +163,32 @@ class ProfilePage extends StatelessWidget {
                                     ),
                                   ),
                                   onPressed: () async {
-                                    try {
-                                      await authController.logout();
-                                      Get.offAll(LoginPage());
-                                      Get.snackbar(
-                                        "Success",
-                                        "Berhasil logout",
-                                      );
-                                    } catch (e) {
-                                      Get.snackbar(
-                                        "Error",
-                                        "Gagal logout: $e",
-                                        backgroundColor: AppColors.errorColor,
-                                        colorText: AppColors.surfaceColor,
-                                      );
-                                    }
+                                    dialogConfirmation(
+                                      imagePath:
+                                          'assets/images/deco_logout.png',
+                                      title: "Yakin Ingin Logout?",
+                                      middleText:
+                                          "",
+                                      onConfirm: () async {
+                                        try {
+                                          await authController.logout();
+                                          Get.offAll(LoginPage());
+                                          Get.snackbar(
+                                            "Success",
+                                            "Berhasil logout",
+                                          );
+                                        } catch (e) {
+                                          Get.snackbar(
+                                            "Error",
+                                            "Gagal logout: $e",
+                                            backgroundColor:
+                                                AppColors.errorColor,
+                                            colorText: AppColors.surfaceColor,
+                                          );
+                                        }
+                                      },
+
+                                    );
                                   },
                                   icon: const Icon(
                                     Icons.logout,
