@@ -98,9 +98,18 @@ class NoteController extends GetxController {
 
   Future<void> fetchAllNotes() async {
     try {
-      allNotes.value = await repository.getAllNotes();
+      isLoading.value = true;
+      var fetchedNotes = await repository.getAllNotes();
+
+      // 🔀 Acak urutan list
+      fetchedNotes.shuffle();
+
+      allNotes.value = fetchedNotes;
+      print('📑 Semua Notes  diambil sejumlah ${allNotes.length}');
     } catch (e) {
       print("Error fetching all database notes");
+    } finally {
+      isLoading.value = false;
     }
   }
 }

@@ -33,13 +33,14 @@ factory NoteModel.fromJson(Map<String, dynamic> json) {
 
 
   Map<String, dynamic> toJson() {
-    return {
-      "id": id,
-      "user_id": userId,
-      "judul": judul,
-      "isi": isi,
-      "kategori": kategori,
-      "tanggal": tanggal.toIso8601String(), // biar aman di JSON
-    };
-  }
+  return {
+    "id": id,
+    "user_id": userId,
+    "judul": judul,
+    "isi": isi,
+    "kategori": kategori,
+    "tanggal": HttpDate.format(tanggal),
+  };
+}
+
 }
