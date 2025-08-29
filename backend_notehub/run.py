@@ -10,7 +10,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app, resources={r"/": {"origins": ""}})
 
 cloudinary.config(
   cloud_name="dgtvpcslj",      
@@ -24,6 +24,7 @@ def get_db_connection():
         user=DB_USER,
         password=DB_PASSWORD,
         database=DB_NAME,
+        charset="utf8mb4",
         cursorclass=pymysql.cursors.DictCursor
     )
 
@@ -52,7 +53,7 @@ def signup():
     foto = data.get("foto", "")
 
     with get_db_connection() as db:
-        with db.cursor() as cursor:
+        with db.cursor as cursor:   # pakai dictionary=True biar hasil dict
             cursor.execute(
                 "INSERT INTO users (nama, email, password, foto) VALUES (%s, %s, %s, %s)",
                 (nama, email, password.decode("utf-8"), foto)
@@ -63,8 +64,11 @@ def signup():
             cursor.execute("SELECT * FROM users WHERE id=%s", (user_id,))
             new_user = cursor.fetchone()
 
-    return jsonify({"message": "User created", "user": new_user})
+    # ubah datetime ke isoformat
+    if new_user and isinstance(new_user.get("tanggal_pembuatan_akun"), datetime):
+        new_user["tanggal_pembuatan_akun"] = new_user["tanggal_pembuatan_akun"].isoformat()
 
+    return jsonify({"message": "User created", "user": new_user})
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -77,11 +81,13 @@ def login():
     password = data["password"].encode("utf-8")
 
     with get_db_connection() as db:
-        with db.cursor() as cursor:
+        with db.cursor as cursor:   # penting: dictionary=True
             cursor.execute("SELECT * FROM users WHERE email=%s", (email,))
             user = cursor.fetchone()
 
     if user and bcrypt.checkpw(password, user["password"].encode("utf-8")):
+        if isinstance(user.get("tanggal_pembuatan_akun"), datetime):
+            user["tanggal_pembuatan_akun"] = user["tanggal_pembuatan_akun"].isoformat()
         return jsonify({"message": "Login success", "user": user})
     else:
         return jsonify({"error": "Invalid credentials"}), 401
@@ -153,8 +159,8 @@ def edit_user(user_id):
 # ======================
 # 📝 NOTE ENDPOINTS
 # ======================
-    
 
+# endpoint buat note baru
 @app.route("/note", methods=["POST"])
 def upload_note():
     data = request.json
@@ -166,7 +172,7 @@ def upload_note():
     judul = data["judul"]
     isi = data["isi"]
     kategori = data.get("kategori", "")
-    tanggal = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    tanggal = datetime.now().isoformat()  
 
     with get_db_connection() as db:
         with db.cursor() as cursor:
@@ -179,7 +185,7 @@ def upload_note():
 
     return jsonify({"message": "Note uploaded", "id": note_id})
 
-
+# endpoint ambil semua note user tertentu
 @app.route("/notes/<int:user_id>", methods=["GET"])
 def get_user_notes(user_id):
     with get_db_connection() as db:
@@ -189,6 +195,7 @@ def get_user_notes(user_id):
     return jsonify(notes)
 
 
+# endpoint hapus note tertentu
 @app.route("/note/<int:note_id>", methods=["DELETE"])
 def delete_note(note_id):
     with get_db_connection() as db:
@@ -197,7 +204,7 @@ def delete_note(note_id):
             db.commit()
     return jsonify({"message": "Note deleted"})
 
-
+# endpoint ambil semua note yang ada
 @app.route("/notes", methods=["GET"])
 def get_all_notes():
     with get_db_connection() as db:
@@ -206,7 +213,7 @@ def get_all_notes():
             notes = cursor.fetchall()
     return jsonify(notes)
 
-
+# endpoint simpan note
 @app.route("/save_note", methods=["POST"])
 def save_note():
     data = request.json
@@ -228,7 +235,7 @@ def save_note():
 
     return jsonify({"message": "Note saved", "id": save_id})
 
-
+# endpoint ambil note yang disimpan user tertentu
 @app.route("/saved_notes/<int:user_id>", methods=["GET"])
 def get_saved_notes(user_id):
     with get_db_connection() as db:
