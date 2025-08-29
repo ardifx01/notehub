@@ -235,6 +235,30 @@ def save_note():
 
     return jsonify({"message": "Note saved", "id": save_id})
 
+@app.route("/unsave_note", methods=["DELETE"])
+def unsave_note():
+    data = request.json
+    valid, error = validate_fields(data, ["user_id", "note_id"])
+    if not valid:
+        return jsonify({"error": error}), 400
+
+    user_id = data["user_id"]
+    note_id = data["note_id"]
+
+    with get_db_connection() as db:
+        with db.cursor() as cursor:
+            cursor.execute(
+                "DELETE FROM saved_notes WHERE user_id=%s AND note_id=%s",
+                (user_id, note_id)
+            )
+            db.commit()
+
+            if cursor.rowcount == 0:  # kalau tidak ada baris terhapus
+                return jsonify({"message": "Note not found in saved list"}), 404
+
+    return jsonify({"message": "Note unsaved"})
+
+
 # endpoint ambil note yang disimpan user tertentu
 @app.route("/saved_notes/<int:user_id>", methods=["GET"])
 def get_saved_notes(user_id):
