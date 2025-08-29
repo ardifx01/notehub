@@ -53,7 +53,7 @@ def signup():
     foto = data.get("foto", "")
 
     with get_db_connection() as db:
-        with db.cursor as cursor:   # pakai dictionary=True biar hasil dict
+        with db.cursor() as cursor:   # pakai dictionary=True biar hasil dict
             cursor.execute(
                 "INSERT INTO users (nama, email, password, foto) VALUES (%s, %s, %s, %s)",
                 (nama, email, password.decode("utf-8"), foto)
@@ -81,7 +81,7 @@ def login():
     password = data["password"].encode("utf-8")
 
     with get_db_connection() as db:
-        with db.cursor as cursor:   # penting: dictionary=True
+        with db.cursor() as cursor:   # penting: dictionary=True
             cursor.execute("SELECT * FROM users WHERE email=%s", (email,))
             user = cursor.fetchone()
 
