@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notehub/core/const/colors.dart';
 import 'package:notehub/core/functions/convert_date.dart';
+import 'package:notehub/core/widgets/dialog_confirmation.dart';
 import 'package:notehub/core/widgets/heatmap_callendar.dart';
 import 'package:notehub/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:notehub/features/auth/presentation/pages/login_page.dart';
@@ -78,11 +79,11 @@ class ProfilePage extends StatelessWidget {
                             // tombol edit profil
                             ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.buttonColor3,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                              ),
+                                  backgroundColor: AppColors.buttonColor3,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  elevation: 0),
                               onPressed: () {
                                 Get.to(EditPage());
                               },
@@ -152,31 +153,40 @@ class ProfilePage extends StatelessWidget {
                                     const EdgeInsets.symmetric(horizontal: 25),
                                 child: ElevatedButton.icon(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.buttonColor3,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 30,
-                                      vertical: 12,
-                                    ),
-                                  ),
+                                      backgroundColor: AppColors.buttonColor3,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 30,
+                                        vertical: 12,
+                                      ),
+                                      elevation: 0),
                                   onPressed: () async {
-                                    try {
-                                      await authController.logout();
-                                      Get.offAll(LoginPage());
-                                      Get.snackbar(
-                                        "Success",
-                                        "Berhasil logout",
-                                      );
-                                    } catch (e) {
-                                      Get.snackbar(
-                                        "Error",
-                                        "Gagal logout: $e",
-                                        backgroundColor: AppColors.errorColor,
-                                        colorText: AppColors.surfaceColor,
-                                      );
-                                    }
+                                    dialogConfirmation(
+                                      imagePath:
+                                          'assets/images/deco_logout.png',
+                                      title: "Yakin Ingin Logout?",
+                                      middleText: "",
+                                      onConfirm: () async {
+                                        try {
+                                          await authController.logout();
+                                          Get.offAll(LoginPage());
+                                          Get.snackbar(
+                                            "Success",
+                                            "Berhasil logout",
+                                          );
+                                        } catch (e) {
+                                          Get.snackbar(
+                                            "Error",
+                                            "Gagal logout: $e",
+                                            backgroundColor:
+                                                AppColors.errorColor,
+                                            colorText: AppColors.surfaceColor,
+                                          );
+                                        }
+                                      },
+                                    );
                                   },
                                   icon: const Icon(
                                     Icons.logout,

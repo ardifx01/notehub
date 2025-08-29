@@ -3,6 +3,9 @@ import 'package:get/get.dart';
 import 'package:notehub/core/const/colors.dart';
 import 'package:notehub/core/widgets/heatmap_callendar.dart';
 import 'package:notehub/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:notehub/features/note/presentation/pages/buat_note_page.dart';
+import 'package:notehub/features/note/presentation/pages/daftar_notes.dart';
+import 'package:notehub/features/note/presentation/pages/jelajahi_notes.dart';
 import 'package:notehub/features/profile/presentation/pages/profile_page.dart';
 
 class HomePage extends StatelessWidget {
@@ -33,7 +36,7 @@ class HomePage extends StatelessWidget {
                             radius: 20,
                             backgroundColor: AppColors.buttonColor2,
                             backgroundImage: authController.user.value?.foto !=
-                                        ''
+                                    ''
                                 ? NetworkImage(authController.user.value!.foto!)
                                 : AssetImage(
                                     'assets/images/default_avatar.png'),
@@ -70,6 +73,8 @@ class HomePage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const SizedBox(height: 20),
+
+                    // Judul
                     const Text(
                       "Ide hebat apa yang ingin kamu tulis hari ini?",
                       textAlign: TextAlign.center,
@@ -80,8 +85,12 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 20),
+
+                    // Tombol buat note
                     ElevatedButton.icon(
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.to(BuatNotePage());
+                      },
                       icon:
                           const Icon(Icons.add, color: AppColors.surfaceColor),
                       label: const Text(
@@ -99,8 +108,10 @@ class HomePage extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
+                        elevation: 0,
                       ),
                     ),
+
                     const SizedBox(height: 30),
 
                     // Tiga kotak menu
@@ -111,7 +122,7 @@ class HomePage extends StatelessWidget {
                           flex: 1,
                           child: GestureDetector(
                             onTap: () {
-                              print("Jelajahi Notes ditekan");
+                              Get.to(JelajahiNotes());
                             },
                             child: Container(
                               height: 210,
@@ -149,7 +160,7 @@ class HomePage extends StatelessWidget {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  print("Notes Disimpan ditekan");
+                                  Get.to(DaftarNotes());
                                 },
                                 child: Container(
                                   height: 100,

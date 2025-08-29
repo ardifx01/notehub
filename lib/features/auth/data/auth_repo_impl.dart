@@ -53,7 +53,7 @@ class AuthRepositoryImpl implements AuthRepository {
       foto,
     );
 
-    // simpan juga ke lokal
+    // simpan ke lokal
     await localDataSource.saveUser(updatedUser);
     return updatedUser;
   }

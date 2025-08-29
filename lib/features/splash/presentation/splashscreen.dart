@@ -26,7 +26,7 @@ class _SplashscreenState extends State<Splashscreen> {
     try {
       // ambil controller
       final authController = Get.find<AuthController>();
-
+      
       // Hitung sisa waktu agar minimal 5 detik
       final elapsed = DateTime.now().difference(start);
       final remaining = const Duration(seconds: 5) - elapsed;

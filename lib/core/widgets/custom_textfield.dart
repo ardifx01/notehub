@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:notehub/core/const/colors.dart';
 
@@ -7,6 +6,7 @@ Widget customTextfield({
   required TextEditingController controller,
   IconButton? suffixIcon,
   bool obscureText = false,
+  ValueChanged<String>? onChanged, 
 }) {
   return TextField(
     controller: controller,
@@ -23,5 +23,6 @@ Widget customTextfield({
       suffixIcon: suffixIcon,
       suffixIconColor: AppColors.textFieldHintColor,
     ),
+    onChanged: onChanged, 
   );
 }

@@ -14,14 +14,14 @@ class CustomBigButton extends StatelessWidget {
     required this.onPressed,
     required this.backgroundColor,
     required this.textColor,
-    this.fontSize = 25,
+    this.fontSize = 20,
     this.icon,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 70,
+      height: 60,
       width: double.infinity,
       child: FloatingActionButton(
         onPressed: onPressed,

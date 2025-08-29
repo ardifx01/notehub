@@ -1,8 +1,5 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:notehub/core/const/colors.dart';
 
 void dialogConfirmation({
@@ -31,6 +28,7 @@ void dialogConfirmation({
           // Judul dan deskripsi
           Text(
             title,
+            textAlign: TextAlign.center,
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -97,7 +95,7 @@ void dialogConfirmation({
                     padding: const EdgeInsets.symmetric(vertical: 12),
                   ),
                   child: Text(
-                    "Simpan",
+                    "Iya",
                     style: TextStyle(
                       color: AppColors.surfaceColor,
                       fontWeight: FontWeight.bold,
