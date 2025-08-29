@@ -10,7 +10,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app, resources={r"/": {"origins": ""}})
 
 cloudinary.config(
   cloud_name="dgtvpcslj",      
@@ -24,6 +24,7 @@ def get_db_connection():
         user=DB_USER,
         password=DB_PASSWORD,
         database=DB_NAME,
+        charset="utf8mb4",
         cursorclass=pymysql.cursors.DictCursor
     )
 
