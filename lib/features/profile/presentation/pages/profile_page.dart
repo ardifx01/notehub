@@ -79,11 +79,11 @@ class ProfilePage extends StatelessWidget {
                             // tombol edit profil
                             ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.buttonColor3,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                              ),
+                                  backgroundColor: AppColors.buttonColor3,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  elevation: 0),
                               onPressed: () {
                                 Get.to(EditPage());
                               },
@@ -153,22 +153,21 @@ class ProfilePage extends StatelessWidget {
                                     const EdgeInsets.symmetric(horizontal: 25),
                                 child: ElevatedButton.icon(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.buttonColor3,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 30,
-                                      vertical: 12,
-                                    ),
-                                  ),
+                                      backgroundColor: AppColors.buttonColor3,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 30,
+                                        vertical: 12,
+                                      ),
+                                      elevation: 0),
                                   onPressed: () async {
                                     dialogConfirmation(
                                       imagePath:
                                           'assets/images/deco_logout.png',
                                       title: "Yakin Ingin Logout?",
-                                      middleText:
-                                          "",
+                                      middleText: "",
                                       onConfirm: () async {
                                         try {
                                           await authController.logout();
@@ -187,7 +186,6 @@ class ProfilePage extends StatelessWidget {
                                           );
                                         }
                                       },
-
                                     );
                                   },
                                   icon: const Icon(

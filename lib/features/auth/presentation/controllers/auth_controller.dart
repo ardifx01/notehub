@@ -7,6 +7,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:notehub/features/auth/domain/auth_repository.dart';
 import 'package:notehub/features/auth/models/user_model.dart';
+import 'package:notehub/features/note/presentation/controllers/note_controller.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class AuthController extends GetxController {
@@ -16,6 +17,8 @@ class AuthController extends GetxController {
 
   final ImagePicker _picker = ImagePicker();
 
+  final noteController = Get.find<NoteController>();
+
   /// State reactive
   var user = Rxn<UserModel>(); // null kalau belum login
   var fotoBaruPath = Rxn<String>(); // variabel untuk preview foto sementara
@@ -23,7 +26,6 @@ class AuthController extends GetxController {
 
   /// Cek apakah user sudah login
   bool get isLoggedIn => user.value != null;
-
 
   // --- load user lokal dari SharedPreferences diawal app dibuka
   @override
@@ -42,10 +44,13 @@ class AuthController extends GetxController {
       final savedUser = await authRepository.getCurrentUser();
       if (savedUser != null) {
         debugPrint("✅ User ditemukan di local: ${savedUser.toJson()}");
+        user.value = savedUser; 
+        noteController.fetchUserNotes(savedUser.id);
+        noteController.fetchSavedNotes(savedUser.id);
       } else {
         debugPrint("⚠️ Tidak ada user tersimpan (belum login)");
+        user.value = null;
       }
-      user.value = savedUser;
     } catch (e) {
       debugPrint("❌ Gagal load user: $e");
     } finally {
@@ -61,6 +66,11 @@ class AuthController extends GetxController {
       final loggedUser = await authRepository.login(email, password);
       debugPrint("✅ Login berhasil, user: ${loggedUser.toJson()}");
       user.value = loggedUser;
+
+      // Fetch note user setelah login berhasil
+
+      noteController.fetchUserNotes(loggedUser.id);
+      noteController.fetchSavedNotes(loggedUser.id);
     } catch (e) {
       debugPrint("❌ Login gagal: $e");
       rethrow;
@@ -121,7 +131,7 @@ class AuthController extends GetxController {
     }
   }
 
-  /// --- Edit user (nama, email, foto, password) 
+  /// --- Edit user (nama, email, foto, password)
   Future<void> editUsercon(
       String? nama, String? email, String? password) async {
     if (user.value == null) return;
@@ -136,7 +146,7 @@ class AuthController extends GetxController {
         password?.isNotEmpty == true ? password : null,
       );
 
-      // update variabel user sekarang pakai hasil backend 
+      // update variabel user sekarang pakai hasil backend
       user.value = updatedUser;
       // reset path foto preview
       fotoBaruPath.value = null;

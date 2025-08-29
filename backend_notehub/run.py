@@ -52,7 +52,7 @@ def signup():
     foto = data.get("foto", "")
 
     with get_db_connection() as db:
-        with db.cursor(dictionary=True) as cursor:   # pakai dictionary=True biar hasil dict
+        with db.cursor as cursor:   # pakai dictionary=True biar hasil dict
             cursor.execute(
                 "INSERT INTO users (nama, email, password, foto) VALUES (%s, %s, %s, %s)",
                 (nama, email, password.decode("utf-8"), foto)
@@ -80,7 +80,7 @@ def login():
     password = data["password"].encode("utf-8")
 
     with get_db_connection() as db:
-        with db.cursor(dictionary=True) as cursor:   # penting: dictionary=True
+        with db.cursor as cursor:   # penting: dictionary=True
             cursor.execute("SELECT * FROM users WHERE email=%s", (email,))
             user = cursor.fetchone()
 
@@ -158,8 +158,8 @@ def edit_user(user_id):
 # ======================
 # 📝 NOTE ENDPOINTS
 # ======================
-    
 
+# endpoint buat note baru
 @app.route("/note", methods=["POST"])
 def upload_note():
     data = request.json
@@ -171,7 +171,7 @@ def upload_note():
     judul = data["judul"]
     isi = data["isi"]
     kategori = data.get("kategori", "")
-    tanggal = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    tanggal = datetime.now().isoformat()  
 
     with get_db_connection() as db:
         with db.cursor() as cursor:
@@ -184,7 +184,7 @@ def upload_note():
 
     return jsonify({"message": "Note uploaded", "id": note_id})
 
-
+# endpoint ambil semua note user tertentu
 @app.route("/notes/<int:user_id>", methods=["GET"])
 def get_user_notes(user_id):
     with get_db_connection() as db:
@@ -194,6 +194,7 @@ def get_user_notes(user_id):
     return jsonify(notes)
 
 
+# endpoint hapus note tertentu
 @app.route("/note/<int:note_id>", methods=["DELETE"])
 def delete_note(note_id):
     with get_db_connection() as db:
@@ -202,7 +203,7 @@ def delete_note(note_id):
             db.commit()
     return jsonify({"message": "Note deleted"})
 
-
+# endpoint ambil semua note yang ada
 @app.route("/notes", methods=["GET"])
 def get_all_notes():
     with get_db_connection() as db:
@@ -211,7 +212,7 @@ def get_all_notes():
             notes = cursor.fetchall()
     return jsonify(notes)
 
-
+# endpoint simpan note
 @app.route("/save_note", methods=["POST"])
 def save_note():
     data = request.json
@@ -233,7 +234,7 @@ def save_note():
 
     return jsonify({"message": "Note saved", "id": save_id})
 
-
+# endpoint ambil note yang disimpan user tertentu
 @app.route("/saved_notes/<int:user_id>", methods=["GET"])
 def get_saved_notes(user_id):
     with get_db_connection() as db:

@@ -28,6 +28,7 @@ void dialogConfirmation({
           // Judul dan deskripsi
           Text(
             title,
+            textAlign: TextAlign.center,
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
