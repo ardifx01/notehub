@@ -57,7 +57,7 @@ class _DaftarNotesState extends State<DaftarNotes> {
                       Get.to(HomePage());
                     },
                     icon: const Icon(Icons.arrow_back,
-                        color: AppColors.surfaceColor),
+                        color: AppColors.buttonColor3),
                   ),
                   GestureDetector(
                     child: Obx(
@@ -89,8 +89,8 @@ class _DaftarNotesState extends State<DaftarNotes> {
                     "Daftar Notes Kamu",
                     style: TextStyle(
                       fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.primaryColor, 
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primaryTextColor, 
                     ),
                   ),
                   SizedBox(height: 10),
