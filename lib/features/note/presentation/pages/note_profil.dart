@@ -23,7 +23,7 @@ class NoteProfil extends StatelessWidget {
               decoration: BoxDecoration(
                   image: DecorationImage(
                       image: AssetImage(
-                          'Assets/Images/background_${note.kategori.toLowerCase()}.png'),
+                          'assets/images/background_${note.kategori.toLowerCase()}.png'),
                       fit: BoxFit.cover))),
           Column(
             children: [
