@@ -9,7 +9,6 @@ import 'package:notehub/core/functions/warna_kategori.dart';
 import 'package:notehub/core/widgets/custom_textfield.dart';
 import 'package:notehub/core/widgets/note_card.dart';
 import 'package:notehub/features/auth/presentation/controllers/auth_controller.dart';
-import 'package:notehub/features/home/presentation/home_page.dart';
 import 'package:notehub/features/note/presentation/controllers/note_controller.dart';
 import 'package:notehub/features/note/presentation/pages/note_pribadi.dart';
 import 'package:notehub/features/profile/presentation/pages/profile_page.dart';

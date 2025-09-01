@@ -13,6 +13,8 @@ class NoteController extends GetxController {
   var allNotes = <NoteModel>[].obs;
   var isLoading = false.obs;
 
+
+  // ----------------------------- FILTER
   // filter kategori
   var selectedFilter = ''.obs;
 
@@ -41,7 +43,7 @@ class NoteController extends GetxController {
     return filtered;
   }
 
-
+  // ----------------------------- FETCH
   Future<void> fetchUserNotes(int userId) async {
     try {
       isLoading.value = true;
@@ -49,8 +51,7 @@ class NoteController extends GetxController {
 
       // Urutkan terbaru duluan
       notes.value = fetchedNotes.reversed.toList();
-      print(
-          '🗒️ Notes user $userId berhasil diambil sejumlah ${notes.length}');
+      print('🗒️ Notes user $userId berhasil diambil sejumlah ${notes.length}');
     } catch (e) {
       print("Error fetching notes: $e");
     } finally {
@@ -74,6 +75,24 @@ class NoteController extends GetxController {
     }
   }
 
+  Future<void> fetchAllNotes() async {
+    try {
+      isLoading.value = true;
+      var fetchedNotes = await repository.getAllNotes();
+
+      // 🔀 Acak urutan list
+      fetchedNotes.shuffle();
+
+      allNotes.value = fetchedNotes;
+      print('📑 Semua Notes  diambil sejumlah ${allNotes.length}');
+    } catch (e) {
+      print("Error fetching all database notes");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  // ----------------------------- ADD & DELETE
   Future<void> addNote(
       int userId, String judul, String isi, String kategori) async {
     try {
@@ -93,29 +112,34 @@ class NoteController extends GetxController {
     }
   }
 
+  // ----------------------------- SAVE & UNSAVE
   Future<void> saveNote(int userId, int noteId) async {
     try {
       await repository.saveNote(userId, noteId);
-      fetchSavedNotes(userId);
+      await fetchSavedNotes(userId);
     } catch (e) {
       print("Error saving note: $e");
     }
   }
 
-  Future<void> fetchAllNotes() async {
+  Future<void> removesavedNote(int userId, int noteId) async {
     try {
-      isLoading.value = true;
-      var fetchedNotes = await repository.getAllNotes();
-
-      // 🔀 Acak urutan list
-      fetchedNotes.shuffle();
-
-      allNotes.value = fetchedNotes;
-      print('📑 Semua Notes  diambil sejumlah ${allNotes.length}');
+      await repository.unsaveNote(userId, noteId);
+      await fetchSavedNotes(userId);
     } catch (e) {
-      print("Error fetching all database notes");
-    } finally {
-      isLoading.value = false;
+      print("Error remove saved note: $e");
     }
+  }
+
+  Future<void> toggleSaveNote(int userId, int noteId) async {
+    if (isNoteSaved(noteId)) {
+      await removesavedNote(userId, noteId);
+    } else {
+      await saveNote(userId, noteId);
+    }
+  }
+
+  bool isNoteSaved(int noteId) {
+    return savedNotes.any((n) => n.id == noteId);
   }
 }

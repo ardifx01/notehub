@@ -5,6 +5,7 @@ import 'package:notehub/core/widgets/heatmap_callendar.dart';
 import 'package:notehub/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:notehub/features/note/presentation/pages/buat_note_page.dart';
 import 'package:notehub/features/note/presentation/pages/daftar_notes.dart';
+import 'package:notehub/features/note/presentation/pages/disimpan_note.dart';
 import 'package:notehub/features/note/presentation/pages/jelajahi_notes.dart';
 import 'package:notehub/features/profile/presentation/pages/profile_page.dart';
 
@@ -197,7 +198,7 @@ class HomePage extends StatelessWidget {
                               const SizedBox(height: 10),
                               GestureDetector(
                                 onTap: () {
-                                  print("Notes Disimpan ditekan");
+                                  Get.to(DisimpanNote());
                                 },
                                 child: Container(
                                   height: 100,

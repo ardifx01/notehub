@@ -223,7 +223,7 @@ def save_note():
     valid, error = validate_fields(data, ["user_id", "note_id"])
     if not valid:
         return jsonify({"error": error}), 400
-
+    
     user_id = data["user_id"]
     note_id = data["note_id"]
 
