@@ -19,16 +19,15 @@ class NoteController extends GetxController {
   // filter judul (search bar)
   var searchQuery = ''.obs;
 
-  List<NoteModel> get filteredNotes {
-    var filtered = notes;
+  List<NoteModel> getFilteredNotes(List<NoteModel> source) {
+    var filtered = source;
 
     // filter kategori
     if (selectedFilter.value.isNotEmpty) {
       filtered = filtered
           .where((n) =>
               n.kategori.toLowerCase() == selectedFilter.value.toLowerCase())
-          .toList()
-          .obs;
+          .toList();
     }
 
     // filter judul
@@ -36,18 +35,22 @@ class NoteController extends GetxController {
       filtered = filtered
           .where((n) =>
               n.judul.toLowerCase().contains(searchQuery.value.toLowerCase()))
-          .toList()
-          .obs;
+          .toList();
     }
 
     return filtered;
   }
 
+
   Future<void> fetchUserNotes(int userId) async {
     try {
       isLoading.value = true;
-      notes.value = await repository.getUserNotes(userId);
-      print('🗒️ Notes user $userId berhasil diambil sejumlah ${notes.length}');
+      var fetchedNotes = await repository.getUserNotes(userId);
+
+      // Urutkan terbaru duluan
+      notes.value = fetchedNotes.reversed.toList();
+      print(
+          '🗒️ Notes user $userId berhasil diambil sejumlah ${notes.length}');
     } catch (e) {
       print("Error fetching notes: $e");
     } finally {
@@ -58,7 +61,10 @@ class NoteController extends GetxController {
   Future<void> fetchSavedNotes(int userId) async {
     try {
       isLoading.value = true;
-      savedNotes.value = await repository.getSavedNotes(userId);
+      var fetchedNotes = await repository.getSavedNotes(userId);
+
+      // Urutkan terbaru
+      savedNotes.value = fetchedNotes.reversed.toList();
       print(
           '🔖 Saved notes user $userId berhasil diambil sejumlah ${savedNotes.length}');
     } catch (e) {
