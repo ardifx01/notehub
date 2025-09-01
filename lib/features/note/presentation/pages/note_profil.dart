@@ -40,6 +40,7 @@ class _NoteProfilState extends State<NoteProfil> {
       body: Stack(
         children: [
           Container(
+<<<<<<< HEAD
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(
@@ -56,6 +57,20 @@ class _NoteProfilState extends State<NoteProfil> {
                   child: Padding(
                     padding: const EdgeInsets.all(15),
                     child: IconButton(
+=======
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage(
+                          'assets/images/background_${note.kategori.toLowerCase()}.png'),
+                      fit: BoxFit.cover))),
+          Column(
+            children: [
+              Align(
+                alignment: AlignmentDirectional.topStart,
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: IconButton(
+>>>>>>> bd6ee6f (frontend_5)
                       onPressed: () => Get.back(),
                       color: AppColors.surfaceColor,
                       icon: Icon(Icons.arrow_back_rounded),
