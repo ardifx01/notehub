@@ -20,7 +20,7 @@ class AuthController extends GetxController {
 
   /// State reactive
   var user = Rxn<UserModel>(); // null kalau belum login
-  var userLain = Rxn<UserModel>(); // simpan sementara user lain
+  var selectedUser = Rxn<UserModel>(); // User yang dipilih sementara
   var fotoBaruPath = Rxn<String>(); // variabel untuk preview foto sementara
   var isLoading = false.obs;
 
@@ -89,6 +89,21 @@ class AuthController extends GetxController {
       user.value = newUser;
     } catch (e) {
       debugPrint("❌ Signup gagal: $e");
+      rethrow;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> ambilUser(int userId) async {
+    isLoading.value = true;
+    debugPrint("🤣 Mulai ambil data user $userId");
+    try {
+      final userData = await authRepository.getUser(userId);
+      debugPrint("✅ Ambil data user berhasil, user: ${userData.toJson()}");
+      selectedUser.value = userData;
+    } catch (e) {
+      debugPrint("❌ Ambil data user gagal: $e");
       rethrow;
     } finally {
       isLoading.value = false;

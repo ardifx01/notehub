@@ -33,7 +33,8 @@ class AuthRemoteDataSource {
   // ==============================
   // SIGNUP
   // ==============================
-  Future<UserModel> signUp(String username, String email, String password) async {
+  Future<UserModel> signUp(
+      String username, String email, String password) async {
     final response = await http.post(
       Uri.parse('$baseUrl/signup'),
       headers: {"Content-Type": "application/json"},
@@ -100,7 +101,8 @@ class AuthRemoteDataSource {
     const cloudName = Config.cloudinary_cloud_name;
     const uploadPreset = Config.cloudinary_upload_preset;
 
-    final url = Uri.parse("https://api.cloudinary.com/v1_1/$cloudName/image/upload");
+    final url =
+        Uri.parse("https://api.cloudinary.com/v1_1/$cloudName/image/upload");
 
     var request = http.MultipartRequest("POST", url);
     request.fields["upload_preset"] = uploadPreset;
@@ -114,6 +116,20 @@ class AuthRemoteDataSource {
       return data["secure_url"];
     } else {
       throw Exception("Gagal upload foto ke Cloudinary: $resBody");
+    }
+  }
+
+  Future<UserModel> getUser(int userId) async {
+    final response = await http.get(
+      Uri.parse("$baseUrl/user/$userId"),
+      headers: {"Content-Type": "application/json"},
+    );
+
+    final data = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      return UserModel.fromJson(data);
+    } else {
+      throw Exception(data['message'] ?? "Gagal ambil data user $userId");
     }
   }
 }

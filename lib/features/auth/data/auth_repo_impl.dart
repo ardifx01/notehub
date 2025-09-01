@@ -28,6 +28,12 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<UserModel> getUser(int userId) async {
+    final user = await remoteDataSource.getUser(userId);
+    return user;
+  }
+
+  @override
   Future<void> logout() async {
     await localDataSource.clearUser();
   }
@@ -57,7 +63,7 @@ class AuthRepositoryImpl implements AuthRepository {
     await localDataSource.saveUser(updatedUser);
     return updatedUser;
   }
-  
+
   @override
   Future<String> uploadFotoKeCloudinary(File pathFile) async {
     return await remoteDataSource.uploadFotoKeCloudinary(pathFile);
