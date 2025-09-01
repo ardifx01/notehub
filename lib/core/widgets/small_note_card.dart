@@ -1,18 +1,19 @@
 // note_card.dart
 import 'package:flutter/material.dart';
+import 'package:notehub/core/const/colors.dart';
 import 'package:notehub/core/functions/warna_kategori.dart';
 import 'package:notehub/features/note/models/note_model.dart';
 
 class SmallNoteCard extends StatelessWidget {
   final NoteModel note;
   final VoidCallback? onTap;
-  final IconData icon;
+  final Widget trailing;
 
   const SmallNoteCard({
     super.key,
     required this.note,
     this.onTap,
-    this.icon = Icons.person, // default
+    this.trailing = const Icon(Icons.person), // default
   });
 
   @override
@@ -33,14 +34,14 @@ class SmallNoteCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.3),
+                color: AppColors.surfaceColor.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
                 note.kategori,
                 style: const TextStyle(
                   fontSize: 12,
-                  color: Colors.white,
+                  color: AppColors.surfaceColor,
                 ),
               ),
             ),
@@ -48,17 +49,22 @@ class SmallNoteCard extends StatelessWidget {
 
             // judul
             Expanded(
-              child: Text(
-                note.judul,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+              child: Column(
+                children: [
+                  Text(
+                    note.judul,
+                    textAlign: TextAlign.start,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: AppColors.surfaceColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                ],
               ),
             ),
-            const SizedBox(height: 8),
-
             // icon + tanggal
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -70,7 +76,7 @@ class SmallNoteCard extends StatelessWidget {
                     color: Colors.white70,
                   ),
                 ),
-                Icon(icon, color: Colors.white),
+                trailing
               ],
             ),
           ],

@@ -42,7 +42,7 @@ class NoteRemoteDataSource {
     }
   }
 
-   // ==============================
+  // ==============================
   // AMBIL NOTES USER TERTENTU
   // ==============================
   Future<List<NoteModel>> getUserNotes(int userId) async {
@@ -55,7 +55,7 @@ class NoteRemoteDataSource {
     }
   }
 
-   // ==============================
+  // ==============================
   // AMBIL SEMUA NOTES YANG ADA
   // ==============================
   Future<List<NoteModel>> getAllNotes() async {
@@ -68,7 +68,7 @@ class NoteRemoteDataSource {
     }
   }
 
-   // ==============================
+  // ==============================
   // HAPUS NOTE TERTENTU
   // ==============================
   Future<void> deleteNote(int noteId) async {
@@ -78,8 +78,8 @@ class NoteRemoteDataSource {
     }
   }
 
-   // ==============================
-  // SIMPAN NOTE 
+  // ==============================
+  // SIMPAN NOTE
   // ==============================
   Future<void> saveNote(int userId, int noteId) async {
     final response = await http.post(
@@ -95,7 +95,21 @@ class NoteRemoteDataSource {
     }
   }
 
-   // ==============================
+  Future<void> unsaveNote(int userId, int noteId) async {
+    final response = await http.delete(
+      Uri.parse("$baseUrl/unsave_note"),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        "user_id": userId,
+        "note_id": noteId,
+      }),
+    );
+    if (response.statusCode != 200) {
+      throw Exception("Failed to unsave note");
+    }
+  }
+
+  // ==============================
   // AMBIL NOTES YANG DISIMPAN USER TERTENTU
   // ==============================
   Future<List<NoteModel>> getSavedNotes(int userId) async {

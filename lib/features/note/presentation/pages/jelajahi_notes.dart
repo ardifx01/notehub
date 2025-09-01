@@ -32,8 +32,7 @@ class _JelajahiNotesState extends State<JelajahiNotes> {
   @override
   void initState() {
     super.initState();
-    noteController
-        .fetchAllNotes(); 
+    noteController.fetchAllNotes();
   }
 
   @override
@@ -193,7 +192,7 @@ class _JelajahiNotesState extends State<JelajahiNotes> {
                     crossAxisCount: 2,
                     crossAxisSpacing: 12,
                     mainAxisSpacing: 12,
-                    childAspectRatio: 3 / 4,
+                    childAspectRatio: 1,
                   ),
                   itemCount: noteController
                       .getFilteredNotes(noteController.allNotes)
@@ -204,11 +203,13 @@ class _JelajahiNotesState extends State<JelajahiNotes> {
                     return SmallNoteCard(
                       note: note,
                       onTap: () {
+                        // authController. // TODO:
                         Get.to(() => NoteProfil(note: note));
                       },
-                      icon: note.userId == authController.user.value?.id
-                          ? Icons.edit // kalau punya sendiri
-                          : Icons.person, // kalau punya orang lain
+                      trailing: CircleAvatar(
+                        backgroundColor: AppColors.surfaceColor,
+                        radius: 15,
+                      ),
                     );
                   },
                 );

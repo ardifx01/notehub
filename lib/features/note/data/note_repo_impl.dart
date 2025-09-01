@@ -33,6 +33,11 @@ class NoteRepositoryImpl implements NoteRepository {
     return remoteDataSource.saveNote(userId, noteId);
   }
 
+   @override
+  Future<void> unsaveNote(int userId, int noteId) {
+    return remoteDataSource.unsaveNote(userId, noteId);
+  }
+
   @override
   Future<List<NoteModel>> getSavedNotes(int userId) {
     return remoteDataSource.getSavedNotes(userId);

@@ -20,6 +20,7 @@ class AuthController extends GetxController {
 
   /// State reactive
   var user = Rxn<UserModel>(); // null kalau belum login
+  var userLain = Rxn<UserModel>(); // simpan sementara user lain
   var fotoBaruPath = Rxn<String>(); // variabel untuk preview foto sementara
   var isLoading = false.obs;
 
@@ -43,7 +44,7 @@ class AuthController extends GetxController {
       final savedUser = await authRepository.getCurrentUser();
       if (savedUser != null) {
         debugPrint("✅ User ditemukan di local: ${savedUser.toJson()}");
-        user.value = savedUser; 
+        user.value = savedUser;
         noteController.fetchUserNotes(savedUser.id);
         noteController.fetchSavedNotes(savedUser.id);
       } else {
