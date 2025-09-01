@@ -50,11 +50,11 @@ class _DaftarNotesState extends State<DaftarNotes> {
                 children: [
                   IconButton(
                     onPressed: () {
-                      // Membersihkan filter 
+                      // Membersihkan filter
                       noteController.selectedFilter.value = '';
                       noteController.searchQuery.value = '';
                       // Ke homepage
-                      Get.to(HomePage());
+                      Get.back();
                     },
                     icon: const Icon(Icons.arrow_back,
                         color: AppColors.buttonColor3),
@@ -90,7 +90,7 @@ class _DaftarNotesState extends State<DaftarNotes> {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.primaryTextColor, 
+                      color: AppColors.primaryTextColor,
                     ),
                   ),
                   SizedBox(height: 10),
@@ -183,9 +183,12 @@ class _DaftarNotesState extends State<DaftarNotes> {
                 return ListView.builder(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-                  itemCount: noteController.filteredNotes.length,
+                  itemCount: noteController
+                      .getFilteredNotes(noteController.notes)
+                      .length,
                   itemBuilder: (context, index) {
-                    final note = noteController.filteredNotes[index];
+                    final note = noteController
+                        .getFilteredNotes(noteController.notes)[index];
                     return NoteCard(
                       kategori: note.kategori,
                       judul: note.judul,

@@ -167,24 +167,28 @@ class _BuatNotePageState extends State<BuatNotePage> {
                                       controller.isiNoteController.text.trim();
                                   var kategori =
                                       controller.kategoriDipilih.value;
-                                  try {
-                                    await noteController.addNote(
-                                        userId, judul, isi, kategori);
+                                      
+                                  if (noteController.isLoading.value != true) {
+                                    try {
+                                      await noteController.addNote(
+                                          userId, judul, isi, kategori);
 
-                                    // Reset textfield controller
-                                    controller.judulController.clear();
-                                    controller.isiNoteController.clear();
-                                    controller.kategoriDipilih.value = 'Random';
+                                      // Reset textfield controller
+                                      controller.judulController.clear();
+                                      controller.isiNoteController.clear();
+                                      controller.kategoriDipilih.value =
+                                          'Random';
 
-                                    Get.back();
-                                  } catch (e) {
-                                    Get.snackbar(
-                                      'Error',
-                                      'Gagal membuat note, $e',
-                                      snackPosition: SnackPosition.BOTTOM,
-                                      backgroundColor: AppColors.errorColor,
-                                      colorText: AppColors.surfaceColor,
-                                    );
+                                      Get.back();
+                                    } catch (e) {
+                                      Get.snackbar(
+                                        'Error',
+                                        'Gagal membuat note, $e',
+                                        snackPosition: SnackPosition.BOTTOM,
+                                        backgroundColor: AppColors.errorColor,
+                                        colorText: AppColors.surfaceColor,
+                                      );
+                                    }
                                   }
                                 }
                               },

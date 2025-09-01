@@ -32,7 +32,8 @@ class _JelajahiNotesState extends State<JelajahiNotes> {
   @override
   void initState() {
     super.initState();
-    noteController.fetchAllNotes();
+    noteController
+        .fetchAllNotes(); 
   }
 
   @override
@@ -54,7 +55,7 @@ class _JelajahiNotesState extends State<JelajahiNotes> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         IconButton(
-                          onPressed: () => Get.to(HomePage()),
+                          onPressed: () => Get.back(),
                           icon: const Icon(Icons.arrow_back,
                               color: AppColors.surfaceColor),
                         ),
@@ -194,13 +195,15 @@ class _JelajahiNotesState extends State<JelajahiNotes> {
                     mainAxisSpacing: 12,
                     childAspectRatio: 3 / 4,
                   ),
-                  itemCount: noteController.allNotes.length,
+                  itemCount: noteController
+                      .getFilteredNotes(noteController.allNotes)
+                      .length,
                   itemBuilder: (context, index) {
-                    final note = noteController.allNotes[index];
+                    final note = noteController
+                        .getFilteredNotes(noteController.allNotes)[index];
                     return SmallNoteCard(
                       note: note,
                       onTap: () {
-                        // contoh: buka detail
                         Get.to(() => NoteProfil(note: note));
                       },
                       icon: note.userId == authController.user.value?.id
