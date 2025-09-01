@@ -148,6 +148,9 @@ def edit_user(user_id):
                 )
                 updated_user = cursor.fetchone()
 
+                if updated_user and isinstance(updated_user["tanggal_pembuatan_akun"], datetime):
+                    updated_user["tanggal_pembuatan_akun"] = updated_user["tanggal_pembuatan_akun"].isoformat()
+
         return jsonify({
             "message": "User updated",
             "user": updated_user
