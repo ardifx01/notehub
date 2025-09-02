@@ -1,6 +1,6 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/FajarFarel/notehub)
-![GitHub stars](https://img.shields.io/github/stars/FajarFarel/nothub?style=social)
-![GitHub last commit](https://img.shields.io/github/last-commit/FajarFarel/nothub)
+![GitHub stars](https://img.shields.io/github/stars/FajarFarel/notehub?style=social)
+![GitHub last commit](https://img.shields.io/github/last-commit/FajarFarel/notehub)
 
 NOTEHUB
 notehub adalah aplikasi pencatat modern yang berfungsi seperti media sosial tidak langsung. selain menyimpan catatan pribadi, pengguna juga bisa:
