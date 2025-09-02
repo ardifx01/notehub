@@ -31,7 +31,7 @@ class _DaftarNotesState extends State<DaftarNotes> {
   void initState() {
     super.initState();
     noteController
-        .fetchUserNotes(authController.user.value!.id); // load di sini
+        .fetchUserNotes(authController.user.value!.id, forPeople: false); // load di sini
   }
 
   @override

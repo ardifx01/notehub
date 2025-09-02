@@ -13,7 +13,7 @@ class SmallNoteCard extends StatelessWidget {
     super.key,
     required this.note,
     this.onTap,
-    this.trailing = const Icon(Icons.person), // default
+    this.trailing = const Icon(Icons.person, color: Colors.transparent,), // default
   });
 
   @override

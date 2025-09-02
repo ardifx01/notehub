@@ -167,7 +167,7 @@ class _BuatNotePageState extends State<BuatNotePage> {
                                       controller.isiNoteController.text.trim();
                                   var kategori =
                                       controller.kategoriDipilih.value;
-                                      
+
                                   if (noteController.isLoading.value != true) {
                                     try {
                                       await noteController.addNote(

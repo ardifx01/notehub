@@ -205,10 +205,7 @@ class _JelajahiNotesState extends State<JelajahiNotes> {
                       // authController. // TODO:
                       Get.to(() => NoteProfil(note: note));
                     },
-                    trailing: CircleAvatar(
-                      backgroundColor: AppColors.surfaceColor,
-                      radius: 15,
-                    ),
+                  
                   );
                 },
               );
