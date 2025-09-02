@@ -1,22 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:notehub/core/const/colors.dart';
-import 'package:notehub/core/functions/convert_date.dart';
-import 'package:notehub/core/functions/warna_kategori.dart';
 import 'package:notehub/core/widgets/custom_textfield.dart';
 import 'package:notehub/core/widgets/small_note_card.dart';
 import 'package:notehub/features/auth/presentation/controllers/auth_controller.dart';
-import 'package:notehub/features/home/presentation/home_page.dart';
 import 'package:notehub/features/note/presentation/controllers/note_controller.dart';
-import 'package:notehub/features/note/presentation/pages/note_pribadi.dart';
 import 'package:notehub/features/note/presentation/pages/note_profil.dart';
 import 'package:notehub/features/profile/presentation/pages/profile_page.dart';
 
 class JelajahiNotes extends StatefulWidget {
-  JelajahiNotes({super.key});
+  const JelajahiNotes({super.key});
 
   @override
   State<JelajahiNotes> createState() => _JelajahiNotesState();
@@ -45,28 +39,31 @@ class _JelajahiNotesState extends State<JelajahiNotes> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // --------- Header (tombol back dan profil)
+
+                // ================= HEADER =================
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 30),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 30),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+
+                      // Back
                       IconButton(
                         onPressed: () => Get.back(),
                         icon: const Icon(Icons.arrow_back,
                             color: AppColors.surfaceColor),
                       ),
+
+                      // Profil
                       GestureDetector(
                         child: Obx(
                           () => CircleAvatar(
                             radius: 20,
                             backgroundColor: AppColors.buttonColor2,
-                            backgroundImage: authController
-                                        .user.value?.foto !=
+                            backgroundImage: authController.user.value?.foto !=
                                     ''
-                                ? NetworkImage(
-                                    authController.user.value!.foto!)
+                                ? NetworkImage(authController.user.value!.foto!)
                                 : const AssetImage(
                                         'assets/images/default_avatar.png')
                                     as ImageProvider,
@@ -79,14 +76,15 @@ class _JelajahiNotesState extends State<JelajahiNotes> {
                     ],
                   ),
                 ),
-      
-                // ---------- Search + Filter Row
+
+                // ================= SEARCH AND FILTER =================
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 25, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Judul
                       const Text(
                         "Jelajahi Notes",
                         style: TextStyle(
@@ -98,6 +96,7 @@ class _JelajahiNotesState extends State<JelajahiNotes> {
                       SizedBox(height: 10),
                       Row(
                         children: [
+                          // Search
                           Expanded(
                             child: customTextfield(
                               hintText: "Cari Note",
@@ -108,6 +107,8 @@ class _JelajahiNotesState extends State<JelajahiNotes> {
                             ),
                           ),
                           const SizedBox(width: 8),
+
+                          // Dropdown filter button berdasarkan kategori
                           PopupMenuButton<String>(
                             icon: const Icon(Icons.menu_rounded,
                                 color: Colors.white),
@@ -160,12 +161,12 @@ class _JelajahiNotesState extends State<JelajahiNotes> {
                     ],
                   ),
                 ),
-      
                 SizedBox(height: 15),
               ],
             ),
           ),
-          // ------------- List Notes
+
+          // ================= LIST NOTES =================
           Expanded(
             child: Obx(() {
               if (noteController.isLoading.value) {
@@ -184,7 +185,7 @@ class _JelajahiNotesState extends State<JelajahiNotes> {
                   ),
                 );
               }
-      
+
               return GridView.builder(
                 padding: const EdgeInsets.all(16),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -202,10 +203,8 @@ class _JelajahiNotesState extends State<JelajahiNotes> {
                   return SmallNoteCard(
                     note: note,
                     onTap: () {
-                      // authController. // TODO:
                       Get.to(() => NoteProfil(note: note));
                     },
-                  
                   );
                 },
               );

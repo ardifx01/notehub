@@ -1,8 +1,6 @@
 import 'dart:io';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flutter/foundation.dart'; // untuk debugPrint
+import 'package:flutter/foundation.dart'; 
 import 'package:get/get.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:notehub/features/auth/domain/auth_repository.dart';
 import 'package:notehub/features/auth/models/user_model.dart';

@@ -30,6 +30,7 @@ class DisimpanNote extends StatelessWidget {
                 color: AppColors.surfaceColor, fontWeight: FontWeight.bold),
           ),
           actions: [
+            // Profil
             Padding(
               padding: const EdgeInsets.only(right: 20.0),
               child: GestureDetector(
@@ -51,7 +52,9 @@ class DisimpanNote extends StatelessWidget {
           ],
           backgroundColor: AppColors.primaryColor,
         ),
-        body: // ------------- List Notes
+        body:
+
+            // ================= LIST NOTES =================
             Obx(() {
           if (noteController.isLoading.value) {
             return Center(
@@ -90,7 +93,7 @@ class DisimpanNote extends StatelessWidget {
                     color: AppColors.surfaceColor,
                     onPressed: () async {
                       try {
-                        await noteController.removesavedNote(user!.id, note.id);
+                        await noteController.removeSavedNote(user!.id, note.id);
                       } catch (e) {
                         Get.snackbar('Error', 'Gagal unsave note ini: $e',
                             backgroundColor: AppColors.errorColor,

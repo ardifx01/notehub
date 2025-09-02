@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:notehub/core/const/colors.dart';
-import 'package:notehub/core/widgets/dialog_confirmation.dart';
 import 'package:notehub/core/widgets/note_detail_card.dart';
 import 'package:notehub/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:notehub/features/note/models/note_model.dart';
 import 'package:notehub/features/note/presentation/controllers/note_controller.dart';
-import 'package:notehub/features/note/presentation/pages/daftar_notes.dart';
 import 'package:notehub/features/profile/presentation/pages/profile_lain.dart';
 
 class NoteProfil extends StatefulWidget {
@@ -71,7 +68,6 @@ class _NoteProfilState extends State<NoteProfil> {
                     final selectedUser = authController.selectedUser.value;
                     
                     if (selectedUser == null) {
-                      // loading sementara
                       return Center(
                         child: CircularProgressIndicator(
                           color: AppColors.buttonColor2,
@@ -101,7 +97,7 @@ class _NoteProfilState extends State<NoteProfil> {
                             ),
                             SizedBox(width: 10),
                             Text(
-                              selectedUser.nama ?? '-',
+                              selectedUser.nama,
                               style: TextStyle(color: AppColors.surfaceColor),
                             ),
                           ],

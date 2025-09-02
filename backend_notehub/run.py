@@ -4,19 +4,12 @@ import pymysql
 import bcrypt
 from datetime import datetime
 from config import DB_HOST, DB_USER, DB_PASSWORD, DB_NAME
-import cloudinary.uploader
-import cloudinary
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
 CORS(app, resources={r"/": {"origins": ""}})
 
-cloudinary.config(
-  cloud_name="dgtvpcslj",      
-  api_key="298163539819314",    
-  api_secret="DSrPDe6QTeHTobNVx9ufQ8ydgtE" 
-)
 
 def get_db_connection():
     return pymysql.connect(
@@ -40,6 +33,7 @@ def validate_fields(data, required_fields):
 # 🔑 AUTH ENDPOINTS
 # ======================
 
+# endpoint sign up
 @app.route("/signup", methods=["POST"])
 def signup():
     data = request.json
@@ -70,6 +64,7 @@ def signup():
 
     return jsonify({"message": "User created", "user": new_user})
 
+# endpoint login
 @app.route("/login", methods=["POST"])
 def login():
     data = request.json
