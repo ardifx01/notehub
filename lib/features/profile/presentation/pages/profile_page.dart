@@ -6,12 +6,14 @@ import 'package:notehub/core/widgets/dialog_confirmation.dart';
 import 'package:notehub/core/widgets/heatmap_callendar.dart';
 import 'package:notehub/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:notehub/features/auth/presentation/pages/login_page.dart';
+import 'package:notehub/features/note/presentation/controllers/note_controller.dart';
 import 'package:notehub/features/profile/presentation/pages/edit_page.dart';
 
 class ProfilePage extends StatelessWidget {
   ProfilePage({super.key});
 
   final authController = Get.find<AuthController>();
+  final noteController = Get.find<NoteController>();
 
   @override
   Widget build(BuildContext context) {
@@ -124,8 +126,21 @@ class ProfilePage extends StatelessWidget {
                                     },
                                   ),
 
-                                  _InfoBox(title: "Notes", value: "6"),
-                                  _InfoBox(title: "Disimpan", value: "24"),
+                                  Obx(() {
+                                    final jumlahNotes =
+                                        noteController.notes.length;
+                                    return _InfoBox(
+                                        title: "Notes",
+                                        value: jumlahNotes.toString());
+                                  }),
+
+                                  Obx(() {
+                                    final jumlahSavedNotes =
+                                        noteController.savedNotes.length;
+                                    return _InfoBox(
+                                        title: "Disimpan",
+                                        value: jumlahSavedNotes.toString());
+                                  }),
                                 ],
                               ),
                             ),

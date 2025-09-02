@@ -7,12 +7,14 @@ class NoteController extends GetxController {
   final NoteRepository repository;
   NoteController({required this.repository});
 
-  var notes = <NoteModel>[].obs;
-  var savedNotes = <NoteModel>[].obs;
-  var peopleNotes = <NoteModel>[].obs;
-  var allNotes = <NoteModel>[].obs;
-  var isLoading = false.obs;
+  var notes = <NoteModel>[].obs; // Note user (saya)
+  var savedNotes = <NoteModel>[].obs; // Saved note user
+  var allNotes = <NoteModel>[].obs; // Semua note yang ada (fyp)
 
+  var peopleNotes = <NoteModel>[].obs; // Note user lain selected
+  var peopleSavedNotes = <NoteModel>[].obs; // Note saved user lain selected
+
+  var isLoading = false.obs;
 
   // ----------------------------- FILTER
   // filter kategori
@@ -43,15 +45,39 @@ class NoteController extends GetxController {
     return filtered;
   }
 
+  // ----------------------------- Daily Notes untuk heatmap calendar
+  Map<DateTime, int> get notesCount {
+    final map = <DateTime, int>{};
+
+    for (var note in notes) {
+      final date =
+          DateTime(note.tanggal.year, note.tanggal.month, note.tanggal.day);
+      map[date] = (map[date] ?? 0) + 1;
+
+      // batasi maksimal level ke 5
+      if (map[date]! > 5) {
+        map[date] = 5;
+      }
+    }
+    print(map);
+    return map;
+  }
+
   // ----------------------------- FETCH
-  Future<void> fetchUserNotes(int userId) async {
+  Future<void> fetchUserNotes(int userId, {bool forPeople = false}) async {
     try {
       isLoading.value = true;
       var fetchedNotes = await repository.getUserNotes(userId);
 
-      // Urutkan terbaru duluan
-      notes.value = fetchedNotes.reversed.toList();
-      print('🗒️ Notes user $userId berhasil diambil sejumlah ${notes.length}');
+      if (forPeople == false) {
+        notes.value = fetchedNotes.reversed.toList();
+        print(
+            '🗒️ Notes user $userId berhasil diambil sejumlah ${notes.length}');
+      } else {
+        peopleNotes.value = fetchedNotes.reversed.toList();
+        print(
+            '🗒️ Notes user lain $userId berhasil diambil sejumlah ${notes.length}');
+      }
     } catch (e) {
       print("Error fetching notes: $e");
     } finally {
@@ -59,15 +85,20 @@ class NoteController extends GetxController {
     }
   }
 
-  Future<void> fetchSavedNotes(int userId) async {
+  Future<void> fetchSavedNotes(int userId, {bool forPeople = false}) async {
     try {
       isLoading.value = true;
       var fetchedNotes = await repository.getSavedNotes(userId);
 
-      // Urutkan terbaru
-      savedNotes.value = fetchedNotes.reversed.toList();
-      print(
-          '🔖 Saved notes user $userId berhasil diambil sejumlah ${savedNotes.length}');
+       if (forPeople == false) {
+        savedNotes.value  = fetchedNotes.reversed.toList();
+        print(
+            '🔖 Saved notes user $userId berhasil diambil sejumlah ${savedNotes.length}');
+      } else {
+        peopleSavedNotes.value = fetchedNotes.reversed.toList();
+        print(
+            '🔖 Saved notes user lain $userId berhasil diambil sejumlah ${savedNotes.length}');
+      }
     } catch (e) {
       print("Error fetching saved notes: $e");
     } finally {

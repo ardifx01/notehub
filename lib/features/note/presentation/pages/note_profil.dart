@@ -68,8 +68,9 @@ class _NoteProfilState extends State<NoteProfil> {
                 Padding(
                   padding: const EdgeInsets.all(25),
                   child: Obx(() {
-                    final user = authController.selectedUser.value;
-                    if (user == null) {
+                    final selectedUser = authController.selectedUser.value;
+                    
+                    if (selectedUser == null) {
                       // loading sementara
                       return Center(
                         child: CircularProgressIndicator(
@@ -85,14 +86,14 @@ class _NoteProfilState extends State<NoteProfil> {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                Get.to(() => ProfileLain(user: user));
+                                Get.to(() => ProfileLain(selectedUser: selectedUser));
                               },
                               child: CircleAvatar(
                                 radius: 15,
                                 backgroundColor: AppColors.buttonColor2,
-                                backgroundImage: (user.foto != null &&
-                                        user.foto!.isNotEmpty)
-                                    ? NetworkImage(user.foto!)
+                                backgroundImage: (selectedUser.foto != null &&
+                                        selectedUser.foto!.isNotEmpty)
+                                    ? NetworkImage(selectedUser.foto!)
                                     : AssetImage(
                                             'assets/images/default_avatar.png')
                                         as ImageProvider,
@@ -100,7 +101,7 @@ class _NoteProfilState extends State<NoteProfil> {
                             ),
                             SizedBox(width: 10),
                             Text(
-                              user.nama ?? '-',
+                              selectedUser.nama ?? '-',
                               style: TextStyle(color: AppColors.surfaceColor),
                             ),
                           ],
@@ -117,7 +118,7 @@ class _NoteProfilState extends State<NoteProfil> {
                           onIconPressed: () async {
                             try {
                               await noteController.toggleSaveNote(
-                                  user.id, widget.note.id);
+                                  authController.user.value!.id, widget.note.id);
                             } catch (e) {
                               Get.snackbar('Error',
                                   'Gagal save note ini: ${e.toString()}',
