@@ -7,22 +7,40 @@ from config import DB_HOST, DB_USER, DB_PASSWORD, DB_NAME
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
+# ======================
+# 🚀 FLASK APP SETUP
+# ======================
 app = Flask(__name__)
-CORS(app, resources={r"/": {"origins": ""}})
+CORS(app, resources={r"/": {"origins": ""}})  # aktifkan CORS supaya API bisa diakses frontend
 
+# ======================
+# ☁️ CLOUDINARY SETUP
+# ======================
+cloudinary.config(
+  cloud_name="dgtvpcslj",      
+  api_key="298163539819314",    
+  api_secret="DSrPDe6QTeHTobNVx9ufQ8ydgtE" 
+)
 
+# ======================
+# 🔌 DATABASE CONNECTION
+# ======================
 def get_db_connection():
+    """Buka koneksi ke MySQL"""
     return pymysql.connect(
         host=DB_HOST,
         user=DB_USER,
         password=DB_PASSWORD,
         database=DB_NAME,
         charset="utf8mb4",
-        cursorclass=pymysql.cursors.DictCursor
+        cursorclass=pymysql.cursors.DictCursor  # hasil query otomatis dict
     )
 
+# ======================
+# 🛠️ HELPER FUNCTION
+# ======================
 def validate_fields(data, required_fields):
-    """Helper function untuk cek field wajib"""
+    """Cek field wajib ada & tidak kosong"""
     missing = [field for field in required_fields if field not in data or data[field] in [None, ""]]
     if missing:
         return False, f"Field(s) missing or empty: {', '.join(missing)}"
@@ -36,6 +54,7 @@ def validate_fields(data, required_fields):
 # endpoint sign up
 @app.route("/signup", methods=["POST"])
 def signup():
+    """Daftar user baru"""
     data = request.json
     valid, error = validate_fields(data, ["nama", "email", "password"])
     if not valid:
@@ -43,30 +62,33 @@ def signup():
 
     nama = data["nama"]
     email = data["email"]
-    password = bcrypt.hashpw(data["password"].encode("utf-8"), bcrypt.gensalt())
+    password = bcrypt.hashpw(data["password"].encode("utf-8"), bcrypt.gensalt())  # hash password
     foto = data.get("foto", "")
 
+    # simpan user ke database
     with get_db_connection() as db:
-        with db.cursor() as cursor:   # pakai dictionary=True biar hasil dict
+        with db.cursor() as cursor:
             cursor.execute(
                 "INSERT INTO users (nama, email, password, foto) VALUES (%s, %s, %s, %s)",
                 (nama, email, password.decode("utf-8"), foto)
             )
             db.commit()
-            user_id = cursor.lastrowid
+            user_id = cursor.lastrowid  # ambil id user baru
 
+            # ambil data user baru
             cursor.execute("SELECT * FROM users WHERE id=%s", (user_id,))
             new_user = cursor.fetchone()
 
-    # ubah datetime ke isoformat
+    # ubah datetime ke isoformat biar bisa di-JSON
     if new_user and isinstance(new_user.get("tanggal_pembuatan_akun"), datetime):
         new_user["tanggal_pembuatan_akun"] = new_user["tanggal_pembuatan_akun"].isoformat()
 
     return jsonify({"message": "User created", "user": new_user})
 
-# endpoint login
+
 @app.route("/login", methods=["POST"])
 def login():
+    """Login user"""
     data = request.json
     valid, error = validate_fields(data, ["email", "password"])
     if not valid:
@@ -75,11 +97,13 @@ def login():
     email = data["email"]
     password = data["password"].encode("utf-8")
 
+    # cari user berdasarkan email
     with get_db_connection() as db:
-        with db.cursor() as cursor:   # penting: dictionary=True
+        with db.cursor() as cursor:
             cursor.execute("SELECT * FROM users WHERE email=%s", (email,))
             user = cursor.fetchone()
 
+    # verifikasi password
     if user and bcrypt.checkpw(password, user["password"].encode("utf-8")):
         if isinstance(user.get("tanggal_pembuatan_akun"), datetime):
             user["tanggal_pembuatan_akun"] = user["tanggal_pembuatan_akun"].isoformat()
@@ -88,9 +112,13 @@ def login():
         return jsonify({"error": "Invalid credentials"}), 401
 
 
-# endpoint update user
+# ======================
+# 👤 USER ENDPOINTS
+# ======================
+
 @app.route("/user/<int:user_id>", methods=["PUT"])
 def edit_user(user_id):
+    """Update data user"""
     data = request.get_json()
     if not data:
         return jsonify({"message": "Request body kosong"}), 400
@@ -100,7 +128,7 @@ def edit_user(user_id):
     password = data.get("password")
     foto_url = data.get("foto")
 
-    # cek user lama
+    # cek apakah user ada
     with get_db_connection() as db:
         with db.cursor() as cursor:
             cursor.execute("SELECT * FROM users WHERE id=%s", (user_id,))
@@ -109,7 +137,7 @@ def edit_user(user_id):
     if not user_lama:
         return jsonify({"message": "User tidak ditemukan"}), 404
 
-    # fallback ke data lama kalau field kosong
+    # fallback: pakai data lama kalau field kosong
     nama = nama or user_lama["nama"]
     email = email or user_lama["email"]
     foto_url = foto_url or user_lama["foto"]
@@ -123,7 +151,7 @@ def edit_user(user_id):
     query = "UPDATE users SET nama=%s, email=%s, foto=%s"
     params = [nama, email, foto_url]
 
-    if hashed_pw:
+    if hashed_pw:  # update password kalau ada
         query += ", password=%s"
         params.append(hashed_pw)
 
@@ -154,45 +182,30 @@ def edit_user(user_id):
         return jsonify({"message": f"Gagal update user: {e}"}), 500
     
 
-# @app.route("/user/<int:user_id>", methods=["GET"])
-# def get_user(user_id):
-#     with get_db_connection() as db:
-#         with db.cursor(pymysql.cursors.DictCursor) as cursor:
-#             cursor.execute("SELECT id, nama, email, foto, tanggal_pembuatan_akun FROM users WHERE id=%s", (user_id,))
-#             user = cursor.fetchone()
-#             if user and isinstance(user["tanggal_pembuatan_akun"], datetime):
-#                 user["tanggal_pembuatan_akun"] = user["tanggal_pembuatan_akun"].isoformat()
-
-
-#     if not user:
-#         return jsonify({"error": "User not found"}), 404
-
-#     return jsonify(user)
-
-
-# endpoint ambil user tertentu
 @app.route("/user/<int:user_id>", methods=["GET"])
 def get_user(user_id):
+    """Ambil data user berdasarkan ID"""
     with get_db_connection() as db:
         with db.cursor(pymysql.cursors.DictCursor) as cursor:
             cursor.execute("SELECT id, nama, email, foto, tanggal_pembuatan_akun FROM users WHERE id=%s", (user_id,))
             user = cursor.fetchone()
 
             if user and isinstance(user["tanggal_pembuatan_akun"], datetime):
-                    user["tanggal_pembuatan_akun"] = user["tanggal_pembuatan_akun"].isoformat()
+                user["tanggal_pembuatan_akun"] = user["tanggal_pembuatan_akun"].isoformat()
 
     if not user:
         return jsonify({"error": "User not found"}), 404
 
     return jsonify(user)
 
+
 # ======================
 # 📝 NOTE ENDPOINTS
 # ======================
 
-# endpoint buat note baru
 @app.route("/note", methods=["POST"])
 def upload_note():
+    """Buat note baru"""
     data = request.json
     valid, error = validate_fields(data, ["user_id", "judul", "isi"])
     if not valid:
@@ -204,6 +217,7 @@ def upload_note():
     kategori = data.get("kategori", "")
     tanggal = datetime.now().isoformat()  
 
+    # simpan note
     with get_db_connection() as db:
         with db.cursor() as cursor:
             cursor.execute(
@@ -215,9 +229,10 @@ def upload_note():
 
     return jsonify({"message": "Note uploaded", "id": note_id})
 
-# endpoint ambil semua note user tertentu
+
 @app.route("/notes/<int:user_id>", methods=["GET"])
 def get_user_notes(user_id):
+    """Ambil semua note milik user tertentu"""
     with get_db_connection() as db:
         with db.cursor() as cursor:
             cursor.execute("SELECT * FROM notes WHERE user_id=%s", (user_id,))
@@ -225,27 +240,29 @@ def get_user_notes(user_id):
     return jsonify(notes)
 
 
-# endpoint hapus note tertentu
 @app.route("/note/<int:note_id>", methods=["DELETE"])
 def delete_note(note_id):
+    """Hapus note berdasarkan ID"""
     with get_db_connection() as db:
         with db.cursor() as cursor:
             cursor.execute("DELETE FROM notes WHERE id=%s", (note_id,))
             db.commit()
     return jsonify({"message": "Note deleted"})
 
-# endpoint ambil semua note yang ada
+
 @app.route("/notes", methods=["GET"])
 def get_all_notes():
+    """Ambil semua note yang ada di database"""
     with get_db_connection() as db:
         with db.cursor() as cursor:
             cursor.execute("SELECT * FROM notes")
             notes = cursor.fetchall()
     return jsonify(notes)
 
-# endpoint simpan note
+
 @app.route("/save_note", methods=["POST"])
 def save_note():
+    """Simpan note ke daftar saved_notes"""
     data = request.json
     valid, error = validate_fields(data, ["user_id", "note_id"])
     if not valid:
@@ -265,8 +282,10 @@ def save_note():
 
     return jsonify({"message": "Note saved", "id": save_id})
 
+
 @app.route("/unsave_note", methods=["DELETE"])
 def unsave_note():
+    """Hapus note dari daftar saved_notes"""
     data = request.json
     valid, error = validate_fields(data, ["user_id", "note_id"])
     if not valid:
@@ -289,9 +308,9 @@ def unsave_note():
     return jsonify({"message": "Note unsaved"})
 
 
-# endpoint ambil note yang disimpan user tertentu
 @app.route("/saved_notes/<int:user_id>", methods=["GET"])
 def get_saved_notes(user_id):
+    """Ambil semua note yang disimpan user"""
     with get_db_connection() as db:
         with db.cursor() as cursor:
             cursor.execute("""
@@ -303,5 +322,8 @@ def get_saved_notes(user_id):
     return jsonify(notes)
 
 
+# ======================
+# 🚀 RUN APP
+# ======================
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
