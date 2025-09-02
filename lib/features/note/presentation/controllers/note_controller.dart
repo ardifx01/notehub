@@ -7,22 +7,20 @@ class NoteController extends GetxController {
   final NoteRepository repository;
   NoteController({required this.repository});
 
-  var notes = <NoteModel>[].obs; // Note user (saya)
-  var savedNotes = <NoteModel>[].obs; // Saved note user
-  var allNotes = <NoteModel>[].obs; // Semua note yang ada (fyp)
-
-  var peopleNotes = <NoteModel>[].obs; // Note user lain selected
-  var peopleSavedNotes = <NoteModel>[].obs; // Note saved user lain selected
-
+  // ----------------------------- DATA
+  var notes = <NoteModel>[].obs;           // catatan milik user
+  var savedNotes = <NoteModel>[].obs;      // catatan disimpan user
+  var allNotes = <NoteModel>[].obs;        // semua catatan (fyp)
+  var peopleNotes = <NoteModel>[].obs;     // catatan user lain (selected)
+  var peopleSavedNotes = <NoteModel>[].obs;// catatan disimpan user lain
   var isLoading = false.obs;
 
-  // ----------------------------- FILTER
-  // filter kategori
-  var selectedFilter = ''.obs;
+  // ----------------------------- FILTER STATE
+  var selectedFilter = ''.obs;   // filter kategori
+  var searchQuery = ''.obs;      // filter judul (search bar)
 
-  // filter judul (search bar)
-  var searchQuery = ''.obs;
-
+  // ----------------------------- FILTER FUNCTION
+  /// mengembalikan notes sesuai filter kategori + judul
   List<NoteModel> getFilteredNotes(List<NoteModel> source) {
     var filtered = source;
 
@@ -45,7 +43,8 @@ class NoteController extends GetxController {
     return filtered;
   }
 
-  // ----------------------------- Daily Notes untuk heatmap calendar
+  // ----------------------------- HEATMAP CALENDAR
+  /// menghitung jumlah note per tanggal (maksimal level = 5)
   Map<DateTime, int> get notesCount {
     final map = <DateTime, int>{};
 
@@ -54,7 +53,6 @@ class NoteController extends GetxController {
           DateTime(note.tanggal.year, note.tanggal.month, note.tanggal.day);
       map[date] = (map[date] ?? 0) + 1;
 
-      // batasi maksimal level ke 5
       if (map[date]! > 5) {
         map[date] = 5;
       }
@@ -64,19 +62,19 @@ class NoteController extends GetxController {
   }
 
   // ----------------------------- FETCH
+  /// ambil notes milik user (atau user lain dengan forPeople = true)
   Future<void> fetchUserNotes(int userId, {bool forPeople = false}) async {
     try {
       isLoading.value = true;
       var fetchedNotes = await repository.getUserNotes(userId);
 
-      if (forPeople == false) {
+      if (!forPeople) {
         notes.value = fetchedNotes.reversed.toList();
-        print(
-            '🗒️ Notes user $userId berhasil diambil sejumlah ${notes.length}');
+        print('🗒️ Notes user $userId berhasil diambil sejumlah ${notes.length}');
       } else {
         peopleNotes.value = fetchedNotes.reversed.toList();
         print(
-            '🗒️ Notes user lain $userId berhasil diambil sejumlah ${notes.length}');
+            '🗒️ Notes user lain $userId berhasil diambil sejumlah ${peopleNotes.length}');
       }
     } catch (e) {
       print("Error fetching notes: $e");
@@ -85,19 +83,20 @@ class NoteController extends GetxController {
     }
   }
 
+  /// ambil saved notes milik user (atau user lain dengan forPeople = true)
   Future<void> fetchSavedNotes(int userId, {bool forPeople = false}) async {
     try {
       isLoading.value = true;
       var fetchedNotes = await repository.getSavedNotes(userId);
 
-       if (forPeople == false) {
-        savedNotes.value  = fetchedNotes.reversed.toList();
+      if (!forPeople) {
+        savedNotes.value = fetchedNotes.reversed.toList();
         print(
             '🔖 Saved notes user $userId berhasil diambil sejumlah ${savedNotes.length}');
       } else {
         peopleSavedNotes.value = fetchedNotes.reversed.toList();
         print(
-            '🔖 Saved notes user lain $userId berhasil diambil sejumlah ${savedNotes.length}');
+            '🔖 Saved notes user lain $userId berhasil diambil sejumlah ${peopleSavedNotes.length}');
       }
     } catch (e) {
       print("Error fetching saved notes: $e");
@@ -106,16 +105,15 @@ class NoteController extends GetxController {
     }
   }
 
+  /// ambil semua notes (random order untuk FYP)
   Future<void> fetchAllNotes() async {
     try {
       isLoading.value = true;
       var fetchedNotes = await repository.getAllNotes();
-
-      // 🔀 Acak urutan list
-      fetchedNotes.shuffle();
+      fetchedNotes.shuffle(); // acak urutan
 
       allNotes.value = fetchedNotes;
-      print('📑 Semua Notes  diambil sejumlah ${allNotes.length}');
+      print('📑 Semua Notes diambil sejumlah ${allNotes.length}');
     } catch (e) {
       print("Error fetching all database notes");
     } finally {
@@ -124,6 +122,7 @@ class NoteController extends GetxController {
   }
 
   // ----------------------------- ADD & DELETE
+  /// tambah note baru ke repository & simpan di state user
   Future<void> addNote(
       int userId, String judul, String isi, String kategori) async {
     try {
@@ -134,6 +133,7 @@ class NoteController extends GetxController {
     }
   }
 
+  /// hapus note berdasarkan id
   Future<void> removeNote(int noteId) async {
     try {
       await repository.deleteNote(noteId);
@@ -144,6 +144,7 @@ class NoteController extends GetxController {
   }
 
   // ----------------------------- SAVE & UNSAVE
+  /// simpan note ke daftar saved user
   Future<void> saveNote(int userId, int noteId) async {
     try {
       await repository.saveNote(userId, noteId);
@@ -153,7 +154,8 @@ class NoteController extends GetxController {
     }
   }
 
-  Future<void> removesavedNote(int userId, int noteId) async {
+  /// hapus note dari daftar saved user
+  Future<void> removeSavedNote(int userId, int noteId) async {
     try {
       await repository.unsaveNote(userId, noteId);
       await fetchSavedNotes(userId);
@@ -162,14 +164,16 @@ class NoteController extends GetxController {
     }
   }
 
+  /// toggle simpan / unsave note
   Future<void> toggleSaveNote(int userId, int noteId) async {
     if (isNoteSaved(noteId)) {
-      await removesavedNote(userId, noteId);
+      await removeSavedNote(userId, noteId);
     } else {
       await saveNote(userId, noteId);
     }
   }
 
+  /// cek apakah note dengan id tertentu sudah disimpan user
   bool isNoteSaved(int noteId) {
     return savedNotes.any((n) => n.id == noteId);
   }

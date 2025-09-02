@@ -27,7 +27,7 @@ Future<void> initDependencies() async {
   Get.lazyPut(() => BuatNoteController(), fenix: true);
   Get.put(NoteController(repository: Get.find<NoteRepository>()));
 
-  // ✅ AUTH
+  // ✅ AUTH / PROFILE
   // DataSource
   Get.lazyPut(() => AuthRemoteDataSource(), fenix: true);
   Get.lazyPut(() => AuthLocalDataSource(), fenix: true);
@@ -45,9 +45,4 @@ Future<void> initDependencies() async {
   Get.put(SignUpController(), permanent: true);
   Get.put(EditController(), permanent: true);
   Get.put(AuthController(Get.find<AuthRepository>()), permanent: true);
-
-  // ✅ PROFILE
-  // Datasource
-  // Repository
-  // Controller
 }

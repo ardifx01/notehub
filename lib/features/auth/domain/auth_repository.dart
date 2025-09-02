@@ -15,9 +15,10 @@ abstract class AuthRepository {
   /// Cek user sekarang (dari SharedPreferences)
   Future<UserModel?> getCurrentUser();
 
+  // Ambil user tertentu berdasarkan id 
   Future<UserModel> getUser(int userId);
 
-  /// Update user
+  /// Update user 
   Future<UserModel> editUser(
       int userId, String nama, String email, String? foto, String? password);
 

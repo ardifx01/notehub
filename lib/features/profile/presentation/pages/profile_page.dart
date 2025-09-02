@@ -26,7 +26,8 @@ class ProfilePage extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  // ---- header hijau dengan gambar dekorasi + tombol back
+
+                  // ================= HEADER HIJAU DENGAN GAMBAR =================
                   Stack(
                     children: [
                       // background header
@@ -54,7 +55,7 @@ class ProfilePage extends StatelessWidget {
                     ],
                   ),
 
-                  // -------- container putih + avatar overlap
+                  // ================= CONTAINER PUTIH BERISI PROFIL =================
                   Stack(
                     clipBehavior: Clip.none,
                     children: [
@@ -104,7 +105,7 @@ class ProfilePage extends StatelessWidget {
 
                             const SizedBox(height: 20),
 
-                            // info box sejajar (Sejak, Notes, Disimpan)
+                            // ================= INFO BOX (Sejak, Notes, Disimpan) =================
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 30),
@@ -112,7 +113,6 @@ class ProfilePage extends StatelessWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  // TODO: ganti value dengan data asli
                                   Obx(
                                     () {
                                       final createdAt =
@@ -125,7 +125,6 @@ class ProfilePage extends StatelessWidget {
                                       );
                                     },
                                   ),
-
                                   Obx(() {
                                     final jumlahNotes =
                                         noteController.notes.length;
@@ -133,7 +132,6 @@ class ProfilePage extends StatelessWidget {
                                         title: "Notes",
                                         value: jumlahNotes.toString());
                                   }),
-
                                   Obx(() {
                                     final jumlahSavedNotes =
                                         noteController.savedNotes.length;
@@ -151,7 +149,7 @@ class ProfilePage extends StatelessWidget {
                             ),
                             const SizedBox(height: 20),
 
-                            // heatmap placeholder
+                            // Kalender heatmap
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 25),

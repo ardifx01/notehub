@@ -54,7 +54,7 @@ class _ProfileLainState extends State<ProfileLain> {
             width: double.infinity,
             padding: const EdgeInsets.only(top: 10, bottom: 30),
             decoration: const BoxDecoration(
-              color: Color(0xFF8CA45A), // hijau olive seperti di gambar
+              color: AppColors.primaryColor
             ),
             child: Column(
               children: [

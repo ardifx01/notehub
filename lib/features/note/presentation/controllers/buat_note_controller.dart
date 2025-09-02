@@ -8,7 +8,8 @@ class BuatNoteController extends GetxController {
   var judulController = TextEditingController();
   var isiNoteController = TextEditingController();
   var kategoriDipilih = 'Random'.obs;
-
+  
+  // List warna untuk setiap kategori note
   final List<Map<String, dynamic>> kategoriList = [
     {
       "label": "Belajar",
