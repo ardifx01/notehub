@@ -40,28 +40,10 @@ class _NoteProfilState extends State<NoteProfil> {
       body: Stack(
         children: [
           Container(
-<<<<<<< HEAD
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(
-                    'assets/images/background_${widget.note.kategori.toLowerCase()}.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          SafeArea(
-            child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: IconButton(
-=======
               decoration: BoxDecoration(
                   image: DecorationImage(
                       image: AssetImage(
-                          'assets/images/background_${note.kategori.toLowerCase()}.png'),
+                          'assets/images/background_${widget.note.kategori.toLowerCase()}.png'),
                       fit: BoxFit.cover))),
           Column(
             children: [
@@ -70,80 +52,78 @@ class _NoteProfilState extends State<NoteProfil> {
                 child: Padding(
                   padding: const EdgeInsets.all(15),
                   child: IconButton(
->>>>>>> bd6ee6f (frontend_5)
                       onPressed: () => Get.back(),
                       color: AppColors.surfaceColor,
                       icon: Icon(Icons.arrow_back_rounded),
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(25),
-                  child: Obx(() {
-                    final selectedUser = authController.selectedUser.value;
-                    
-                    if (selectedUser == null) {
-                      return Center(
-                        child: CircularProgressIndicator(
-                          color: AppColors.buttonColor2,
-                        ),
-                      );
-                    }
-
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Get.to(() => ProfileLain(selectedUser: selectedUser));
-                              },
-                              child: CircleAvatar(
-                                radius: 15,
-                                backgroundColor: AppColors.buttonColor2,
-                                backgroundImage: (selectedUser.foto != null &&
-                                        selectedUser.foto!.isNotEmpty)
-                                    ? NetworkImage(selectedUser.foto!)
-                                    : AssetImage(
-                                            'assets/images/default_avatar.png')
-                                        as ImageProvider,
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Text(
-                              selectedUser.nama,
-                              style: TextStyle(color: AppColors.surfaceColor),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 15),
-                        NoteDetailCard(
-                          note: widget.note,
-                          icon: noteController.isNoteSaved(widget.note.id)
-                              ? Icons.bookmark
-                              : Icons.bookmark_border,
-                          iconColor: noteController.isNoteSaved(widget.note.id)
-                              ? AppColors.buttonColor3
-                              : Colors.grey.shade300,
-                          onIconPressed: () async {
-                            try {
-                              await noteController.toggleSaveNote(
-                                  authController.user.value!.id, widget.note.id);
-                            } catch (e) {
-                              Get.snackbar('Error',
-                                  'Gagal save note ini: ${e.toString()}',
-                                  backgroundColor: AppColors.errorColor,
-                                  colorText: AppColors.surfaceColor);
-                            }
-                          },
-                        ),
-                      ],
+              Padding(
+                padding: const EdgeInsets.all(25),
+                child: Obx(() {
+                  final user = authController.selectedUser.value;
+                  if (user == null) {
+                    // loading sementara
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.buttonColor2,
+                      ),
                     );
-                  }),
-                ),
-              ],
-            ),
+                  }
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Get.to(() => ProfileLain(user: user));
+                            },
+                            child: CircleAvatar(
+                              radius: 15,
+                              backgroundColor: AppColors.buttonColor2,
+                              backgroundImage: (user.foto != null &&
+                                      user.foto!.isNotEmpty)
+                                  ? NetworkImage(user.foto!)
+                                  : AssetImage(
+                                          'assets/images/default_avatar.png')
+                                      as ImageProvider,
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            user.nama ?? '-',
+                            style: TextStyle(color: AppColors.surfaceColor),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 15),
+                      NoteDetailCard(
+                        note: widget.note,
+                        icon: noteController.isNoteSaved(widget.note.id)
+                            ? Icons.bookmark
+                            : Icons.bookmark_border,
+                        iconColor: noteController.isNoteSaved(widget.note.id)
+                            ? AppColors.buttonColor3
+                            : Colors.grey.shade300,
+                        onIconPressed: () async {
+                          try {
+                            await noteController.toggleSaveNote(
+                                user.id, widget.note.id);
+                          } catch (e) {
+                            Get.snackbar('Error',
+                                'Gagal save note ini: ${e.toString()}',
+                                backgroundColor: AppColors.errorColor,
+                                colorText: AppColors.surfaceColor);
+                          }
+                        },
+                      ),
+                    ],
+                  );
+                }),
+              ),
+            ],
           ),
         ],
       ),

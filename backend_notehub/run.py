@@ -154,20 +154,20 @@ def edit_user(user_id):
         return jsonify({"message": f"Gagal update user: {e}"}), 500
     
 
-@app.route("/user/<int:user_id>", methods=["GET"])
-def get_user(user_id):
-    with get_db_connection() as db:
-        with db.cursor(pymysql.cursors.DictCursor) as cursor:
-            cursor.execute("SELECT id, nama, email, foto, tanggal_pembuatan_akun FROM users WHERE id=%s", (user_id,))
-            user = cursor.fetchone()
-            if user and isinstance(user["tanggal_pembuatan_akun"], datetime):
-                user["tanggal_pembuatan_akun"] = user["tanggal_pembuatan_akun"].isoformat()
+# @app.route("/user/<int:user_id>", methods=["GET"])
+# def get_user(user_id):
+#     with get_db_connection() as db:
+#         with db.cursor(pymysql.cursors.DictCursor) as cursor:
+#             cursor.execute("SELECT id, nama, email, foto, tanggal_pembuatan_akun FROM users WHERE id=%s", (user_id,))
+#             user = cursor.fetchone()
+#             if user and isinstance(user["tanggal_pembuatan_akun"], datetime):
+#                 user["tanggal_pembuatan_akun"] = user["tanggal_pembuatan_akun"].isoformat()
 
 
-    if not user:
-        return jsonify({"error": "User not found"}), 404
+#     if not user:
+#         return jsonify({"error": "User not found"}), 404
 
-    return jsonify(user)
+#     return jsonify(user)
 
 
 # endpoint ambil user tertentu
