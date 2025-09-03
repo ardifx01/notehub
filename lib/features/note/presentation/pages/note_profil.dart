@@ -110,7 +110,7 @@ class _NoteProfilState extends State<NoteProfil> {
                         onIconPressed: () async {
                           try {
                             await noteController.toggleSaveNote(
-                                user.id, widget.note.id);
+                                authController.user.value!.id, widget.note.id);
                           } catch (e) {
                             Get.snackbar('Error',
                                 'Gagal save note ini: ${e.toString()}',
