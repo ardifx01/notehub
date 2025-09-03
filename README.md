@@ -35,11 +35,11 @@ Aplikasi **Notehub** yang dimana pengguna dapat membuat sebuah catatan tentang a
 ### 🌐 Backend (Flask)
 
 - REST API
-- MySQL Database
 - Ngrox
 
 ## 📂 Penyimpanan (Database)
 
 - MySQL
-- Cloude
+- Cloudinary
+
 ---
