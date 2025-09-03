@@ -37,7 +37,7 @@ Aplikasi **Notehub** yang dimana pengguna dapat membuat sebuah catatan tentang a
 - REST API
 - Ngrox
 
-## 📂 Penyimpanan (Database)
+### 📂 Penyimpanan (Database)
 
 - MySQL
 - Cloudinary
