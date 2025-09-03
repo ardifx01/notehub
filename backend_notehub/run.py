@@ -5,6 +5,7 @@ import bcrypt
 from datetime import datetime
 from config import DB_HOST, DB_USER, DB_PASSWORD, DB_NAME
 import logging
+import cloudinary
 logging.basicConfig(level=logging.DEBUG)
 
 # ======================
@@ -325,5 +326,10 @@ def get_saved_notes(user_id):
 # ======================
 # 🚀 RUN APP
 # ======================
+
+@app.route("/")
+def home():
+    return jsonify({"message": "Hello dari Flask + Ngrok!"})
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

@@ -78,7 +78,7 @@ class _NoteProfilState extends State<NoteProfil> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              Get.to(() => ProfileLain(user: user));
+                              Get.to(() => ProfileLain(selectedUser: user));
                             },
                             child: CircleAvatar(
                               radius: 15,
