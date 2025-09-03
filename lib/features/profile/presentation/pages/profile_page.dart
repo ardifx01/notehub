@@ -232,7 +232,7 @@ class ProfilePage extends StatelessWidget {
                             child: authController.user.value?.foto != null
                                 ? ClipOval(
                                     child: Image.network(
-                                      authController.user.value!.foto!,
+                                      authController.user.value!.foto!.trim(),
                                       fit: BoxFit.cover,
                                       width: 100,
                                       height: 100,
