@@ -67,7 +67,7 @@ id, user_id, note_id
 
 - 👨‍💻 **Wahyu** - Pengembang Frontend (PM)
 - 👨‍💻 **Fajar** – Pengembang Backend  
-- 🤖 **Leo** – Asisten AI  
+- 🤖 Asisten AI  
 
 ---
 
