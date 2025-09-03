@@ -14,7 +14,7 @@ class NoteController extends GetxController {
   var peopleNotes = <NoteModel>[].obs;     // catatan user lain (selected)
   var peopleSavedNotes = <NoteModel>[].obs;// catatan disimpan user lain
   var isLoading = false.obs;
-
+  
   // ----------------------------- FILTER STATE
   var selectedFilter = ''.obs;   // filter kategori
   var searchQuery = ''.obs;      // filter judul (search bar)
