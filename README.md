@@ -60,3 +60,20 @@ id, user_id, judul, isi, kategori, tanggal
 ```sql
 id, user_id, note_id
 ```
+
+---
+
+## 👥 Kontributor
+
+- 👨‍💻 **Wahyu** - Pengembang Frontend (PM)
+- 👨‍💻 **Fajar** – Pengembang Backend  
+- 🤖 **Leo** – Asisten AI  
+
+---
+
+## Lisensi
+
+Proyek ini dilisensikan sebagai perangkat lunak terbuka (**Open Source**).  
+Seluruh fitur perangkat lunak ini dapat di akses dengan gratis tanpa pungutan biaya 
+📩 Hubungi pengembang untuk info lebih lanjut.  
+[Lihat Lisensi](License)
