@@ -76,4 +76,4 @@ id, user_id, note_id
 Proyek ini dilisensikan sebagai perangkat lunak terbuka (**Open Source**).  
 Seluruh fitur perangkat lunak ini dapat di akses dengan gratis tanpa pungutan biaya 
 📩 Hubungi pengembang untuk info lebih lanjut.  
-[Lihat Lisensi](License)
+[Lihat Lisensi](LICENSE)
