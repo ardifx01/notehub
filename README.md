@@ -29,7 +29,7 @@ Aplikasi **Notehub** yang dimana pengguna dapat membuat sebuah catatan tentang a
 - Flutter SDK
 - [`http`](https://pub.dev/packages/http) – komunikasi API
 - [`shared_preferences`](https://pub.dev/packages/shared_preferences) – penyimpanan lokal
-- [`provider`](https://pub.dev/packages/provider) & [`get x`](https://pub.dev/packages/get) – manajemen state
+- [`get x`](https://pub.dev/packages/get) – manajemen state
 - [`foto`](https://pub.dev/packages/image_picker) - mengambil foto untuk profile
 
 ### 🌐 Backend (Flask)
