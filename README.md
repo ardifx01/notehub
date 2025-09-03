@@ -15,9 +15,24 @@ Aplikasi **Notehub** yang dimana pengguna dapat membuat sebuah catatan tentang a
 ## 🧩 Fitur Utama
 
 - ✒ Membuat note baru
-- 👁 Membaca note user lain
+- 👁 Membaca note pengguna lain
 - 🔍 Jelajahi ribuan note 
 - 🔖 Simpan note favorit
 - 📆 Kalender frekuensi menulis note
 
 ---
+
+## 🛠️ Teknologi yang Digunakan
+
+### 📱 Frontend (Flutter)
+
+- Flutter SDK
+- [`http`](https://pub.dev/packages/http) – komunikasi API
+- [`shared_preferences`](https://pub.dev/packages/shared_preferences) – penyimpanan lokal
+- [`flutter_local_notifications`](https://pub.dev/packages/flutter_local_notifications) – notifikasi
+- [`provider`](https://pub.dev/packages/provider) & [`get`](https://pub.dev/packages/get) – manajemen state
+
+### 🌐 Backend (Flask)
+
+- REST API
+- MySQL Database
