@@ -1,4 +1,8 @@
 
+<img width="1240" height="649" alt="notehubMockup" src="https://github.com/user-attachments/assets/a7c0a723-018a-4e85-b43c-855d9a6aeade" />
+
+---
+
 # 📓 Notehub
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/FajarFarel/notehub)
@@ -18,5 +22,3 @@ Aplikasi **Notehub** yang dimana pengguna dapat membuat sebuah catatan tentang a
 - 📆 Kalender frekuensi menulis note
 
 ---
-
-<img width="1240" height="649" alt="notehubMockup" src="https://github.com/user-attachments/assets/a7c0a723-018a-4e85-b43c-855d9a6aeade" />
