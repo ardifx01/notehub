@@ -76,7 +76,7 @@ class EditPage extends StatelessWidget {
                           if (fotoPreview != null) {
                             avatarImage = FileImage(File(fotoPreview));
                           } else if (fotoUser != null && fotoUser.isNotEmpty) {
-                            avatarImage = NetworkImage(fotoUser);
+                            avatarImage = NetworkImage(fotoUser.trim());
                           } else {
                             avatarImage =
                                 AssetImage('assets/images/default_avatar.png');

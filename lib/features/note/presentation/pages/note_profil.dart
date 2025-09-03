@@ -85,7 +85,7 @@ class _NoteProfilState extends State<NoteProfil> {
                               backgroundColor: AppColors.buttonColor2,
                               backgroundImage: (user.foto != null &&
                                       user.foto!.isNotEmpty)
-                                  ? NetworkImage(user.foto!)
+                                  ? NetworkImage(user.foto!.trim())
                                   : AssetImage(
                                           'assets/images/default_avatar.png')
                                       as ImageProvider,

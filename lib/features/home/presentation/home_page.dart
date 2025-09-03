@@ -38,7 +38,7 @@ class HomePage extends StatelessWidget {
                             backgroundColor: AppColors.buttonColor2,
                             backgroundImage: authController.user.value?.foto !=
                                     ''
-                                ? NetworkImage(authController.user.value!.foto!)
+                                ? NetworkImage(authController.user.value!.foto!.trim())
                                 : AssetImage(
                                     'assets/images/default_avatar.png'),
                           ),

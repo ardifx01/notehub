@@ -77,7 +77,7 @@ class _ProfileLainState extends State<ProfileLain> {
                   child: widget.selectedUser.foto != null
                       ? ClipOval(
                           child: Image.network(
-                            widget.selectedUser.foto!,
+                            widget.selectedUser.foto!.trim(),
                             fit: BoxFit.cover,
                             width: 100,
                             height: 100,
