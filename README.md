@@ -43,3 +43,20 @@ Aplikasi **Notehub** yang dimana pengguna dapat membuat sebuah catatan tentang a
 - Cloudinary
 
 ---
+
+## 🗃️ Struktur Database
+
+### 📘 Tabel users
+```sql
+id, nama, email, password, foto, tanggal_pembuatan_akun
+```
+
+### 📗 Tabel notes
+```sql
+id, user_id, judul, isi, kategori, tanggal
+```
+
+### 📕 Tabel save_notes
+```sql
+id, user_id, note_id
+```
