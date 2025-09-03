@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart'; 
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -109,41 +110,45 @@ class AuthController extends GetxController {
   }
 
   /// --- Pilih foto dari galeri, simpan path sementara untuk preview
-  Future<void> pilihFotoPreview() async {
-    PermissionStatus status;
+Future<void> pilihFotoPreview() async {
+  PermissionStatus status;
 
-    if (Platform.isAndroid) {
-      // android 13 ke atas pakai photos, 12 ke bawah pakai storage
-      if (Platform.version.contains('13') ||
-          Platform.version.contains('14') ||
-          Platform.version.contains('15')) {
-        status = await Permission.photos.request();
-      } else {
-        status = await Permission.storage.request();
-      }
-    } else if (Platform.isIOS) {
+  if (Platform.isAndroid) {
+    final androidInfo = await DeviceInfoPlugin().androidInfo;
+    final sdkInt = androidInfo.version.sdkInt;
+
+    if (sdkInt >= 33) {
+      // Android 13 ke atas → pakai photos
       status = await Permission.photos.request();
     } else {
-      return; // platform lain tidak didukung
+      // Android 12 ke bawah → pakai storage
+      status = await Permission.storage.request();
     }
-
-    // cek status permission
-    if (!status.isGranted) {
-      if (status.isPermanentlyDenied) openAppSettings();
-      debugPrint("❌ Permission galeri ditolak");
-      return;
-    }
-
-    debugPrint("✅ Permission galeri diberikan");
-
-    // buka galeri
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      fotoBaruPath.value = image.path; // simpan path sementara
-      debugPrint("📸 Path foto: ${image.path}");
-    }
+  } else if (Platform.isIOS) {
+    status = await Permission.photos.request();
+  } else {
+    return; // platform lain tidak didukung
   }
 
+  // cek status permission
+  if (!status.isGranted) {
+    if (status.isPermanentlyDenied) {
+      await openAppSettings();
+    }
+    debugPrint("❌ Permission galeri ditolak");
+    return;
+  }
+
+  debugPrint("✅ Permission galeri diberikan");
+
+  // buka galeri
+  final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+  if (image != null) {
+    // contoh kalau pakai RxString di GetX
+    fotoBaruPath.value = image.path;
+    debugPrint("📸 Path foto: ${image.path}");
+  }
+}
   /// --- Edit user (nama, email, foto, password)
   Future<void> editUsercon(
       String? nama, String? email, String? password) async {
