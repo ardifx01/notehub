@@ -1,3 +1,5 @@
+# 📓 Notehub
+
 ![GitHub repo size](https://img.shields.io/github/repo-size/FajarFarel/notehub)
 ![GitHub stars](https://img.shields.io/github/stars/FajarFarel/notehub?style=social)
 ![GitHub last commit](https://img.shields.io/github/last-commit/FajarFarel/notehub)
