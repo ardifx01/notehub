@@ -94,14 +94,14 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<void> ambilUser(int userId) async {
+  Future<UserModel> ambilUser(int userId) async {
     isLoading.value = true;
     debugPrint("🤣 Mulai ambil data user lain $userId");
     try {
       final userData = await authRepository.getUser(userId);
       debugPrint(
           "✅ Ambil data user lain berhasil, user lain: ${userData.toJson()}");
-      selectedUser.value = userData;
+      return userData;
     } catch (e) {
       debugPrint("❌ Ambil data user gagal: $e");
       rethrow;

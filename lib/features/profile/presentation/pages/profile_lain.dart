@@ -7,6 +7,7 @@ import 'package:notehub/core/widgets/small_note_card.dart';
 import 'package:notehub/features/auth/models/user_model.dart';
 import 'package:notehub/features/note/presentation/controllers/note_controller.dart';
 import 'package:notehub/features/note/presentation/pages/note_profil.dart';
+import 'package:notehub/features/profile/presentation/controllers/profile_controller.dart';
 
 class ProfileLain extends StatefulWidget {
   final UserModel selectedUser; // user lain
@@ -18,30 +19,7 @@ class ProfileLain extends StatefulWidget {
 
 class _ProfileLainState extends State<ProfileLain> {
   final noteController = Get.find<NoteController>();
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadUserData();
-    });
-  }
-
-  Future<void> _loadUserData() async {
-    try {
-      await noteController.fetchUserNotes(widget.selectedUser.id,
-          forPeople: true);
-      await noteController.fetchSavedNotes(widget.selectedUser.id,
-          forPeople: true);
-    } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Gagal memuat user: $e',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-    }
-  }
+  final profileController = Get.find<ProfileController>(); // inject
 
   @override
   Widget build(BuildContext context) {
@@ -50,92 +28,92 @@ class _ProfileLainState extends State<ProfileLain> {
       body: Column(
         children: [
           // ================= HEADER HIJAU =================
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.only(top: 10, bottom: 30),
-            decoration: const BoxDecoration(
-              color: AppColors.primaryColor
-            ),
-            child: Column(
-              children: [
-                // tombol back
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: IconButton(
-                      icon: const Icon(Icons.arrow_back,
-                          color: AppColors.surfaceColor),
-                      onPressed: () => Get.back(),
+          Obx(() {
+            final user = profileController.selectedUser.value;
+            return Container(
+              width: double.infinity,
+              padding: const EdgeInsets.only(top: 10, bottom: 30),
+              decoration: const BoxDecoration(color: AppColors.primaryColor),
+              child: Column(
+                children: [
+                  // tombol back
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: IconButton(
+                        icon: const Icon(Icons.arrow_back,
+                            color: AppColors.surfaceColor),
+                        onPressed: () => Get.back(),
+                      ),
                     ),
                   ),
-                ),
-                // avatar + nama
-                CircleAvatar(
-                  radius: 50,
-                  backgroundColor: AppColors.buttonColor2,
-                  child: widget.selectedUser.foto != null
-                      ? ClipOval(
-                          child: Image.network(
-                            widget.selectedUser.foto!.trim(),
-                            fit: BoxFit.cover,
-                            width: 100,
-                            height: 100,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Image.asset(
-                                "assets/images/default_avatar.png",
-                                fit: BoxFit.cover,
-                                width: 100,
-                                height: 100,
-                              );
-                            },
+                  // avatar + nama
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundColor: AppColors.buttonColor2,
+                    child: user?.foto != null
+                        ? ClipOval(
+                            child: Image.network(
+                              user!.foto!.trim(),
+                              fit: BoxFit.cover,
+                              width: 100,
+                              height: 100,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Image.asset(
+                                  "assets/images/default_avatar.png",
+                                  fit: BoxFit.cover,
+                                  width: 100,
+                                  height: 100,
+                                );
+                              },
+                            ),
+                          )
+                        : ClipOval(
+                            child: Image.asset(
+                              "assets/images/default_avatar.png",
+                              fit: BoxFit.cover,
+                              width: 100,
+                              height: 100,
+                            ),
                           ),
-                        )
-                      : ClipOval(
-                          child: Image.asset(
-                            "assets/images/default_avatar.png",
-                            fit: BoxFit.cover,
-                            width: 100,
-                            height: 100,
-                          ),
-                        ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  widget.selectedUser.nama,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.surfaceColor,
                   ),
-                ),
-                const SizedBox(height: 20),
+                  const SizedBox(height: 10),
+                  Text(
+                    user?.nama ?? widget.selectedUser.nama,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.surfaceColor,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
 
-                // info box (Sejak, Notes, Disimpan)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _InfoBox(
-                        title: "Sejak",
-                        value: formatTanggal(widget.selectedUser.createdAt),
-                      ),
-                      Obx(() => _InfoBox(
-                            title: "Notes",
-                            value: noteController.peopleNotes.length.toString(),
-                          )),
-                      Obx(() => _InfoBox(
-                            title: "Disimpan",
-                            value: noteController.peopleSavedNotes.length
-                                .toString(),
-                          )),
-                    ],
+                  // info box (Sejak, Notes, Disimpan)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _InfoBox(
+                          title: "Sejak",
+                          value: formatTanggal(user?.createdAt ?? widget.selectedUser.createdAt),
+                        ),
+                        Obx(() => _InfoBox(
+                              title: "Notes",
+                              value: noteController.peopleNotes.length.toString(),
+                            )),
+                        Obx(() => _InfoBox(
+                              title: "Disimpan",
+                              value: noteController.peopleSavedNotes.length.toString(),
+                            )),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
+                ],
+              ),
+            );
+          }),
 
           // ================= ISI CATATAN =================
           Expanded(

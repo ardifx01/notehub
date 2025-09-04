@@ -12,6 +12,7 @@ import 'package:notehub/features/note/domain/note_repository.dart';
 import 'package:notehub/features/note/presentation/controllers/buat_note_controller.dart';
 import 'package:notehub/features/note/presentation/controllers/note_controller.dart';
 import 'package:notehub/features/profile/presentation/controllers/edit_controller.dart';
+import 'package:notehub/features/profile/presentation/controllers/profile_controller.dart';
 
 Future<void> initDependencies() async {
   // ✅ NOTE
@@ -45,4 +46,5 @@ Future<void> initDependencies() async {
   Get.put(SignUpController(), permanent: true);
   Get.put(EditController(), permanent: true);
   Get.put(AuthController(Get.find<AuthRepository>()), permanent: true);
+  Get.lazyPut(() => ProfileController(authRepository: Get.find<AuthRepository>()), fenix: true);
 }
