@@ -173,6 +173,12 @@ class _BuatNotePageState extends State<BuatNotePage> {
                                       await noteController.addNote(
                                           userId, judul, isi, kategori);
 
+                                      Get.snackbar(
+                                        'Berhasil',
+                                        'Note berhasil diupload!',
+                                        snackPosition: SnackPosition.BOTTOM,
+                                      );
+
                                       // Reset textfield controller
                                       controller.judulController.clear();
                                       controller.isiNoteController.clear();
