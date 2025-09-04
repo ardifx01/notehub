@@ -1,6 +1,6 @@
 class Config {
   // URL backend
-  static const base_URL = "https://2f120917cccb.ngrok-free.app";
+  static const base_URL = "https://d3b330d23469.ngrok-free.app";
 //   static const base_URL = "http://10.0.5.41:5000";
 
   // Cloudinary config (Service untuk hosting foto)
