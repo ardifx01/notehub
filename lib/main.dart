@@ -11,7 +11,7 @@ Future<void> main() async {
   await initDependencies(); // Inisialisasi dependency
   runApp(const MyApp());
 }
-
+ 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   
