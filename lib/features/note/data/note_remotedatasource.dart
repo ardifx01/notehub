@@ -58,13 +58,40 @@ class NoteRemoteDataSource {
   // ==============================
   // AMBIL SEMUA NOTES YANG ADA
   // ==============================
-  Future<List<NoteModel>> getAllNotes() async {
-    final response = await http.get(Uri.parse("$baseUrl/notes"));
+  // Future<List<NoteModel>> getAllNotes() async {
+  //   final response = await http.get(Uri.parse("$baseUrl/notes"));
+  //   if (response.statusCode == 200) {
+  //     final List data = jsonDecode(response.body);
+  //     return data.map((e) => NoteModel.fromJson(e)).toList();
+  //   } else {
+  //     throw Exception("Failed to fetch all notes");
+  //   }
+  // }
+
+  // ==============================
+  // AMBIL NOTES FYP/JELAJAH 
+  // ==============================
+  Future<List<NoteModel>> getFypNotes(String? search, String? kategori) async {
+    // rakit query param
+    final queryParams = <String, String>{};
+    if (search != null && search.isNotEmpty) {
+      queryParams['search'] = search;
+    }
+    if (kategori != null && kategori.isNotEmpty) {
+      queryParams['kategori'] = kategori;
+    }
+
+    // bikin uri dengan query param
+    final uri =
+        Uri.parse("$baseUrl/fyp_notes").replace(queryParameters: queryParams);
+
+    final response = await http.get(uri);
+
     if (response.statusCode == 200) {
       final List data = jsonDecode(response.body);
       return data.map((e) => NoteModel.fromJson(e)).toList();
     } else {
-      throw Exception("Failed to fetch all notes");
+      throw Exception("Failed to fetch fyp notes: ${response.body}");
     }
   }
 

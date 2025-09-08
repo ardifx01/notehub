@@ -260,6 +260,7 @@ def get_all_notes():
             notes = cursor.fetchall()
     return jsonify(notes)
 
+
 @app.route("/fyp_notes", methods=["GET"])
 def get_notes():
     search = request.args.get("search")
@@ -311,6 +312,7 @@ def get_notes():
             notes = cursor.fetchall()
 
     return jsonify(notes)
+
 
 @app.route("/save_note", methods=["POST"])
 def save_note():

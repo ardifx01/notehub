@@ -30,8 +30,8 @@ class _DaftarNotesState extends State<DaftarNotes> {
   @override
   void initState() {
     super.initState();
-    noteController
-        .fetchUserNotes(authController.user.value!.id, forPeople: false); // load di sini
+    noteController.fetchUserNotes(authController.user.value!.id,
+        forPeople: false); // load di sini
   }
 
   @override
@@ -123,12 +123,7 @@ class _DaftarNotesState extends State<DaftarNotes> {
                         ),
                         onSelected: (value) {
                           // toggle filter
-                          if (noteController.selectedFilter.value == value) {
-                            noteController.selectedFilter.value =
-                                ''; // kosongin -> semua muncul
-                          } else {
-                            noteController.selectedFilter.value = value;
-                          }
+                          noteController.selectedFilter.value = value;
                         },
                         itemBuilder: (context) => const [
                           PopupMenuItem(
@@ -146,6 +141,12 @@ class _DaftarNotesState extends State<DaftarNotes> {
                           PopupMenuItem(
                             value: 'Random',
                             child: Text('Random',
+                                style:
+                                    TextStyle(color: AppColors.surfaceColor)),
+                          ),
+                          PopupMenuItem(
+                            value: '',
+                            child: Text('Semua',
                                 style:
                                     TextStyle(color: AppColors.surfaceColor)),
                           ),
