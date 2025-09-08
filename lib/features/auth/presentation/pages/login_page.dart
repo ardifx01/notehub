@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notehub/core/const/colors.dart';
@@ -126,6 +127,14 @@ class LoginPage extends StatelessWidget {
                                       colorText: AppColors.surfaceColor,
                                     );
                                     return;
+                                  } else if (!EmailValidator.validate(
+                                      controller.emailController.text)) {
+                                    Get.snackbar(
+                                      'Error',
+                                      'Pastikan struktur email valid',
+                                      backgroundColor: AppColors.errorColor,
+                                      colorText: AppColors.surfaceColor,
+                                    );
                                   } else {
                                     try {
                                       // Memulai proses login

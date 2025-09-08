@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notehub/core/const/colors.dart';
@@ -113,7 +114,8 @@ class SignupPage extends StatelessWidget {
                             Obx(
                               () => customButton(
                                 text: authController.isLoading.value
-                                    ? 'Sedang Mendaftar..' : 'Daftar',
+                                    ? 'Sedang Mendaftar..'
+                                    : 'Daftar',
                                 color: authController.isLoading.value
                                     ? AppColors.disabledTextColor
                                     : AppColors.buttonColor3,
@@ -130,6 +132,14 @@ class SignupPage extends StatelessWidget {
                                       colorText: AppColors.surfaceColor,
                                     );
                                     return;
+                                  } else if (!EmailValidator.validate(
+                                      controller.emailController.text)) {
+                                    Get.snackbar(
+                                      'Error',
+                                      'Pastikan struktur email valid',
+                                      backgroundColor: AppColors.errorColor,
+                                      colorText: AppColors.surfaceColor,
+                                    );
                                   } else {
                                     try {
                                       await authController.signUp(
