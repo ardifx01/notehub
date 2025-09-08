@@ -250,7 +250,7 @@ def delete_note(note_id):
             db.commit()
     return jsonify({"message": "Note deleted"})
 
-
+@app.route("/fyp_notes", methods=["GET"])
 def get_posts(search=None, kategori=None):
     if not search and not kategori:
         # default → 1 bulan terakhir
