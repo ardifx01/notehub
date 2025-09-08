@@ -251,47 +251,66 @@ def delete_note(note_id):
     return jsonify({"message": "Note deleted"})
 
 
-# @app.route("/notes", methods=["GET"])
-# def get_all_notes():
-#     """Ambil semua note yang ada di database"""
-#     with get_db_connection() as db:
-#         with db.cursor() as cursor:
-#             cursor.execute("SELECT * FROM notes")
-#             notes = cursor.fetchall()
-#     return jsonify(notes)
+@app.route("/notes", methods=["GET"])
+def get_all_notes():
+    """Ambil semua note yang ada di database"""
+    with get_db_connection() as db:
+        with db.cursor() as cursor:
+            cursor.execute("SELECT * FROM notes")
+            notes = cursor.fetchall()
+    return jsonify(notes)
 
 @app.route("/fyp_notes", methods=["GET"])
-def get_posts(search=None, kategori=None):
+def get_notes():
+    search = request.args.get("search")
+    kategori = request.args.get("kategori")
+
     if not search and not kategori:
-        # default → 1 bulan terakhir
+        # default → ambil 1 bulan terakhir
         query = """
-            SELECT * FROM posts 
-            WHERE created_at >= NOW() - INTERVAL 1 MONTH
-            ORDER BY created_at DESC
+            SELECT * FROM notes
+            WHERE tanggal >= NOW() - INTERVAL 1 MONTH
+            ORDER BY tanggal DESC
         """
         params = []
 
-    elif search:
-        # kalau ada search → tanpa batas waktu
+    elif search and kategori:
+        # kalau ada search + kategori → tanpa batas waktu
         query = """
-            SELECT * FROM posts
-            WHERE LOWER(title) LIKE %s OR LOWER(category) LIKE %s
-            ORDER BY created_at DESC
+            SELECT * FROM notes
+            WHERE kategori = %s
+              AND (LOWER(judul) LIKE %s OR LOWER(isi) LIKE %s)
+            ORDER BY tanggal DESC
         """
-        params = [f"%{search.lower()}%", f"%{search.lower()}%"]
+        like_pattern = f"%{search.lower()}%"
+        params = [kategori, like_pattern, like_pattern]
+
+    elif search:
+        # hanya search → tanpa batas waktu
+        query = """
+            SELECT * FROM notes
+            WHERE LOWER(judul) LIKE %s OR LOWER(kategori) LIKE %s OR LOWER(isi) LIKE %s
+            ORDER BY tanggal DESC
+        """
+        like_pattern = f"%{search.lower()}%"
+        params = [like_pattern, like_pattern, like_pattern]
 
     elif kategori:
-        # kalau ada filter kategori → tanpa batas waktu
+        # hanya kategori → tanpa batas waktu
         query = """
-            SELECT * FROM posts
-            WHERE category = %s
-            ORDER BY created_at DESC
+            SELECT * FROM notes
+            WHERE kategori = %s
+            ORDER BY tanggal DESC
         """
         params = [kategori]
 
-    return db.execute(query, params)
+    # jalankan query
+    with get_db_connection() as db:
+        with db.cursor() as cursor:
+            cursor.execute(query, params)
+            notes = cursor.fetchall()
 
-
+    return jsonify(notes)
 
 @app.route("/save_note", methods=["POST"])
 def save_note():
