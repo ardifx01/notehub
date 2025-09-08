@@ -116,7 +116,7 @@ class LoginPage extends StatelessWidget {
                                     ? AppColors.disabledTextColor
                                     : AppColors.buttonColor3,
                                 onPressed: () async {
-                                  // Validasi input
+                                  // Validasi input terisi/tidak
                                   if (controller.emailController.text.isEmpty ||
                                       controller
                                           .passwordController.text.isEmpty) {
@@ -127,6 +127,7 @@ class LoginPage extends StatelessWidget {
                                       colorText: AppColors.surfaceColor,
                                     );
                                     return;
+                                    // Validasi struktur email
                                   } else if (!EmailValidator.validate(
                                       controller.emailController.text)) {
                                     Get.snackbar(

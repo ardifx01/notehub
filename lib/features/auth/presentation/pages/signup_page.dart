@@ -120,6 +120,7 @@ class SignupPage extends StatelessWidget {
                                     ? AppColors.disabledTextColor
                                     : AppColors.buttonColor3,
                                 onPressed: () async {
+                                  // Validasi input terisi/tidak
                                   if (controller
                                           .usernameController.text.isEmpty ||
                                       controller.emailController.text.isEmpty ||
@@ -132,6 +133,7 @@ class SignupPage extends StatelessWidget {
                                       colorText: AppColors.surfaceColor,
                                     );
                                     return;
+                                    // Validasi struktur email
                                   } else if (!EmailValidator.validate(
                                       controller.emailController.text)) {
                                     Get.snackbar(
