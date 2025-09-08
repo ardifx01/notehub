@@ -14,6 +14,9 @@ abstract class NoteRepository {
   /// ambil semua catatan
   Future<List<NoteModel>> getAllNotes();
 
+  // ambil note fyp
+  Future<List<NoteModel>> getFypNotes(String? search, String? kategori);
+
   /// hapus catatan
   Future<void> deleteNote(int noteId);
 

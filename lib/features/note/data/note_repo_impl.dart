@@ -23,6 +23,11 @@ class NoteRepositoryImpl implements NoteRepository {
     return remoteDataSource.getAllNotes();
   }
 
+    @override
+  Future<List<NoteModel>> getFypNotes(String? search, String? kategori) {
+    return remoteDataSource.getFypNotes(search, kategori);
+  }
+
   @override
   Future<void> deleteNote(int noteId) {
     return remoteDataSource.deleteNote(noteId);

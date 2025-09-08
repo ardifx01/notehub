@@ -11,6 +11,7 @@ class NoteController extends GetxController {
   var notes = <NoteModel>[].obs; // catatan milik user
   var savedNotes = <NoteModel>[].obs; // catatan disimpan user
   var allNotes = <NoteModel>[].obs; // semua catatan (fyp)
+  var allFypNotes = <NoteModel>[].obs; // semua catatan (fyp)
   var peopleNotes = <NoteModel>[].obs; // catatan user lain (selected)
   var peopleSavedNotes = <NoteModel>[].obs; // catatan disimpan user lain
   var isLoading = false.obs;
@@ -116,7 +117,22 @@ class NoteController extends GetxController {
       allNotes.value = fetchedNotes;
       print('📑 Semua Notes diambil sejumlah ${allNotes.length}');
     } catch (e) {
-      print("Error fetching all database notes");
+      print("Error ambil semua note $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> fetchFypNotes(String? search, String? kategori) async {
+    try {
+      isLoading.value = true;
+      var fetchedFypNotes = await repository.getFypNotes(search, kategori);
+      fetchedFypNotes.shuffle();
+
+      allFypNotes.value = fetchedFypNotes;
+      print('📑 Fyp Notes diambil sejumlah ${allFypNotes.length}');
+    } catch (e) {
+      print("Error ambil notes fyp: $e");
     } finally {
       isLoading.value = false;
     }
