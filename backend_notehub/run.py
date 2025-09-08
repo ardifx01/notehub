@@ -250,6 +250,16 @@ def delete_note(note_id):
             db.commit()
     return jsonify({"message": "Note deleted"})
 
+
+# @app.route("/notes", methods=["GET"])
+# def get_all_notes():
+#     """Ambil semua note yang ada di database"""
+#     with get_db_connection() as db:
+#         with db.cursor() as cursor:
+#             cursor.execute("SELECT * FROM notes")
+#             notes = cursor.fetchall()
+#     return jsonify(notes)
+
 @app.route("/fyp_notes", methods=["GET"])
 def get_posts(search=None, kategori=None):
     if not search and not kategori:
@@ -279,11 +289,8 @@ def get_posts(search=None, kategori=None):
         """
         params = [kategori]
 
-    with get_db_connection() as db:
-        with db.cursor() as cursor:
-            cursor.execute(query, params)
-            results = cursor.fetchall()
-    return results
+    return db.execute(query, params)
+
 
 
 @app.route("/save_note", methods=["POST"])
