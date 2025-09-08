@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:notehub/core/const/colors.dart';
 import 'package:notehub/core/widgets/note_detail_card.dart';
 import 'package:notehub/features/auth/presentation/controllers/auth_controller.dart';
@@ -82,8 +83,9 @@ class _NoteProfilState extends State<NoteProfil> {
                   final user = profileController.selectedUser.value;
                   if (user == null) {
                     return Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.buttonColor2,
+                      child: LoadingAnimationWidget.staggeredDotsWave(
+                        color: AppColors.surfaceColor,
+                        size: 30,
                       ),
                     );
                   }

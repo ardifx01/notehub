@@ -18,9 +18,14 @@ class NoteRepositoryImpl implements NoteRepository {
     return remoteDataSource.getUserNotes(userId);
   }
 
-  @override
-  Future<List<NoteModel>> getAllNotes() {
-    return remoteDataSource.getAllNotes();
+  // @override
+  // Future<List<NoteModel>> getAllNotes() {
+  //   return remoteDataSource.getAllNotes();
+  // }
+
+    @override
+  Future<List<NoteModel>> getFypNotes(String? search, String? kategori) {
+    return remoteDataSource.getFypNotes(search, kategori);
   }
 
   @override
