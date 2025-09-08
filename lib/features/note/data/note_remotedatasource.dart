@@ -58,18 +58,18 @@ class NoteRemoteDataSource {
   // ==============================
   // AMBIL SEMUA NOTES YANG ADA
   // ==============================
-  Future<List<NoteModel>> getAllNotes() async {
-    final response = await http.get(Uri.parse("$baseUrl/notes"));
-    if (response.statusCode == 200) {
-      final List data = jsonDecode(response.body);
-      return data.map((e) => NoteModel.fromJson(e)).toList();
-    } else {
-      throw Exception("Failed to fetch all notes");
-    }
-  }
+  // Future<List<NoteModel>> getAllNotes() async {
+  //   final response = await http.get(Uri.parse("$baseUrl/notes"));
+  //   if (response.statusCode == 200) {
+  //     final List data = jsonDecode(response.body);
+  //     return data.map((e) => NoteModel.fromJson(e)).toList();
+  //   } else {
+  //     throw Exception("Failed to fetch all notes");
+  //   }
+  // }
 
   // ==============================
-  // AMBIL NOTES FYP/JELAJAH
+  // AMBIL NOTES FYP/JELAJAH 
   // ==============================
   Future<List<NoteModel>> getFypNotes(String? search, String? kategori) async {
     // rakit query param

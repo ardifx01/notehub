@@ -26,7 +26,7 @@ class _JelajahiNotesState extends State<JelajahiNotes> {
   @override
   void initState() {
     super.initState();
-    noteController.fetchAllNotes();
+    noteController.fetchFypNotes();
   }
 
   @override
@@ -39,7 +39,6 @@ class _JelajahiNotesState extends State<JelajahiNotes> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 // ================= HEADER =================
                 Padding(
                   padding:
@@ -47,7 +46,6 @@ class _JelajahiNotesState extends State<JelajahiNotes> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-
                       // Back
                       IconButton(
                         onPressed: () => Get.back(),
@@ -101,8 +99,9 @@ class _JelajahiNotesState extends State<JelajahiNotes> {
                             child: customTextfield(
                               hintText: "Cari Note",
                               controller: cariController,
-                              onChanged: (value) {
-                                noteController.searchQuery.value = value;
+                              onChanged: (value) async {
+                                await noteController.fetchFypNotes(
+                                    search: value);
                               },
                             ),
                           ),
@@ -125,15 +124,9 @@ class _JelajahiNotesState extends State<JelajahiNotes> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            onSelected: (value) {
-                              // toggle filter
-                              if (noteController.selectedFilter.value ==
-                                  value) {
-                                noteController.selectedFilter.value =
-                                    ''; // kosongin -> semua muncul
-                              } else {
-                                noteController.selectedFilter.value = value;
-                              }
+                            onSelected: (value) async {
+                              await noteController.fetchFypNotes(
+                                  kategori: value);
                             },
                             itemBuilder: (context) => const [
                               PopupMenuItem(
@@ -151,6 +144,12 @@ class _JelajahiNotesState extends State<JelajahiNotes> {
                               PopupMenuItem(
                                 value: 'Random',
                                 child: Text('Random',
+                                    style: TextStyle(
+                                        color: AppColors.surfaceColor)),
+                              ),
+                              PopupMenuItem(
+                                value: '',
+                                child: Text('Semua',
                                     style: TextStyle(
                                         color: AppColors.surfaceColor)),
                               ),
@@ -177,7 +176,7 @@ class _JelajahiNotesState extends State<JelajahiNotes> {
                   ),
                 );
               }
-              if (noteController.allNotes.isEmpty) {
+              if (noteController.allFypNotes.isEmpty) {
                 return const Center(
                   child: Text(
                     "Belum ada catatan",
@@ -195,11 +194,11 @@ class _JelajahiNotesState extends State<JelajahiNotes> {
                   childAspectRatio: 1,
                 ),
                 itemCount: noteController
-                    .getFilteredNotes(noteController.allNotes)
+                    .getFilteredNotes(noteController.allFypNotes)
                     .length,
                 itemBuilder: (context, index) {
                   final note = noteController
-                      .getFilteredNotes(noteController.allNotes)[index];
+                      .getFilteredNotes(noteController.allFypNotes)[index];
                   return SmallNoteCard(
                     note: note,
                     onTap: () {

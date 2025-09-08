@@ -107,26 +107,31 @@ class NoteController extends GetxController {
     }
   }
 
-  /// ambil semua notes (random order untuk FYP)
-  Future<void> fetchAllNotes() async {
+  // /// ambil semua notes
+  // Future<void> fetchAllNotes() async {
+  //   try {
+  //     isLoading.value = true;
+  //     var fetchedNotes = await repository.getAllNotes();
+  //     fetchedNotes.shuffle(); // acak urutan
+
+  //     allNotes.value = fetchedNotes;
+  //     print('📑 Semua Notes diambil sejumlah ${allNotes.length}');
+  //   } catch (e) {
+  //     print("Error ambil semua note $e");
+  //   } finally {
+  //     isLoading.value = false;
+  //   }
+  // }
+
+  // ambil fyp notes sesuai filter
+  Future<void> fetchFypNotes({String? search, String? kategori}) async {
+    var querySearch = search ?? '';
+    var queryKategori = kategori ?? '';
+
     try {
       isLoading.value = true;
-      var fetchedNotes = await repository.getAllNotes();
-      fetchedNotes.shuffle(); // acak urutan
-
-      allNotes.value = fetchedNotes;
-      print('📑 Semua Notes diambil sejumlah ${allNotes.length}');
-    } catch (e) {
-      print("Error ambil semua note $e");
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
-  Future<void> fetchFypNotes(String? search, String? kategori) async {
-    try {
-      isLoading.value = true;
-      var fetchedFypNotes = await repository.getFypNotes(search, kategori);
+      var fetchedFypNotes =
+          await repository.getFypNotes(querySearch, queryKategori);
       fetchedFypNotes.shuffle();
 
       allFypNotes.value = fetchedFypNotes;

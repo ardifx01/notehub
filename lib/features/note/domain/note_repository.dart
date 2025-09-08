@@ -12,7 +12,7 @@ abstract class NoteRepository {
   Future<List<NoteModel>> getUserNotes(int userId);
 
   /// ambil semua catatan
-  Future<List<NoteModel>> getAllNotes();
+  // Future<List<NoteModel>> getAllNotes();
 
   // ambil note fyp
   Future<List<NoteModel>> getFypNotes(String? search, String? kategori);
