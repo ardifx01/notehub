@@ -251,14 +251,39 @@ def delete_note(note_id):
     return jsonify({"message": "Note deleted"})
 
 
-@app.route("/notes", methods=["GET"])
-def get_all_notes():
-    """Ambil semua note yang ada di database"""
+def get_posts(search=None, kategori=None):
+    if not search and not kategori:
+        # default → 1 bulan terakhir
+        query = """
+            SELECT * FROM posts 
+            WHERE created_at >= NOW() - INTERVAL 1 MONTH
+            ORDER BY created_at DESC
+        """
+        params = []
+
+    elif search:
+        # kalau ada search → tanpa batas waktu
+        query = """
+            SELECT * FROM posts
+            WHERE LOWER(title) LIKE %s OR LOWER(category) LIKE %s
+            ORDER BY created_at DESC
+        """
+        params = [f"%{search.lower()}%", f"%{search.lower()}%"]
+
+    elif kategori:
+        # kalau ada filter kategori → tanpa batas waktu
+        query = """
+            SELECT * FROM posts
+            WHERE category = %s
+            ORDER BY created_at DESC
+        """
+        params = [kategori]
+
     with get_db_connection() as db:
         with db.cursor() as cursor:
-            cursor.execute("SELECT * FROM notes")
-            notes = cursor.fetchall()
-    return jsonify(notes)
+            cursor.execute(query, params)
+            results = cursor.fetchall()
+    return results
 
 
 @app.route("/save_note", methods=["POST"])
