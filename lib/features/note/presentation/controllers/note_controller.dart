@@ -8,16 +8,16 @@ class NoteController extends GetxController {
   NoteController({required this.repository});
 
   // ----------------------------- DATA
-  var notes = <NoteModel>[].obs;           // catatan milik user
-  var savedNotes = <NoteModel>[].obs;      // catatan disimpan user
-  var allNotes = <NoteModel>[].obs;        // semua catatan (fyp)
-  var peopleNotes = <NoteModel>[].obs;     // catatan user lain (selected)
-  var peopleSavedNotes = <NoteModel>[].obs;// catatan disimpan user lain
+  var notes = <NoteModel>[].obs; // catatan milik user
+  var savedNotes = <NoteModel>[].obs; // catatan disimpan user
+  var allNotes = <NoteModel>[].obs; // semua catatan (fyp)
+  var peopleNotes = <NoteModel>[].obs; // catatan user lain (selected)
+  var peopleSavedNotes = <NoteModel>[].obs; // catatan disimpan user lain
   var isLoading = false.obs;
-  
+
   // ----------------------------- FILTER STATE
-  var selectedFilter = ''.obs;   // filter kategori
-  var searchQuery = ''.obs;      // filter judul (search bar)
+  var selectedFilter = ''.obs; // filter kategori
+  var searchQuery = ''.obs; // filter judul (search bar)
 
   // ----------------------------- FILTER FUNCTION
   /// mengembalikan notes sesuai filter kategori + judul
@@ -70,7 +70,8 @@ class NoteController extends GetxController {
 
       if (!forPeople) {
         notes.value = fetchedNotes.reversed.toList();
-        print('🗒️ Notes user $userId berhasil diambil sejumlah ${notes.length}');
+        print(
+            '🗒️ Notes user $userId berhasil diambil sejumlah ${notes.length}');
       } else {
         peopleNotes.value = fetchedNotes.reversed.toList();
         print(
@@ -126,10 +127,13 @@ class NoteController extends GetxController {
   Future<void> addNote(
       int userId, String judul, String isi, String kategori) async {
     try {
+      isLoading.value = true;
       final note = await repository.uploadNote(userId, judul, isi, kategori);
       notes.add(note);
     } catch (e) {
       print("Error uploading note: $e");
+    } finally {
+      isLoading.value = false;
     }
   }
 
@@ -176,5 +180,15 @@ class NoteController extends GetxController {
   /// cek apakah note dengan id tertentu sudah disimpan user
   bool isNoteSaved(int noteId) {
     return savedNotes.any((n) => n.id == noteId);
+  }
+
+  // Memebersihkan cache untuk logout
+  void clear() {
+    notes.clear();
+    savedNotes.clear();
+    allNotes.clear();
+    peopleNotes.clear();
+    peopleSavedNotes.clear();
+    print('🧹 Cache notes dibersihkan');
   }
 }

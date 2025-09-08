@@ -149,57 +149,59 @@ class _BuatNotePageState extends State<BuatNotePage> {
                         // tombol unggah
                         Obx(
                           () => CustomBigButton(
-                              text: noteController.isLoading.value
-                                  ? 'Sedang Upload..'
-                                  : '⬆️ Upload',
-                              onPressed: () async {
-                                if (controller.judulController.text.isEmpty ||
-                                    controller.isiNoteController.text.isEmpty) {
-                                  Get.snackbar('Peringatan',
-                                      'Judul dan isi note tidak boleh kosong',
-                                      backgroundColor: AppColors.errorColor,
-                                      colorText: AppColors.surfaceColor);
-                                } else {
-                                  var userId = authController.user.value!.id;
-                                  var judul =
-                                      controller.judulController.text.trim();
-                                  var isi =
-                                      controller.isiNoteController.text.trim();
-                                  var kategori =
-                                      controller.kategoriDipilih.value;
+                            text: noteController.isLoading.value
+                                ? 'Sedang Upload..'
+                                : '⬆️ Upload',
+                            onPressed: () async {
+                              if (controller.judulController.text.isEmpty ||
+                                  controller.isiNoteController.text.isEmpty) {
+                                Get.snackbar(
+                                  'Peringatan',
+                                  'Judul dan isi note tidak boleh kosong',
+                                  backgroundColor: AppColors.errorColor,
+                                  colorText: AppColors.surfaceColor,
+                                );
+                                return;
+                              }
 
-                                  if (noteController.isLoading.value != true) {
-                                    try {
-                                      await noteController.addNote(
-                                          userId, judul, isi, kategori);
+                              var userId = authController.user.value!.id;
+                              var judul =
+                                  controller.judulController.text.trim();
+                              var isi =
+                                  controller.isiNoteController.text.trim();
+                              var kategori = controller.kategoriDipilih.value;
 
-                                      Get.snackbar(
-                                        'Berhasil',
-                                        'Note berhasil diupload!',
-                                        snackPosition: SnackPosition.BOTTOM,
-                                      );
+                              if (!noteController.isLoading.value) {
+                                try {
+                                  await noteController.addNote(
+                                      userId, judul, isi, kategori);
 
-                                      // Reset textfield controller
-                                      controller.judulController.clear();
-                                      controller.isiNoteController.clear();
-                                      controller.kategoriDipilih.value =
-                                          'Random';
+                                  controller.judulController.clear();
+                                  controller.isiNoteController.clear();
+                                  controller.kategoriDipilih.value = 'Random';
 
-                                      Get.back();
-                                    } catch (e) {
-                                      Get.snackbar(
-                                        'Error',
-                                        'Gagal membuat note, $e',
-                                        snackPosition: SnackPosition.BOTTOM,
-                                        backgroundColor: AppColors.errorColor,
-                                        colorText: AppColors.surfaceColor,
-                                      );
-                                    }
-                                  }
+                                  Get.back();
+
+                                  Future.delayed(Duration(milliseconds: 200),
+                                      () {
+                                    Get.snackbar(
+                                      'Berhasil',
+                                      'Note berhasil diupload!',
+                                    );
+                                  });
+                                } catch (e) {
+                                  Get.snackbar(
+                                    'Error',
+                                    'Gagal membuat note, $e',
+                                    backgroundColor: AppColors.errorColor,
+                                    colorText: AppColors.surfaceColor,
+                                  );
                                 }
-                              },
-                              backgroundColor: AppColors.buttonColor3,
-                              textColor: AppColors.surfaceColor),
+                              }
+                            },
+                            backgroundColor: AppColors.buttonColor3,
+                            textColor: AppColors.surfaceColor,
+                          ),
                         )
                       ],
                     ),

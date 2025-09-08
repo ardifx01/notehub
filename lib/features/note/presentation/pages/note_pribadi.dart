@@ -6,7 +6,6 @@ import 'package:notehub/core/widgets/dialog_confirmation.dart';
 import 'package:notehub/core/widgets/note_detail_card.dart';
 import 'package:notehub/features/note/models/note_model.dart';
 import 'package:notehub/features/note/presentation/controllers/note_controller.dart';
-import 'package:notehub/features/note/presentation/pages/daftar_notes.dart';
 
 class NotePribadi extends StatelessWidget {
   NotePribadi({super.key, required this.note});
@@ -55,7 +54,7 @@ class NotePribadi extends StatelessWidget {
                         onConfirm: () async {
                           try {
                             await noteController.removeNote(note.id);
-                            Get.off(DaftarNotes());
+                            Get.back();
                           } catch (e) {
                             Get.snackbar('Error', '$e',
                                 backgroundColor: AppColors.errorColor,

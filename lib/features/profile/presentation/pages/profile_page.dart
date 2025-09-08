@@ -26,7 +26,6 @@ class ProfilePage extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-
                   // ================= HEADER HIJAU DENGAN GAMBAR =================
                   Stack(
                     children: [
@@ -184,6 +183,7 @@ class ProfilePage extends StatelessWidget {
                                       onConfirm: () async {
                                         try {
                                           await authController.logout();
+                                          noteController.clear();
                                           Get.offAll(LoginPage());
                                           Get.snackbar(
                                             "Success",
