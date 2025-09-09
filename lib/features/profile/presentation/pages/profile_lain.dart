@@ -7,6 +7,7 @@ import 'package:notehub/core/widgets/small_note_card.dart';
 import 'package:notehub/features/auth/models/user_model.dart';
 import 'package:notehub/features/note/presentation/controllers/note_controller.dart';
 import 'package:notehub/features/note/presentation/pages/note_profil.dart';
+import 'package:notehub/features/note/presentation/pages/small_note_card_shimmer.dart';
 import 'package:notehub/features/profile/presentation/controllers/profile_controller.dart';
 
 class ProfileLain extends StatefulWidget {
@@ -79,7 +80,7 @@ class _ProfileLainState extends State<ProfileLain> {
                           ),
                   ),
                   const SizedBox(height: 10),
-                  Text(
+                  SelectableText(
                     user?.nama ?? widget.selectedUser.nama,
                     style: const TextStyle(
                       fontSize: 18,
@@ -97,15 +98,18 @@ class _ProfileLainState extends State<ProfileLain> {
                       children: [
                         _InfoBox(
                           title: "Sejak",
-                          value: formatTanggal(user?.createdAt ?? widget.selectedUser.createdAt),
+                          value: formatTanggal(
+                              user?.createdAt ?? widget.selectedUser.createdAt),
                         ),
                         Obx(() => _InfoBox(
                               title: "Notes",
-                              value: noteController.peopleNotes.length.toString(),
+                              value:
+                                  noteController.peopleNotes.length.toString(),
                             )),
                         Obx(() => _InfoBox(
                               title: "Disimpan",
-                              value: noteController.peopleSavedNotes.length.toString(),
+                              value: noteController.peopleSavedNotes.length
+                                  .toString(),
                             )),
                       ],
                     ),
@@ -119,12 +123,7 @@ class _ProfileLainState extends State<ProfileLain> {
           Expanded(
             child: Obx(() {
               if (noteController.isLoading.value) {
-                return Center(
-                  child: LoadingAnimationWidget.staggeredDotsWave(
-                    color: AppColors.primaryColor,
-                    size: 30,
-                  ),
-                );
+                return SmallNoteCardShimmer();
               }
               if (noteController.peopleNotes.isEmpty) {
                 return const Center(
@@ -180,7 +179,7 @@ class _InfoBox extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 5),
-        Text(
+        SelectableText(
           value,
           style: const TextStyle(
             fontWeight: FontWeight.bold,

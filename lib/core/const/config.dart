@@ -1,6 +1,6 @@
 class Config {
   // URL backend
-  static const base_URL = "https://14486fc5c21f.ngrok-free.app";
+  static const base_URL = "https://0b73f882b8ce.ngrok-free.app";
   // static const base_URL = "http://10.0.5.41:5000";
   // static const base_URL = "http://192.168.1.103:5000"
 
