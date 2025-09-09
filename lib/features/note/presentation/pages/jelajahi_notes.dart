@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:notehub/core/const/colors.dart';
 import 'package:notehub/core/widgets/custom_textfield.dart';
 import 'package:notehub/core/widgets/small_note_card.dart';
 import 'package:notehub/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:notehub/features/note/presentation/controllers/note_controller.dart';
 import 'package:notehub/features/note/presentation/pages/note_profil.dart';
+import 'package:notehub/features/note/presentation/pages/small_note_card_shimmer.dart';
 import 'package:notehub/features/profile/presentation/pages/profile_page.dart';
+
 
 class JelajahiNotes extends StatefulWidget {
   const JelajahiNotes({super.key});
@@ -169,12 +170,7 @@ class _JelajahiNotesState extends State<JelajahiNotes> {
           Expanded(
             child: Obx(() {
               if (noteController.isLoading.value) {
-                return Center(
-                  child: LoadingAnimationWidget.staggeredDotsWave(
-                    color: AppColors.primaryColor,
-                    size: 30,
-                  ),
-                );
+                return SmallNoteCardShimmer();
               }
               if (noteController.allFypNotes.isEmpty) {
                 return const Center(
@@ -214,3 +210,7 @@ class _JelajahiNotesState extends State<JelajahiNotes> {
     );
   }
 }
+
+
+
+

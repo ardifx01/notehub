@@ -68,7 +68,7 @@ class ProfilePage extends StatelessWidget {
                         child: Column(
                           children: [
                             // nama user
-                            Text(
+                            SelectableText(
                               authController.user.value?.nama ?? "Loading...",
                               style: TextStyle(
                                 fontSize: 18,
@@ -289,7 +289,7 @@ class _InfoBox extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 5),
-        Text(
+        SelectableText(
           value,
           style: const TextStyle(
             fontWeight: FontWeight.bold,

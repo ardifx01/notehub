@@ -47,6 +47,7 @@ dependencies:
   image_cropper: ^9.1.0
   device_info_plus: ^11.3.0
   email_validator: ^3.0.0
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:

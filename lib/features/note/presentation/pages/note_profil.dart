@@ -89,7 +89,7 @@ class _NoteProfilState extends State<NoteProfil> {
                       ),
                     );
                   }
-
+            
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -157,3 +157,4 @@ class _NoteProfilState extends State<NoteProfil> {
     );
   }
 }
+

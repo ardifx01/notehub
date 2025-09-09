@@ -53,7 +53,7 @@ class NoteDetailCard extends StatelessWidget {
             const SizedBox(height: 10),
 
             // ---------- judul
-            Text(
+            SelectableText(
               note.judul,
               style: const TextStyle(
                 fontSize: 20,
@@ -66,7 +66,7 @@ class NoteDetailCard extends StatelessWidget {
             // ---------- isi (scrollable)
             Expanded(
               child: SingleChildScrollView(
-                child: Text(
+                child: SelectableText(
                   note.isi,
                   style: TextStyle(
                     fontSize: 12,
@@ -84,7 +84,7 @@ class NoteDetailCard extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  SelectableText(
                     'Diunggah: ${formatTanggal(note.tanggal)}',
                     style: const TextStyle(
                       fontSize: 12,

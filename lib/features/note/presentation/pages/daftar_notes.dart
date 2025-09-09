@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:notehub/core/const/colors.dart';
 import 'package:notehub/core/functions/convert_date.dart';
 import 'package:notehub/core/functions/warna_kategori.dart';
@@ -11,6 +8,7 @@ import 'package:notehub/core/widgets/note_card.dart';
 import 'package:notehub/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:notehub/features/note/presentation/controllers/note_controller.dart';
 import 'package:notehub/features/note/presentation/pages/note_pribadi.dart';
+import 'package:notehub/features/note/presentation/pages/small_note_card_shimmer.dart';
 import 'package:notehub/features/profile/presentation/pages/profile_page.dart';
 
 class DaftarNotes extends StatefulWidget {
@@ -165,11 +163,7 @@ class _DaftarNotesState extends State<DaftarNotes> {
               child: Obx(() {
                 if (noteController.isLoading.value) {
                   // Tampilan jika loading
-                  return Center(
-                      child: LoadingAnimationWidget.staggeredDotsWave(
-                    color: AppColors.primaryColor,
-                    size: 30,
-                  ));
+                  return SmallNoteCardShimmer();
                 }
                 if (noteController.notes.isEmpty) {
                   // Tampilan jika tidak ada catatan
