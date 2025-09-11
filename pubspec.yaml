@@ -48,6 +48,8 @@ dependencies:
   device_info_plus: ^11.3.0
   email_validator: ^3.0.0
   shimmer: ^3.0.0
+  webview_flutter: ^4.13.0
+  webview_flutter_android: ^4.10.1
 
 dev_dependencies:
   flutter_test:

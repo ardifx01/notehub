@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:notehub/core/const/colors.dart';
 import 'package:notehub/core/widgets/small_note_card.dart';
 import 'package:notehub/features/auth/presentation/controllers/auth_controller.dart';
@@ -9,7 +7,6 @@ import 'package:notehub/features/note/presentation/controllers/note_controller.d
 import 'package:notehub/features/note/presentation/pages/note_profil.dart';
 import 'package:notehub/features/note/presentation/pages/small_note_card_shimmer.dart';
 import 'package:notehub/features/profile/presentation/pages/profile_page.dart';
-import 'package:shimmer/shimmer.dart';
 
 class DisimpanNote extends StatelessWidget {
   DisimpanNote({super.key});

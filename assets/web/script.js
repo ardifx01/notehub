@@ -4,6 +4,8 @@ const urlParams = new URLSearchParams(window.location.search);
 // ambil nilai user_id dan user_name dari URL
 const userId = urlParams.get('user_id'); 
 const userName = urlParams.get('user_name') || "User"; 
+const noteId = urlParams.get('note_id'); 
+
 
 // tampilkan nama user di halaman
 document.getElementById('userName').innerText = userName;
@@ -49,14 +51,14 @@ async function loadThemes() {
 
 /* fungsi dipanggil saat user klik salah satu tema */
 function pilihTema(temaLink) {
-  const data = { userId, temaLink }; // user id ikut dikirim
+  const data = { userId, noteId, temaLink }; // user id ikut dikirim
 
   if (typeof ThemeChannel !== "undefined") {
     // kirim ke flutter
     ThemeChannel.postMessage(JSON.stringify(data));
   } else {
     // fallback kalau buka di browser biasa
-    alert("Tema dipilih: " + temaLink + " (User ID: " + userId + ")");
+    alert("Tema dipilih: " + temaLink + " (User ID: " + userId + ")" + " (Note ID: " + noteId + ")");
   }
 }
 

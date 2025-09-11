@@ -10,12 +10,17 @@ class NoteDetailCard extends StatelessWidget {
   final IconData icon;
   final Color iconColor;
 
+  final VoidCallback? onTemaPressed;
+  final bool showTemaButton;
+
   const NoteDetailCard({
     super.key,
     required this.note,
     this.onIconPressed,
     this.icon = Icons.delete, // default delete
     this.iconColor = AppColors.buttonColor3,
+    this.onTemaPressed, // opsional
+    this.showTemaButton = true, // default tampil
   });
 
   @override
@@ -92,9 +97,21 @@ class NoteDetailCard extends StatelessWidget {
                       fontStyle: FontStyle.italic,
                     ),
                   ),
-                  IconButton(
-                    onPressed: onIconPressed,
-                    icon: Icon(icon, color: iconColor),
+                  Row(
+                    children: [
+                      //  button tema (tampil kalau showTemaButton = true)
+                      if (showTemaButton)
+                        IconButton(
+                          onPressed: onTemaPressed,
+                          icon: Icon(Icons.brush_rounded, color: iconColor),
+                        ),
+
+                      // button utama
+                      IconButton(
+                        onPressed: onIconPressed,
+                        icon: Icon(icon, color: iconColor),
+                      ),
+                    ],
                   ),
                 ],
               ),
