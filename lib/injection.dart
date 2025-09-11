@@ -13,6 +13,10 @@ import 'package:notehub/features/note/presentation/controllers/buat_note_control
 import 'package:notehub/features/note/presentation/controllers/note_controller.dart';
 import 'package:notehub/features/profile/presentation/controllers/edit_controller.dart';
 import 'package:notehub/features/profile/presentation/controllers/profile_controller.dart';
+import 'package:notehub/features/theme/data/tema_remotedatasource.dart';
+import 'package:notehub/features/theme/data/tema_repository_impl.dart';
+import 'package:notehub/features/theme/domain/tema_repository.dart';
+import 'package:notehub/features/theme/presentation/controller/web_tema_controller.dart';
 
 Future<void> initDependencies() async {
   // ✅ NOTE
@@ -46,5 +50,18 @@ Future<void> initDependencies() async {
   Get.put(SignUpController(), permanent: true);
   Get.put(EditController(), permanent: true);
   Get.put(AuthController(Get.find<AuthRepository>()), permanent: true);
-  Get.lazyPut(() => ProfileController(authRepository: Get.find<AuthRepository>()), fenix: true);
+  Get.lazyPut(
+      () => ProfileController(authRepository: Get.find<AuthRepository>()),
+      fenix: true);
+
+  // TEMA
+
+  // datasource
+  Get.lazyPut(() => TemaRemotedatasource());
+
+  // repository
+  Get.lazyPut<TemaRepository>(() =>
+      TemaRepositoryImpl(remotedatasource: Get.find<TemaRemotedatasource>()));
+  // controller
+  Get.lazyPut(() => WebTemaController(repository: Get.find<TemaRepository>()));
 }
