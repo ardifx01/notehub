@@ -376,6 +376,45 @@ def get_saved_notes(user_id):
     return jsonify(notes)
 
 
+
+# =====================
+# 🌐 WEB APP ENDPOINTS
+# =====================
+
+@app.route("/tema", methods=["GET"])
+def get_tema():
+    """Ambil semua tema yang ada di database"""
+    with get_db_connection() as db:
+        with db.cursor() as cursor:
+            cursor.execute("SELECT * FROM tema")
+            temas = cursor.fetchall()
+    return jsonify(temas)
+
+
+@app.route("/upload_image", methods=["POST"])
+def upload_image():
+    """Simpan URL gambar (sudah ada di Cloudinary) ke database"""
+    data = request.json
+    if not data or "url" not in data:
+        return jsonify({"error": "No image URL provided"}), 400
+
+    image_url = data["url"]
+    
+    try:
+        with get_db_connection() as db:
+            with db.cursor() as cursor:
+                cursor.execute(
+                    "INSERT INTO foto_url (url, uploaded_at) VALUES (%s, NOW())",
+                    (image_url,)
+                )
+                db.commit()
+                image_id = cursor.lastrowid
+
+        return jsonify({"message": "Image saved", "id": image_id, "url": image_url})
+    except Exception as e:
+        logging.error(f"Database error: {e}")
+        return jsonify({"error": "Failed to save image"}), 500
+
 # ======================
 # 🚀 RUN APP
 # ======================

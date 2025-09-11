@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:notehub/core/const/colors.dart';
 import 'package:notehub/features/note/presentation/controllers/note_controller.dart';
+import 'package:notehub/core/functions/convert_date.dart';
 
 class HeatmapCalendar extends StatelessWidget {
   HeatmapCalendar({super.key});
@@ -30,7 +31,7 @@ class HeatmapCalendar extends StatelessWidget {
         },
         onClick: (value) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(value.toString()),
+            content: Text(formatTanggal(value)),
             backgroundColor: AppColors.primaryColor,
           ));
         },
