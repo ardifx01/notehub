@@ -389,29 +389,42 @@ def get_tema():
             temas = cursor.fetchall()
     return jsonify(temas)
 
-@app.route("/upload_image", methods=["POST"])
-def upload_image():
-    """Simpan URL gambar (sudah ada di Cloudinary) ke database"""
-    data = request.json
-    if not data or "url" not in data:
-        return jsonify({"error": "No image URL provided"}), 400
 
-    image_url = data["url"]
-    
+@app.route("/apply_tema", methods=["POST"])
+def apply_tema():
+    """User pilih tema → simpan link foto_url ke notes"""
+    data = request.json
+    valid, error = validate_fields(data, ["user_id", "note_id", "tema_id"])
+    if not valid:
+        return jsonify({"error": error}), 400
+
+    user_id = data["user_id"]
+    note_id = data["note_id"]
+    tema_id = data["tema_id"]
+
     try:
         with get_db_connection() as db:
             with db.cursor() as cursor:
+                # ambil foto_url tema berdasarkan tema_id
+                cursor.execute("SELECT foto_url FROM tema WHERE id = %s", (tema_id,))
+                tema = cursor.fetchone()
+
+                if not tema:
+                    return jsonify({"error": "Tema not found"}), 404
+
+                foto_url = tema["foto_url"]
+
+                # update kolom tema di notes
                 cursor.execute(
-                    "INSERT INTO foto_url (url, uploaded_at) VALUES (%s, NOW())",
-                    (image_url,)
+                    "UPDATE notes SET tema=%s WHERE id=%s AND user_id=%s",
+                    (foto_url, note_id, user_id)
                 )
                 db.commit()
-                image_id = cursor.lastrowid
 
-        return jsonify({"message": "Image saved", "id": image_id, "url": image_url})
+        return jsonify({"message": "Tema applied to note", "note_id": note_id, "tema_url": foto_url})
     except Exception as e:
-        logging.error(f"Database error: {e}")
-        return jsonify({"error": "Failed to save image"}), 500
+        logging.error(f"Apply tema error: {e}")
+        return jsonify({"error": "Failed to apply tema"}), 500
 
 # ======================
 # 🚀 RUN APP
