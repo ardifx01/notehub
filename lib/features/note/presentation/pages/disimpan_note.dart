@@ -7,7 +7,9 @@ import 'package:notehub/core/widgets/small_note_card.dart';
 import 'package:notehub/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:notehub/features/note/presentation/controllers/note_controller.dart';
 import 'package:notehub/features/note/presentation/pages/note_profil.dart';
+import 'package:notehub/features/note/presentation/pages/small_note_card_shimmer.dart';
 import 'package:notehub/features/profile/presentation/pages/profile_page.dart';
+import 'package:shimmer/shimmer.dart';
 
 class DisimpanNote extends StatelessWidget {
   DisimpanNote({super.key});
@@ -57,12 +59,7 @@ class DisimpanNote extends StatelessWidget {
             // ================= LIST NOTES =================
             Obx(() {
           if (noteController.isLoading.value) {
-            return Center(
-              child: LoadingAnimationWidget.staggeredDotsWave(
-                color: AppColors.primaryColor,
-                size: 30,
-              ),
-            );
+            return SmallNoteCardShimmer();
           }
           if (noteController.savedNotes.isEmpty) {
             return const Center(
@@ -107,5 +104,4 @@ class DisimpanNote extends StatelessWidget {
         }));
   }
 }
-
 
