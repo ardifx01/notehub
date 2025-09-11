@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.DEBUG)
 # 🚀 FLASK APP SETUP
 # ======================
 app = Flask(__name__)
-CORS(app, resources={r"/": {"origins": ""}})  # aktifkan CORS supaya API bisa diakses frontend
+CORS(app, resources={r"/*": {"origins": "*"}})  # aktifkan CORS supaya API bisa diakses frontend
 
 # ======================
 # ☁️ CLOUDINARY SETUP
@@ -386,8 +386,15 @@ def get_tema():
     """Ambil semua tema yang ada di database"""
     with get_db_connection() as db:
         with db.cursor() as cursor:
-            cursor.execute("SELECT * FROM tema")
-            temas = cursor.fetchall()
+            cursor.execute("SELECT id, nama_tema, foto_url, thumbnail, rating FROM tema")
+            rows = cursor.fetchall()
+
+            # Ambil nama kolom
+            columns = [desc[0] for desc in cursor.description]
+
+            # Convert ke list of dict
+            temas = [dict(zip(columns, row)) for row in rows]
+
     return jsonify(temas)
 
 
