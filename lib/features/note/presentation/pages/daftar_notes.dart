@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:notehub/core/const/colors.dart';
 import 'package:notehub/core/functions/convert_date.dart';
 import 'package:notehub/core/functions/warna_kategori.dart';

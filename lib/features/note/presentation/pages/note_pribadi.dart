@@ -4,14 +4,17 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:notehub/core/const/colors.dart';
 import 'package:notehub/core/widgets/dialog_confirmation.dart';
 import 'package:notehub/core/widgets/note_detail_card.dart';
+import 'package:notehub/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:notehub/features/note/models/note_model.dart';
 import 'package:notehub/features/note/presentation/controllers/note_controller.dart';
+import 'package:notehub/features/theme/presentation/pages/web_tema.dart';
 
 class NotePribadi extends StatelessWidget {
   NotePribadi({super.key, required this.note});
 
   final NoteModel note;
   final noteController = Get.find<NoteController>();
+  final authController = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +65,9 @@ class NotePribadi extends StatelessWidget {
                           }
                         });
                   },
+                  showTemaButton: true,
+                  onTemaPressed: () =>
+                      Get.to(WebTema(noteId: note.id.toString())),
                 ),
               )
             ],
