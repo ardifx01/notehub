@@ -383,20 +383,11 @@ def get_saved_notes(user_id):
 
 @app.route("/tema", methods=["GET"])
 def get_tema():
-    """Ambil semua tema yang ada di database"""
     with get_db_connection() as db:
         with db.cursor() as cursor:
-            cursor.execute("SELECT id, nama_tema, foto_url, thumbnail, rating FROM tema")
-            rows = cursor.fetchall()
-
-            # Ambil nama kolom
-            columns = [desc[0] for desc in cursor.description]
-
-            # Convert ke list of dict
-            temas = [dict(zip(columns, row)) for row in rows]
-
+            cursor.execute("SELECT id, nama_tema, foto_url, thumbnail, rating, kategori FROM tema")
+            temas = cursor.fetchall()
     return jsonify(temas)
-
 
 @app.route("/upload_image", methods=["POST"])
 def upload_image():
