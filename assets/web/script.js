@@ -13,12 +13,12 @@ const temaAndalanContainer = document.getElementById('temaAndalan');
 const temaSemuaContainer = document.getElementById('temaSemua');
 
 // base Url rest api
-const baseUrl = 'http://10.0.5.41:5000';
+const baseUrl = 'https://6514cb44b614.ngrok-free.app';
 
 // fungsi buat card tema
 function buatTemaCard(tema) {
   return `
-    <div class="tema-card" onclick="pilihTema('${tema.foto_url}')">
+    <div class="tema-card" onclick="pilihTema('${tema.id}')">
       <img src="${tema.thumbnail}" alt="">
       <div class="tema-info">
         <p>${tema.nama_tema}</p>
@@ -28,24 +28,16 @@ function buatTemaCard(tema) {
   `;
 }
 
-// fetch data dari API
+
 // fetch data dari API
 async function loadThemes() {
   try {
     const res = await fetch(`${baseUrl}/tema`);
-    const data = await res.json();
-
-    // kalau backend balikin object { temas: [...] }
-    // ambil isinya, kalau langsung array biarin aja
-    const temas = Array.isArray(data) ? data : data.temas;
-
-    if (!temas) {
-      throw new Error("Response tidak punya array tema");
-    }
+    const data = await res.json(); // ini array langsung
 
     // contoh: tampilkan 3 pertama jadi andalan
-    const featured = temas.slice(0, 3);
-    const all = temas;
+    const featured = data.slice(0, 3);
+    const all = data;
 
     temaAndalanContainer.innerHTML = featured.map(buatTemaCard).join('');
     temaSemuaContainer.innerHTML = all.map(buatTemaCard).join('');
