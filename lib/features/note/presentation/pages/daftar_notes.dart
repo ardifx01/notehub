@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:notehub/core/const/colors.dart';
 import 'package:notehub/core/functions/convert_date.dart';
 import 'package:notehub/core/functions/warna_kategori.dart';
@@ -8,8 +11,8 @@ import 'package:notehub/core/widgets/note_card.dart';
 import 'package:notehub/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:notehub/features/note/presentation/controllers/note_controller.dart';
 import 'package:notehub/features/note/presentation/pages/note_pribadi.dart';
-import 'package:notehub/features/note/presentation/pages/small_note_card_shimmer.dart';
 import 'package:notehub/features/profile/presentation/pages/profile_page.dart';
+import 'package:shimmer/shimmer.dart';
 
 class DaftarNotes extends StatefulWidget {
   DaftarNotes({super.key});
@@ -163,7 +166,7 @@ class _DaftarNotesState extends State<DaftarNotes> {
               child: Obx(() {
                 if (noteController.isLoading.value) {
                   // Tampilan jika loading
-                  return SmallNoteCardShimmer();
+                  return DaftarNotesShimmer();
                 }
                 if (noteController.notes.isEmpty) {
                   // Tampilan jika tidak ada catatan
@@ -200,6 +203,33 @@ class _DaftarNotesState extends State<DaftarNotes> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class DaftarNotesShimmer extends StatelessWidget {
+  const DaftarNotesShimmer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+      itemCount: 5,
+      itemBuilder: (context, index) {
+        return Shimmer.fromColors(
+          highlightColor: Colors.grey[100]!,
+          baseColor: Colors.grey[300]!,
+          child: Container(
+            height: 230,
+            margin: const EdgeInsets.only(bottom: 16),
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(16),
+            ),
+          ),
+        );
+      },
     );
   }
 }
