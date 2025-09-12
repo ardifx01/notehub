@@ -8,12 +8,21 @@ class TemaRemotedatasource {
   final String baseUrl = Config.base_URL;
 
   Future<void> updateTema(TemaModel tema) async {
-    var response = await http.post(Uri.parse('$baseUrl/apply_tema'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(tema.toJson()));
+    print("📤 Kirim ke backend: ${tema.toJson()}");
+
+    var response = await http.post(
+      Uri.parse('$baseUrl/apply_tema'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'note_id': tema.noteId,
+        'foto_url': tema.fotoUrl,
+      }),
+    );
+
+    print("📩 Respon backend: ${response.statusCode} ${response.body}");
 
     if (response.statusCode != 200) {
-      Exception('Gagal update tema');
+      throw Exception('Gagal update tema: ${response.body}');
     }
   }
 }
