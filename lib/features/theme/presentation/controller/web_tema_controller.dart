@@ -20,31 +20,33 @@ class WebTemaController extends GetxController {
       ..addJavaScriptChannel(
         'ThemeChannel',
         onMessageReceived: (msg) async {
+          print("📩 Dari JS: ${msg.message}");
           try {
             final data = jsonDecode(msg.message);
-            final tema = TemaModel(
-              noteId: data['noteId'],
-              link: data['temaLink'],
-            );
-
+            final tema = TemaModel.fromJs(data);
             await repository.updateTema(tema);
-
-            webViewController.runJavaScript(
-              "alert('Tema berhasil disimpan untuk Note ${tema.noteId}')",
+            Get.snackbar(
+              "Sukses",
+              "Tema berhasil disimpan untuk Note ${tema.noteId}",
+              duration: Duration(seconds: 3),
             );
           } catch (e) {
-            webViewController.runJavaScript(
+            Get.snackbar(
+              "Sukses",
               "alert('Gagal simpan tema: $e')",
+              duration: Duration(seconds: 3),
             );
           }
         },
       );
   }
 
-  void loadPage(String noteId, String userName) {
+  Future<void> loadPage(String noteId, String userName) async {
     // ✅ perbaikan query string: gunakan & bukan /
-    final fullUrl = "${Config.url_web}note_id=$noteId&user_name=$userName";
+    final fullUrl =
+        "${Config.url_web}note_id=$noteId&user_name=$userName&_v=${DateTime.now().millisecondsSinceEpoch}";
 
+    await webViewController.clearCache();
     webViewController.loadRequest(Uri.parse(fullUrl));
   }
 }
