@@ -103,7 +103,7 @@ class NoteDetailCard extends StatelessWidget {
                       if (showTemaButton)
                         IconButton(
                           onPressed: onTemaPressed,
-                          icon: Icon(Icons.brush_rounded, color: iconColor),
+                          icon: Icon(Icons.brush_rounded, color: AppColors.buttonColor3),
                         ),
 
                       // button utama

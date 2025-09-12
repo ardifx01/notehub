@@ -57,11 +57,11 @@ Future<void> initDependencies() async {
   // TEMA
 
   // datasource
-  Get.lazyPut(() => TemaRemotedatasource());
+  Get.lazyPut(() => TemaRemotedatasource(), fenix: true);
 
   // repository
   Get.lazyPut<TemaRepository>(() =>
-      TemaRepositoryImpl(remotedatasource: Get.find<TemaRemotedatasource>()));
+      TemaRepositoryImpl(remotedatasource: Get.find<TemaRemotedatasource>()), fenix: true);
   // controller
-  Get.lazyPut(() => WebTemaController(repository: Get.find<TemaRepository>()));
+  Get.lazyPut(() => WebTemaController(repository: Get.find<TemaRepository>()), fenix: true);
 }
