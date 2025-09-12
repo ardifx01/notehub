@@ -7,7 +7,7 @@ import 'package:notehub/features/theme/models/tema_model.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebTemaController extends GetxController {
-  late WebViewController webViewController;
+  late final WebViewController webViewController;
   final TemaRepository repository;
 
   WebTemaController({required this.repository});
@@ -20,20 +20,21 @@ class WebTemaController extends GetxController {
       ..addJavaScriptChannel(
         'ThemeChannel',
         onMessageReceived: (msg) async {
-          final data = jsonDecode(msg.message);
-          final tema = TemaModel(
-            noteId: data['noteId'],
-            link: data['temaLink'],
-          );
-
           try {
+            final data = jsonDecode(msg.message);
+            final tema = TemaModel(
+              noteId: data['noteId'],
+              link: data['temaLink'],
+            );
+
             await repository.updateTema(tema);
+
             webViewController.runJavaScript(
               "alert('Tema berhasil disimpan untuk Note ${tema.noteId}')",
             );
           } catch (e) {
             webViewController.runJavaScript(
-              "alert('Gagal simpan tema')",
+              "alert('Gagal simpan tema: $e')",
             );
           }
         },
@@ -41,7 +42,9 @@ class WebTemaController extends GetxController {
   }
 
   void loadPage(String noteId, String userName) {
-    final fullUrl = "${Config.url_web}?note_id=$noteId/user_name=$userName";
+    // ✅ perbaikan query string: gunakan & bukan /
+    final fullUrl = "${Config.url_web}note_id=$noteId&user_name=$userName";
+
     webViewController.loadRequest(Uri.parse(fullUrl));
   }
 }

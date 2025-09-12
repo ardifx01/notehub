@@ -145,6 +145,7 @@ class _NoteProfilState extends State<NoteProfil> {
                             );
                           }
                         },
+                        showTemaButton: false,
                       ),
                     ],
                   );
