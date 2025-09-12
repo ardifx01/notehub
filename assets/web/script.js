@@ -15,7 +15,9 @@ const temaAndalanContainer = document.getElementById('temaAndalan');
 const temaSemuaContainer = document.getElementById('temaSemua');
 
 // base Url rest api
-const baseUrl = 'https://6514cb44b614.ngrok-free.app';
+// const baseUrl = 'https://6514cb44b614.ngrok-free.app';
+const baseUrl = 'http://10.0.5.41:5000';
+ 
 
 // fungsi buat card tema
 function buatTemaCard(tema) {
@@ -58,7 +60,7 @@ function pilihTema(temaLink) {
     ThemeChannel.postMessage(JSON.stringify(data));
   } else {
     // fallback kalau buka di browser biasa
-    alert("Tema dipilih: " + temaLink + " (User ID: " + userId + ")" + " (Note ID: " + noteId + ")");
+    alert("Tema dipilih: " + temaLink + " (Note ID: " + noteId + ")");
   }
 }
 
