@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tema Note</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>Tema Note</header>
-
+  
   <!-- Card Sapaan -->
   <div class="welcome-card">
     <h2>Halo, <span id="userName">Fajar</span>!</h2>
@@ -25,6 +25,17 @@
   <h3>Semua Tema</h3>
   <div id="temaSemua" class="tema-grid">
     <!-- tema dari API akan ditambahkan ke sini -->
+  </div>
+
+ <!-- Popup Modal -->
+  <div id="temaModal" class="modal">
+    <div class="modal-box">
+      <span class="close-btn">&times;</span>
+      <h3 id="modalNama"></h3>
+      <img id="modalImage" src="" alt="Tema" />
+      <p><strong>Rating:</strong> <span id="modalRating"></span></p>
+      <button id="pilihTemaBtn" class="btn-pilih">Pilih Tema</button>
+    </div>
   </div>
 
   <script src="script.js"></script>

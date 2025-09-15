@@ -15,12 +15,12 @@ header {
   color: #2e5d35;
 }
 
-/* Menghilangkan scroll bar di web */
-::-webkit-scrollbar { display: none; } 
+/* Hilangkan scrollbar */
+::-webkit-scrollbar { display: none; }
 
 /* Card sapaan */
 .welcome-card {
-  background: linear-gradient(135deg, #E2FBCE, #E3EF26,  #076653);
+  background: linear-gradient(135deg, #E2FBCE, #E3EF26, #076653);
   color: #2e5d35;
   margin: 0 16px;
   padding: 16px;
@@ -36,7 +36,6 @@ header {
   font-size: 14px;
 }
 
-
 /* Section */
 h3 {
   margin: 20px 16px 10px;
@@ -44,7 +43,7 @@ h3 {
   font-weight: 600;
 }
 
-/* Tema Andalan horizontal scroll */
+/* Tema Andalan (horizontal scroll) */
 .tema-andalan {
   display: flex;
   overflow-x: auto;
@@ -52,9 +51,8 @@ h3 {
   gap: 12px;
   scroll-behavior: smooth;
 }
-.tema-andalan::-webkit-scrollbar {
-  display: none; /* sembunyikan scrollbar di Chrome/Safari */
-}
+.tema-andalan::-webkit-scrollbar { display: none; }
+
 .tema-card {
   min-width: 120px;
   background: #f9f9f9;
@@ -65,21 +63,14 @@ h3 {
   cursor: pointer;
   transition: transform 0.2s;
 }
-.tema-card:hover {
-  transform: scale(1.05);
-}
+.tema-card:hover { transform: scale(1.05); }
 .tema-card img {
   width: 100%;
   height: 80px;
   object-fit: cover;
 }
-.tema-info {
-  padding: 8px;
-  font-size: 14px;
-}
-.tema-info p {
-  margin: 0;
-}
+.tema-info { padding: 8px; font-size: 14px; }
+.tema-info p { margin: 0; }
 .rating {
   font-size: 12px;
   color: #f5a623;
@@ -88,13 +79,75 @@ h3 {
   gap: 4px;
 }
 
-/* Semua Tema grid */
+/* Semua Tema (grid) */
 .tema-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
   padding: 0 16px 20px;
 }
-.tema-grid .tema-card {
-  min-width: unset;
+.tema-grid .tema-card { min-width: unset; }
+
+body.noscroll {
+  overflow: hidden;
+}
+
+/* =========================
+   Popup Modal
+   ========================= */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5); /* background gelap */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-box {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 150px;
+  height: auto;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-box img {
+  width: 100%;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+
+.close-btn {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #333;
+}
+
+.btn-pilih {
+  margin-top: 12px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #2e5d35;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-pilih:hover { background: #1e3d24; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
