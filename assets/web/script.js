@@ -50,9 +50,9 @@ async function loadThemes() {
     const res = await fetch(`${baseUrl}/tema`);
     const data = await res.json(); // array langsung
 
- // contoh: tampilkan 3 pertama jadi andalan
-    const featured = data.filter((tema) => tema.kategori === 'Andalan');
-    const all = data.filter((tema) => tema.kategori === 'Biasa');
+    // contoh: tampilkan 3 pertama jadi andalan
+    const featured = data.slice(0, 3);
+    const all = data;
 
     temaAndalanContainer.innerHTML = "";
     temaSemuaContainer.innerHTML = "";
