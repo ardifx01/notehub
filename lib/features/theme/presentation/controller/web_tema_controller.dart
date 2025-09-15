@@ -42,7 +42,6 @@ class WebTemaController extends GetxController {
   }
 
   Future<void> loadPage(String noteId, String userName) async {
-    // ✅ perbaikan query string: gunakan & bukan /
     final fullUrl =
         "${Config.url_web}note_id=$noteId&user_name=$userName&_v=${DateTime.now().millisecondsSinceEpoch}";
 

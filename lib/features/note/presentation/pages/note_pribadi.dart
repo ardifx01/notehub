@@ -34,7 +34,12 @@ class NotePribadi extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(15),
                   child: IconButton(
-                      onPressed: () => Get.back(),
+                      onPressed: () async {
+                        await noteController.fetchUserNotes(
+                            authController.user.value!.id,
+                            forPeople: false);
+                        Get.back();
+                      },
                       color: AppColors.surfaceColor,
                       icon: Icon(
                         Icons.arrow_back_rounded,
