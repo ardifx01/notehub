@@ -381,8 +381,11 @@ def get_saved_notes(user_id):
 # 🌐 WEB APP ENDPOINTS
 # =====================
 
-@app.route("/tema", methods=["GET"])
+@app.route("/tema", methods=["GET", "OPTIONS"])
 def get_tema():
+    if request.method == "OPTIONS":
+        return "", 200  # buat balasan preflight
+
     with get_db_connection() as db:
         with db.cursor() as cursor:
             cursor.execute("SELECT id, nama_tema, foto_url, thumbnail, rating, kategori FROM tema")
