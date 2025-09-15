@@ -36,6 +36,7 @@ class NoteRemoteDataSource {
         isi: isi,
         kategori: kategori,
         tanggal: DateTime.now(),
+        tema: data["tema"] ?? "default",
       );
     } else {
       throw Exception("Failed to upload note");

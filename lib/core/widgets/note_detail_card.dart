@@ -31,9 +31,21 @@ class NoteDetailCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surfaceColor,
         borderRadius: BorderRadius.circular(18),
+        // tema background
+        image: note.tema != "default"
+            ? DecorationImage(
+                image: NetworkImage(note.tema),
+                fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(
+                  Colors.black.withOpacity(0.5),
+                  BlendMode.dstATop,
+                ),
+              )
+            : null,
       ),
       child: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
+        padding:
+            const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -42,7 +54,7 @@ class NoteDetailCard extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               decoration: BoxDecoration(
                 // ignore: deprecated_member_use
-                color: getKategoriColor(note.kategori).withOpacity(0.2),
+                color: AppColors.surfaceColor,
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(color: getKategoriColor(note.kategori)),
               ),
@@ -75,7 +87,6 @@ class NoteDetailCard extends StatelessWidget {
                   note.isi,
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.grey.shade600,
                   ),
                 ),
               ),
@@ -93,8 +104,8 @@ class NoteDetailCard extends StatelessWidget {
                     'Diunggah: ${formatTanggal(note.tanggal)}',
                     style: const TextStyle(
                       fontSize: 12,
-                      color: Colors.grey,
                       fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   Row(
@@ -103,7 +114,8 @@ class NoteDetailCard extends StatelessWidget {
                       if (showTemaButton)
                         IconButton(
                           onPressed: onTemaPressed,
-                          icon: Icon(Icons.brush_rounded, color: AppColors.buttonColor3),
+                          icon: Icon(Icons.brush_rounded,
+                              color: AppColors.buttonColor3),
                         ),
 
                       // button utama
